@@ -7,6 +7,18 @@ openapi = Swagger(title='Alert API', version='1.0.0', description='API for alert
 openapi.add_schema('AlertMessage', create_schema('The alert message', 'System overload'))
 openapi.add_schema('ResponseMessage', create_schema('The response message', 'Success: System overload'))
 
+alert_response_schema = {
+    'type': 'object',
+    'properties': {
+        'message': {
+            'type': 'string',
+            'description': 'Message of the Day',
+            'example': 'Welcome to the Alert API!'
+        }
+    }
+}
+openapi.add_schema('AlertResponse', alert_response_schema)
+
 openapi.add_path('/alert', {
     'post': {
         'summary': 'Post an alert message',
@@ -34,15 +46,48 @@ openapi.add_path('/alert', {
                 }
             }
         }
+    },
+    'get': {
+        'summary': 'Get the last alert',
+        'operationId': 'getAlert',
+        'tags': ['Alert'],
+        'responses': {
+            '200': {
+                'description': 'Get the last alert that was posted.',
+                'content': {
+                    'application/json': {
+                        'schema': {
+                            '$ref': '#/components/schemas/AlertResponse'
+                        }
+                    }
+                }
+            }
+        }
     }
 })
 
+
+last_alert = "This is the first call."
+
+@app.before_request
+async def debug_request_info():
+   app.logger.info(f'Headers: {dict(request.headers)}')
+   app.logger.info(f'Method: {request.method}')
+   app.logger.info(f'URL: {request.url}')
+   app.logger.info(f'Body: {await request.get_data()}')
+
 @app.route('/alert', methods=['POST'])
 async def alert():
+    global last_alert
     data = await request.get_json()
     message = data.get('message', '')
-    print("I received", message)
+    last_alert = message
     return jsonify(status='Success', received_message=message)
+
+
+@app.route('/alert', methods=['GET'])
+async def get_alert():
+    return jsonify(message=last_alert)
 
 @app.route('/', methods=['GET'])
 async def get_apidocs():
