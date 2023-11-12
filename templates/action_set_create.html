@@ -1,0 +1,46 @@
+{% extends 'base_app.html' %}
+
+{% block maincontent %}
+<div class="container mx-auto px-6 py-8">
+    <div class="bg-white shadow-lg rounded-lg p-6">
+        <h2 class="text-2xl font-semibold mb-4">Create Action Set</h2>
+        <form action="/dashboard" method="get">
+            <!-- Input field for Action Set Name -->
+            <div class="mb-4">
+                <label for="actionSetName" class="block text-gray-700 text-sm font-bold mb-2">Action Set Name</label>
+                <input type="text" id="actionSetName" name="actionSetName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+
+            <!-- List of Existing Actions -->
+            <div class="mb-4">
+                <h3 class="text-lg font-semibold mb-2">Existing Actions</h3>
+                <ul>
+                    <!-- Placeholder for existing actions -->
+                    <li class="flex items-center justify-between mb-2">
+                        <span>Action 1</span>
+                        <button type="button" class="text-red-500 hover:text-red-700">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </li>
+                    <li class="flex items-center justify-between mb-2">
+                        <span>Action 2</span>
+                        <button type="button" class="text-red-500 hover:text-red-700">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Button to Add New Action -->
+            <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Add New Action
+            </button>
+
+            <!-- Submit Button for Action Set -->
+            <div class="mt-4">
+                <input type="submit" value="Create Action Set" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
