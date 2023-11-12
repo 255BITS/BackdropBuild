@@ -39,7 +39,10 @@
                         <h3 class="text-lg font-semibold mb-2">Available Actions</h3>
             <ul>
               {%for action in actions%}
-              <li>{{action}}</li>
+              <li>
+                  <i class="fas fa-trash mr-4"></i>
+                  {{action}}
+              </li>
               {%endfor%}
             </ul>
                         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">Add Action</button>
@@ -75,12 +78,13 @@
 
                 <!-- Authentication Key -->
                 <div class="mb-6">
-                        <h3 class="text-lg font-semibold mb-2">Authentication Key</h3>
+                        <h3 class="text-lg font-semibold mb-2">Authentication</h3>
                         <table>
                           <tr><th>Type</th><th>Value</th></tr>
                           {%for auth in auths%}
                             <tr><td>{{auth["type"]}}</td><td>{{auth["value"]}}</td></tr>
                           {%endfor%}
+                          </table>
 
                         <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">Create API Key</button>
                 </div>
