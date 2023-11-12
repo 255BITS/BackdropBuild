@@ -44,17 +44,3 @@ def action_set_usage(id):
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=10002)
-@app.route('/action-set/new')
-def action_set_create():
-    return render_template('action_set_create.html')
-
-@app.route('/action-set/<id>')
-def action_set_show(id):
-    return render_template('action_set_show.html')
-
-@app.route('/action-set/<id>/usage')
-def action_set_usage(id):
-    return render_template('action_set_usage.html')
-
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=10002)
