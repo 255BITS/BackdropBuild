@@ -60,11 +60,23 @@ a:hover {
 }
 
 .profile-image {
-  border-radius: 50%; /* Circular frame */
-  border: 2px solid var(--profile-image-border); /* Adjusted border color */
-  padding: 2px; /* Space between image and border */
-  width: 40px;
-  height: 40px;
+    border-radius: 50%; /* Circular profile image */
+    cursor: pointer; /* Indicates it's clickable */
+    border: 2px solid var(--profile-image-border); /* Adjusted border color */
+    padding: 2px; /* Space between image and border */
+    width: 40px;
+    height: 40px;
+}
+
+.relative:hover .dropdown-menu {
+    display: block; /* Show dropdown when hovering over the entire container */
+}
+
+.dropdown-menu {
+    z-index: 10; /* Ensure dropdown is above other elements */
+    background-color: var(--card-background-color);
+    color: var(--link-hover-color);
+    /* Additional styling to make it look seamless */
 }
 
 .card {
