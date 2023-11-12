@@ -36,7 +36,7 @@ def action_set_create():
 
 @app.route('/action-set/<id>')
 def action_set_show(id):
-    return render_template('action_set_show.html', actions=["Action 1", "Action 2"])
+    return render_template('action_set_show.html', actions=["Action 1", "Action 2"], auths=[{"type": "basic_apikey", "value":"b#gv7IiKP#bj9lXO"}])
 
 @app.route('/action-set/<id>/edit')
 def action_set_edit(id):
