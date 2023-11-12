@@ -1,14 +1,101 @@
-/* styles.css */
 :root {
-    --primary-color: #4a56e2; /* Example primary color */
-    --secondary-color: #f4a261; /* Example secondary color */
-    --background-color: #f1f5f9; /* Light background color */
-    --text-color: #333333; /* Dark text color */
-    /* Add more variables as needed */
+    --primary-color: #6272a4; /* A muted purple, like twilight shadows */
+    --secondary-color: #50fa7b; /* A soft neon green for a touch of vibrance */
+    --background-color: #282a36; /* A deep dark grey that gives off that moody vibe */
+    --card-background-color: #44475a; /* A slightly lighter grey for card backgrounds */
+    --header-background-color: #0d1117;
+    --text-color: #f8f8f2; /* Off-white text for great readability */
+    --menu-hover-color: #3a3c4e; /* A hover color just a shade lighter than the background */
+    --border-color: #191a21; /* Even darker borders for subtle definition */
+    --profile-image-border: #6272a4; /* Using the primary color for the profile image border */
+    --button-text-color: #282a36; /* Dark text on buttons for a contrast with the secondary color */
+    --link-hover-color: #f1fa8c; /* A light, almost pastel yellow for link hovers */
 }
-.bg-primary {
-    background-color: var(--primary-color);
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-.text-primary {
+
+header {
+    background-color: var(--header-background-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+a {
     color: var(--primary-color);
+    transition: color 0.2s ease-in-out;
+}
+
+a:hover {
+	color: var(--link-hover-color);
+}
+
+.bg-primary {
+	background-color: var(--background-color);
+}
+
+.text-primary {
+	color: var(--button-text-color);
+}
+.nav-link {
+	display: block;
+	padding: 10px 15px;
+	border-radius: 4px;
+	transition: background-color 0.3s ease;
+}
+
+.nav-link:hover {
+	background-color: var(--menu-hover-color);
+}
+
+.profile-image {
+	height: 40px;
+	width: 40px;
+	border-radius: 50%;
+	border: 2px solid var(--profile-image-border);
+}
+
+.card {
+	background-color: var(--card-background-color);
+	border: 1px solid var(--border-color);
+	border-radius: 8px;
+	padding: 20px;
+	margin: 10px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* A bolder shadow for depth in dark mode */
+}
+
+.card-header {
+	font-size: 1.2rem;
+	font-weight: bold;
+	color: var(--text-color);
+}
+
+.card-link {
+	color: var(--primary-color);
+}
+
+.card-link:hover {
+	color: var(--secondary-color);
+}
+
+.action-button {
+    background-color: var(--secondary-color);
+    color: var(--background-color);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.action-button:hover {
+    background-color: var(--primary-color);
+    color: var(--button-text-color);
+}
+
+@media (max-width: 640px) {
+    .sidebar {
+        display: none;
+    }
 }
