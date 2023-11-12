@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('landing.html')
+    return render_template('landing.html', count_apis=123)
 
 @app.route('/signup')
 def signup():
