@@ -2,7 +2,7 @@
 
 {% block maincontent %}
 <div class="container mx-auto px-6 py-8">
-    <div class="bg-white shadow-lg rounded-lg p-6">
+    <div class="bg-white shadow-lg rounded-lg p-6 grid">
         <h2 class="text-2xl font-semibold mb-4">Create API</h2>
         <form action="/apis/new" method="get">
             <!-- Input field for Action Set Name -->
@@ -11,11 +11,19 @@
                 <input type="text" id="actionSetName" name="actionSetName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-4">
+                <label for="actionSetName" class="block text-gray-700 text-sm font-bold mb-2">URL</label>
+                <input type="text" id="actionSetName" name="actionSetName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div class="mb-4">
                 <label for="method" class="block text-gray-700 text-sm font-bold mb-2">Method</label>
-                <select id="method" name="method" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <select id="method" name="method" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     <option value="GET">GET</option>
                     <option value="POST">POST</option>
                 </select>
+            </div>
+            <div class="mb-4">
+                <label for="actionSetName" class="block text-gray-700 text-sm font-bold mb-2">Privacy Policy URL</label>
+                <input type="text" id="actionSetName" name="actionSetName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <p>Calling this endpoint will passthrough to your API with the header X-API-Proxy-Service: GPTActionHub</p>
 

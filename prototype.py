@@ -30,6 +30,10 @@ def apis_my():
 def apis_new():
     return render_template('api_new.html')
 
+@app.route('/apis/<id>')
+def apis_show(id):
+    return render_template('api_show.html')
+
 @app.route('/action-set/new')
 def action_set_create():
     return render_template('action_set_create.html')
