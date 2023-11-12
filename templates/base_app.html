@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block body %}
-    <body class="bg-primary text-primary">
+    <body class="bg-primary text-primary h-screen">
         <header class="flex justify-between items-center p-6 border-b py-3">
             <div>
                 <a href="/dashboard" class="text-xl font-semibold text-gray-300">GPTActionHub</a>
@@ -17,7 +17,7 @@
                 </div>
             </div>
         </header>
-        <div class="flex h-screen">
+        <div class="flex h-full">
             <!-- Left Sidebar -->
             <div class="bg-card-background-color w-64 p-6 hidden sm:block">
                 <nav>
@@ -38,7 +38,7 @@
             </div>
 
             <!-- Main content -->
-            <div class="flex-1 flex flex-col overflow-hidden main-content">
+            <div class="flex-1 flex flex-col main-content">
               {%block maincontent%}
               {%endblock%}
             </div>
