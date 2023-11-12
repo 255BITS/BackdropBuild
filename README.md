@@ -1,4 +1,4 @@
-# GPTActionsHub: A Repository of GPT actions
+# GPTActionHub: A Repository of GPT actions
 
 A GPTs creator hub where API hosts and GPT creators converge to create capable GPTs.
 
