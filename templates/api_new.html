@@ -2,9 +2,32 @@
 
 {% block maincontent %}
 <div class="container mx-auto px-6 py-8">
-    <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
-        <h2 class="text-2xl font-semibold mb-4">New APIs</h2>
-        <p> APIs are in beta. Please contact us at support@255bits.com to get early access.</p>
+    <div class="bg-white shadow-lg rounded-lg p-6">
+        <h2 class="text-2xl font-semibold mb-4">Create API</h2>
+        <form action="/apis/new" method="get">
+            <!-- Input field for Action Set Name -->
+            <div class="mb-4">
+                <label for="actionSetName" class="block text-gray-700 text-sm font-bold mb-2">Name</label>
+                <input type="text" id="actionSetName" name="actionSetName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div class="mb-4">
+                <label for="method" class="block text-gray-700 text-sm font-bold mb-2">Method</label>
+                <select id="method" name="method" class="shadow border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <option value="GET">GET</option>
+                    <option value="POST">POST</option>
+                </select>
+            </div>
+            <p>Calling this endpoint will passthrough to your API with the header X-API-Proxy-Service: GPTActionHub</p>
+
+            <!-- Button to Add New Action -->
+            <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Test API
+            </button>
+            <button type="button" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                Create API
+            </button>
+        </form>
     </div>
 </div>
+
 {% endblock %}
