@@ -1,15 +1,15 @@
 :root {
-    --primary-color: #6272a4; /* A muted purple, like twilight shadows */
-    --secondary-color: #50fa7b; /* A soft neon green for a touch of vibrance */
-    --background-color: #282a36; /* A deep dark grey that gives off that moody vibe */
-    --card-background-color: #44475a; /* A slightly lighter grey for card backgrounds */
+    --primary-color: #6272a4;
+    --secondary-color: #50fa7b;
+    --background-color: #282a36;
+    --card-background-color: #44475a;
     --header-background-color: #0d1117;
-    --text-color: #f8f8f2; /* Off-white text for great readability */
-    --menu-hover-color: #3a3c4e; /* A hover color just a shade lighter than the background */
-    --border-color: #191a21; /* Even darker borders for subtle definition */
-    --profile-image-border: #6272a4; /* Using the primary color for the profile image border */
-    --button-text-color: #282a36; /* Dark text on buttons for a contrast with the secondary color */
-    --link-hover-color: #f1fa8c; /* A light, almost pastel yellow for link hovers */
+    --text-color: #f8f8f2;
+    --menu-hover-color: #3a3c4e;
+    --border-color: #191a21;
+    --profile-image-border: #6272a4;
+    --button-text-color: #282a36;
+    --link-hover-color: #f1fa8c;
 }
 
 body {
@@ -39,22 +39,32 @@ a:hover {
 .text-primary {
 	color: var(--button-text-color);
 }
+
+/* Left Navbar Adjustments */
 .nav-link {
-	display: block;
-	padding: 10px 15px;
-	border-radius: 4px;
-	transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  color: var(--text-color); /* Adjust text color for better contrast */
 }
 
-.nav-link:hover {
-	background-color: var(--menu-hover-color);
+.nav-link:hover, .nav-link.active {
+  background-color: var(--primary-color);
+}
+
+/* Add before .nav-link for icons */
+.nav-icon {
+  margin-right: 8px; /* Provides spacing between icon and text */
 }
 
 .profile-image {
-	height: 40px;
-	width: 40px;
-	border-radius: 50%;
-	border: 2px solid var(--profile-image-border);
+  border-radius: 50%; /* Circular frame */
+  border: 2px solid var(--profile-image-border); /* Adjusted border color */
+  padding: 2px; /* Space between image and border */
+  width: 40px;
+  height: 40px;
 }
 
 .card {
