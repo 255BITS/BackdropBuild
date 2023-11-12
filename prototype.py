@@ -36,7 +36,11 @@ def action_set_create():
 
 @app.route('/action-set/<id>')
 def action_set_show(id):
-    return render_template('action_set_show.html')
+    return render_template('action_set_show.html', actions=["Action 1", "Action 2"])
+
+@app.route('/action-set/<id>/edit')
+def action_set_edit(id):
+    return render_template('action_set_show.html', actions=[])
 
 @app.route('/action-set/<id>/usage')
 def action_set_usage(id):
