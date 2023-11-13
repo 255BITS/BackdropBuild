@@ -1,15 +1,17 @@
 # GPTActionHub: A Repository of GPT actions
 
-A GPTs creator hub where API hosts and GPT creators converge to create capable GPTs.
+API hosts and GPT creators meet to create capable GPTs.
 
-We succeed when GPT creators succeed.
+Live nonfunctional prototype at [gptactionhub.com](gptactionhub.com)
 
 ## For API Hosts
 
 * API setup: Adhere to a standard API specification for seamless action integration.
+* API directory
 * Logs of usage
 
 ## For GPT Creators
 
 * Action Integration: Enhance GPT models by incorporating selected marketplace actions.
-
+* Combine actions across providers
+* Stats and logs
