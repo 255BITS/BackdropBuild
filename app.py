@@ -63,7 +63,71 @@ openapi.add_path('/alert', {
                 }
             }
         }
-    }
+    },
+    'delete': {
+        'summary': 'Delete the alert',
+        'operationId': 'deleteAlert',
+        'tags': ['Alert'],
+        'responses': {
+            '204': {
+                'description': 'Get the last alert that was posted.'
+            }
+        }
+    },
+    'put': {
+        'summary': 'Put an alert message',
+        'operationId': 'putAlert',
+        'tags': ['Alert'],
+        'requestBody': {
+            'required': True,
+            'content': {
+                'application/json': {
+                    'schema': {
+                        '$ref': '#/components/schemas/AlertMessage'
+                    }
+                }
+            }
+        },
+        'responses': {
+            '200': {
+                'description': 'Message received successfully',
+                'content': {
+                    'application/json': {
+                        'schema': {
+                            '$ref': '#/components/schemas/ResponseMessage'
+                        }
+                    }
+                }
+            }
+        }
+    },
+    'patch': {
+        'summary': 'Patch an alert message',
+        'operationId': 'patchAlert',
+        'tags': ['Alert'],
+        'requestBody': {
+            'required': True,
+            'content': {
+                'application/json': {
+                    'schema': {
+                        '$ref': '#/components/schemas/AlertMessage'
+                    }
+                }
+            }
+        },
+        'responses': {
+            '200': {
+                'description': 'Message received successfully',
+                'content': {
+                    'application/json': {
+                        'schema': {
+                            '$ref': '#/components/schemas/ResponseMessage'
+                        }
+                    }
+                }
+            }
+        }
+    },
 })
 
 
@@ -84,10 +148,23 @@ async def alert():
     last_alert = message
     return jsonify(status='Success', received_message=message)
 
-
 @app.route('/alert', methods=['GET'])
 async def get_alert():
     return jsonify(message=last_alert)
+
+@app.route('/alert', methods=['DELETE'])
+async def delete_alert():
+    global last_alert
+    last_alert = "This is the first call."
+    return ('', 204)
+
+@app.route('/alert', methods=['PUT', 'PATCH'])
+async def put_alert():
+    data = await request.get_json()
+    message = data.get('message', '')
+    global last_alert
+    last_alert += message
+    return jsonify(status='Success', received_message=message)
 
 @app.route('/', methods=['GET'])
 async def get_apidocs():
