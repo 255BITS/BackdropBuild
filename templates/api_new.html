@@ -6,23 +6,75 @@
         <h2 class="text-2xl font-semibold mb-4">Create API</h2>
         <form action="/apis/new" method="get">
             <div class="mb-4">
-                <label for="actionSetName" class="block text-gray-700 text-sm font-bold mb-2">Name</label>
-                <input type="text" id="actionSetName" name="actionSetName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name</label>
+                <input type="text" id="name" name="name" placeholder="latex2pdf" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-4">
-                <label for="actionSetName" class="block text-gray-700 text-sm font-bold mb-2">URL</label>
-                <input type="text" id="actionSetName" name="actionSetName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <label for="url" class="block text-gray-700 text-sm font-bold mb-2">URL</label>
+                <div class="flex items-center mb-2">
+                    <select id="param0" name="method" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                        <option value="GET">GET</option>
+                        <option value="POST" selected>POST</option>
+                        <option value="PUT">PUT</option>
+                        <option value="PATCH">PATCH</option>
+                        <option value="DELETE">DELETE</option>
+                    </select>
+                    <div class="flex-grow">
+                        <input type="text" id="url" name="url" placeholder="https://..." class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                </div>
             </div>
             <div class="mb-4">
-                <label for="method" class="block text-gray-700 text-sm font-bold mb-2">Method</label>
-                <select id="method" name="method" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    <option value="GET">GET</option>
-                    <option value="POST">POST</option>
-                </select>
+              <label for="params" class="block text-gray-700 text-sm font-bold mb-2">
+                  GPTs Options<a href='#'> ?</a>
+              </label>
+              <div class="flex items-center mb-2">
+                  <select id="param0" name="method" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                      <option value="GET">Integer</option>
+                      <option value="GET">Float</option>
+                      <option value="POST" selected>String</option>
+                  </select>
+                  <div class="flex-grow">
+                      <input type="text" id="param0-input" name="param0-input" placeholder="latex" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                  </div>
+              </div>
+              <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                  Add GPT Parameter
+              </button>
             </div>
             <div class="mb-4">
-                <label for="actionSetName" class="block text-gray-700 text-sm font-bold mb-2">Privacy Policy URL</label>
-                <input type="text" id="actionSetName" name="actionSetName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+              <label for="params" class="block text-gray-700 text-sm font-bold mb-2">
+                  Action Configuration<a href='#'> ?</a>
+              </label>
+              <div class="flex items-center mb-2">
+                  <select id="pparam0" name="method" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                      <option value="GET">Integer</option>
+                      <option value="GET">Float</option>
+                      <option value="POST" selected>String</option>
+                  </select>
+                  <div class="flex-grow">
+                      <input type="text" id="pparam0-input" name="param0-input" placeholder="API_KEY" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                  </div>
+              </div>
+              <div class="flex-grow">
+                Description
+                <textarea class="shadow appearance-none w-full border rounded text-gray-700 focus:outline-none focus:shadow-outline" placeholder="Your API Key given from https://...."></textarea>
+              </div>
+              <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                  Add Action Option
+              </button>
+            </div>
+            <div class="mb-4">
+                <label for="actionSetName" class="block text-gray-700 text-sm font-bold mb-2">Short Description - One line and poignant</label>
+                <input type="text" id="url" name="url" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Convert latex to pdf documents">
+            </div>
+            <div class="mb-4">
+                <label for="actionSetName" class="block text-gray-700 text-sm font-bold mb-2">Usage (markdown)</label>
+                <textarea class="shadow appearance-none w-full border rounded text-gray-700 focus:outline-none focus:shadow-outline" placeholder="# Let your GPTs create pdfs!"></textarea>
+            </div>
+            <div class="mb-4">
+                <label for="actionSetName" class="block text-gray-700 text-sm font-bold mb-2">Privacy Policy (text)</label>
+                <textarea class="shadow appearance-none w-full border rounded text-gray-700 focus:outline-none focus:shadow-outline"></textarea>
             </div>
 
             <!-- Button to Add New Action -->
@@ -32,7 +84,6 @@
             <button type="button" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
                 Create API
             </button>
-            <p>Calling this endpoint will passthrough to your API with the header X-API-Proxy-Service: GPTActionHub</p>
         </form>
     </div>
 </div>
