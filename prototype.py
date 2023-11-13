@@ -71,7 +71,7 @@ def actions_link_api(id):
 @app.route('/actions/<id>/link_api/<api_id>/new')
 def actions_link_api_new(id, api_id):
     api = {
-            "default_mount": "/apiPath",
+            "default_name": "apiCall",
             "fields": [
                 {
                     "api key": "credential",
