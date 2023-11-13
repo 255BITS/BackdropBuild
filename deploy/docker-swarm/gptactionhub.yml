@@ -1,6 +1,6 @@
 version: '3'
 services:
-  aitrainsyou:
+  gptactionhub:
    image: '532091552808.dkr.ecr.us-west-2.amazonaws.com/gptactionhub:1.0'
    ports:
      - 10002:8999
