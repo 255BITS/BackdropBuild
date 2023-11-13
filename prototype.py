@@ -34,6 +34,10 @@ def apis_new():
 def apis_show(id):
     return render_template('api_show.html')
 
+@app.route('/apis/<id>/usage')
+def apis_show_usage(id):
+    return render_template('api_usage.html')
+
 @app.route('/actions/new')
 def actions_create():
     return render_template('actions_create.html')

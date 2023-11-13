@@ -1,0 +1,122 @@
+{% extends 'base_app.html' %}
+
+{% block maincontent %}
+<div class="container mx-auto px-6 py-8">
+    <div class="bg-white shadow-lg rounded-lg p-6">
+        <h2 class="text-2xl font-semibold mb-4">Usage: API name</h2>
+
+        <!-- Tabs for Stats and Logs -->
+        <ul class="flex border-b">
+            <li class="-mb-px mr-1">
+                <a class="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" href="#stats">Stats</a>
+            </li>
+            <li class="mr-1">
+                <a class="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" href="#logs">Logs</a>
+            </li>
+        </ul>
+
+        <!-- Stats Tab -->
+        <div id="stats" class="pt-4 hidden">
+            <div class="mb-4">
+                <h3 class="font-semibold text-lg">Number of Invocations</h3>
+                <p>Placeholder: 123</p>
+            </div>
+            <div class="mb-4">
+                <h3 class="font-semibold text-lg">Graph of Total Bot Count</h3>
+                <canvas id="usersGraph"></canvas>
+            </div>
+            <div>
+                <h3 class="font-semibold text-lg">Graph of Invocations</h3>
+                <canvas id="conversationsGraph"></canvas>
+            </div>
+        </div>
+
+        <!-- Logs Tab -->
+        <div id="logs" class="pt-4 hidden">
+            <div class="flex justify-end mb-2">
+                <input type="text" class="shadow appearance-none border rounded py-2 px-3 text-gray-700" placeholder="Filter logs">
+            </div>
+            <table class="min-w-full">
+                <thead>
+                    <tr>
+                        <th class="border px-4 py-1">Timestamp</th>
+                        <th class="border px-4 py-1">GPT ID</th>
+                        <th class="border px-4 py-1">User ID</th>
+                        <th class="border px-4 py-1">Conversation ID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Placeholder rows for logs -->
+                    <tr>
+                        <td class="border px-4 py-1"></td>
+                        <td class="border px-4 py-1">f0d...</td>
+                        <td class="border px-4 py-1">a18...</td>
+                        <td class="border px-4 py-1">723...</td>
+                    </tr>
+                    <tr>
+                        <td class="border px-4 py-1"></td>
+                        <td class="border px-4 py-1">837...</td>
+                        <td class="border px-4 py-1">0b2...</td>
+                        <td class="border px-4 py-1">c23...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Function to initialize charts
+    function initCharts() {
+        var usersCtx = document.getElementById('usersGraph').getContext('2d');
+        var conversationsCtx = document.getElementById('conversationsGraph').getContext('2d');
+
+        new Chart(usersCtx, {
+            type: 'line',
+            data: {
+                labels: ['Placeholder Data'],
+                datasets: [{ label: 'Total Bots', data: [0] }]
+            }
+        });
+
+        new Chart(conversationsCtx, {
+            type: 'line',
+            data: {
+                labels: ['Placeholder Data'],
+                datasets: [{ label: 'Number of Invocations', data: [0] }]
+            }
+        });
+    }
+
+    // Flag to track if charts have been initialized
+    let chartsInitialized = false;
+
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const tabs = document.querySelectorAll('ul li a');
+        const tabContents = document.querySelectorAll('#stats, #logs');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                tabContents.forEach(content => {
+                    content.classList.add('hidden');
+                });
+                tabs.forEach(tab => {
+                    tab.classList.remove('text-blue-800');
+                });
+
+                tab.classList.add('text-blue-800');
+                const activeTabContent = document.querySelector(tab.getAttribute('href'));
+                activeTabContent.classList.remove('hidden');
+            });
+           // Check if we're opening the Stats tab and if the charts need initializing
+            if (tab.getAttribute('href') === '#stats' && !chartsInitialized) {
+                initCharts();
+                chartsInitialized = true;
+            }
+        });
+    });
+</script>
+{% endblock %}
+
