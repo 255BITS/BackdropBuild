@@ -32,33 +32,11 @@
                 <label for="actionSetName" class="block text-gray-700 text-sm font-bold mb-2">Usage (markdown)</label>
                 <textarea class="shadow appearance-none w-full border rounded text-gray-700 focus:outline-none focus:shadow-outline" placeholder="# Let your GPTs create pdfs!"></textarea>
             </div>
-            <div class="mb-4">
-              <label for="params" class="block text-gray-700 text-lg font-semibold mb-2">
-                    GPT Options<a href="#" class="text-blue-600 text-sm ml-1">(?)</a>
-              </label>
-
-              <div class="flex items-center mb-2">
-                  <i class="fas fa-trash mr-4 ml-4"></i>
-                  <select id="param0" name="method" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
-                      <option value="GET">Integer</option>
-                      <option value="GET">Float</option>
-                      <option value="POST" selected>String</option>
-                  </select>
-                  <div class="flex-grow">
-                      <input type="text" id="param0-input" name="param0-input" placeholder="latex" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                  </div>
-              </div>
-              <div class="flex justify-end">
-              <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                <i class="fas fa-plus"></i> GPT Parameter
-              </button>
-              </div>
-            </div>
             <div class="mb-8">
               <label for="params" class="block text-gray-700 text-lg font-semibold mb-2">
                   Action Configuration<a href="#" class="text-blue-600 text-sm ml-1">(?)</a>
               </label>
-              <div class="flex items-center mb-2">
+              <div class="flex items-center mb-2 border-t pt-2">
                   <i class="fas fa-trash mr-4 ml-4"></i>
                   <select id="pparam0" name="method" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
                       <option value="GET">Integer</option>
@@ -70,16 +48,34 @@
                       <input type="text" id="pparam0-input" name="param0-input" placeholder="API_KEY" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                   </div>
               </div>
-              <div class="flex-grow">
+              <div class="flex-grow mb-4">
                 <label for="params" class="block text-gray-700 text-sm font-semibold mb-2">
                 Description (markdown)
                 </label>
                 <textarea class="shadow appearance-none w-full border rounded text-gray-700 focus:outline-none focus:shadow-outline" placeholder="Your API Key given from the [latex2pdf user settings](https://....)"></textarea>
               </div>
+              <div class="flex items-center mb-2 border-t pt-2">
+                  <i class="fas fa-trash mr-4 ml-4"></i>
+                  <select id="pparam0" name="method" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
+                      <option value="GET">Integer</option>
+                      <option value="GET">Float</option>
+                      <option value="POST" selected>String</option>
+                      <option value="POST">Credential</option>
+                  </select>
+                  <div class="flex-grow">
+                      <input type="text" id="pparam0-input" name="param0-input" placeholder="latex" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                  </div>
+              </div>
+              <div class="flex-grow mb-4">
+                <label for="params" class="block text-gray-700 text-sm font-semibold mb-2">
+                Description (markdown)
+                </label>
+                <textarea class="shadow appearance-none w-full border rounded text-gray-700 focus:outline-none focus:shadow-outline" placeholder="The latex to convert"></textarea>
+              </div>
               <div class="flex justify-end">
-              <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                  <i class="fas fa-plus"></i> Action Option
-              </button>
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    <i class="fas fa-plus"></i> Action Option
+                </button>
               </div>
             </div>
  
