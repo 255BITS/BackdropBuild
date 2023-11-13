@@ -34,21 +34,21 @@ def apis_new():
 def apis_show(id):
     return render_template('api_show.html')
 
-@app.route('/action-set/new')
-def action_set_create():
-    return render_template('action_set_create.html')
+@app.route('/actions/new')
+def actions_create():
+    return render_template('actions_create.html')
 
-@app.route('/action-set/<id>')
-def action_set_show(id):
-    return render_template('action_set_show.html', actions=["Action 1", "Action 2"], auths=[{"type": "basic_apikey", "value":"b#gv7IiKP#bj9lXO"}])
+@app.route('/actions/<id>')
+def actions_show(id):
+    return render_template('actions_show.html', actions=["Action 1", "Action 2"], auths=[{"type": "basic_apikey", "value":"b#gv7IiKP#bj9lXO"}])
 
-@app.route('/action-set/<id>/edit')
-def action_set_edit(id):
-    return render_template('action_set_show.html', actions=[])
+@app.route('/actions/<id>/edit')
+def actions_edit(id):
+    return render_template('actions_show.html', actions=[])
 
-@app.route('/action-set/<id>/usage')
-def action_set_usage(id):
-    return render_template('action_set_usage.html')
+@app.route('/actions/<id>/usage')
+def actions_usage(id):
+    return render_template('actions_usage.html')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=10002)
