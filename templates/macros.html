@@ -1,0 +1,18 @@
+{% macro breadcrumbs(crumbs) %}
+<nav aria-label="breadcrumb">
+  <ol class="list-reset flex">
+    {% for crumb in crumbs %}
+      {% if crumb is string %}
+        <li class="text-gray-500 mx-2" aria-current="page">{{ crumb }}</li>
+      {% else %}
+        {% for title, url in crumb.items() %}
+          <li>
+            <a href="{{ url }}" class="text-blue-600 hover:text-blue-700">{{ title }}</a>
+          </li>
+          <li><span class="text-gray-500 mx-2">/</span></li>
+        {% endfor %}
+      {% endif %}
+    {% endfor %}
+  </ol>
+</nav>
+{% endmacro %}

@@ -46,6 +46,26 @@ def actions_show(id):
 def actions_edit(id):
     return render_template('actions_show.html', actions=[])
 
+@app.route('/actions/<id>/link_api')
+def actions_link_api(id):
+    apis = [
+        {
+            "value": "api1",
+            "description": "Example GET API",
+            "author": "apiauthor1",
+            "name": "API 1",
+            "method": "GET"
+        },
+        {
+            "value": "api2",
+            "description": "Example POST API",
+            "name": "API 2",
+            "author": "apiauthor1",
+            "method": "POST"
+        }
+    ]
+    return render_template('actions_link_api.html', apis=apis)
+
 @app.route('/actions/<id>/usage')
 def actions_usage(id):
     return render_template('actions_usage.html')
