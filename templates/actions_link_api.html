@@ -2,88 +2,91 @@
 
 {% block maincontent %}
 <div class="container mx-auto px-6 py-8">
-    <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 shadow-lg rounded-lg max-w-3xl">
-        {{macros.breadcrumbs([{"Action Name": "/actions/1"}, "Link API"])}}
-<div class="container mx-auto px-6 py-8">
-  <div class="bg-white shadow rounded-lg mb-6 p-4">
-    <div class="flex items-center bg-gray-100 rounded-lg">
-      <div class="w-full">
-        <input type="search" placeholder="Search APIs..." class="px-4 py-2 w-full rounded-lg focus:outline-none" />
-      </div>
-      <button class="bg-blue-500 text-white p-2 rounded-lg">
-        <i class="fas fa-search"></i>
-      </button>
-    </div>
+  <div class="max-w">
+      {{macros.breadcrumbs([{"Action Name": "/actions/1"}, "Link API"])}}
   </div>
-  <div class="bg-white shadow rounded-lg p-4">
-    <table class="min-w-full leading-normal">
-      <thead>
-        <tr>
-          <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-          </th>
-          <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            Name
-          </th>
-          <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            Description
-          </th>
-          <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            Author
-          </th>
-          <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            Method
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {%for api in apis%}
+  <div class="container mx-auto px-6 py-8">
+    <div class="bg-white shadow rounded-lg mb-6 p-4">
+      <div class="flex items-center bg-gray-100 rounded-lg">
+        <div class="w-full">
+          <input type="search" placeholder="Search APIs..." class="px-4 py-2 w-full rounded-lg focus:outline-none" />
+        </div>
+        <button class="bg-blue-500 text-white p-2 rounded-lg">
+          <i class="fas fa-search"></i>
+        </button>
+      </div>
+    </div>
+    <div class="bg-white shadow rounded-lg p-4">
+      <table class="min-w-full leading-normal">
+        <thead>
           <tr>
-            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-              <div class="flex items-center">
-                <div class="ml-3">
-                  <input type="radio" name="api" value="{{api.value}}"/>
-                </div>
-              </div>
-            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-              <div class="flex items-center">
-                <div class="ml-3">
-                  <p class="text-gray-900 whitespace-no-wrap">
-                    {{api.name}}
-                  </p>
-                </div>
-              </div>
-            </td>
-            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-              <div class="flex items-center">
-                <div class="ml-3">
-                  <p class="text-gray-900 whitespace-no-wrap">
-                    {{api.description}}
-                  </p>
-                </div>
-              </div>
-            </td>
-            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-              <div class="flex items-center">
-                <div class="ml-3">
-                  <p class="text-gray-900 whitespace-no-wrap">
-                    {{api.author}}
-                  </p>
-                </div>
-              </div>
-            </td>
-            <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-              <div class="flex items-center">
-                <div class="ml-3">
-                  <p class="text-gray-900 whitespace-no-wrap">
-                    {{api.method}}
-                  </p>
-                </div>
-              </div>
-            </td>
+            <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+            </th>
+            <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              Name
+            </th>
+            <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              Description
+            </th>
+            <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              Author
+            </th>
+            <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              Method
+            </th>
           </tr>
-        {%endfor%}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {%for api in apis%}
+            <tr>
+              <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                <div class="flex items-center">
+                  <div class="ml-3">
+                    <input type="radio" name="api" value="{{api.value}}" hx-get="/actions/{{id}}/link_api/{{api.id}}/new" hx-trigger="change" hx-target="#configuration">
+                  </div>
+                </div>
+              <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                <div class="flex items-center">
+                  <div class="ml-3">
+                    <p class="text-gray-900 whitespace-no-wrap">
+                      {{api.name}}
+                    </p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                <div class="flex items-center">
+                  <div class="ml-3">
+                    <p class="text-gray-900 whitespace-no-wrap">
+                      {{api.description}}
+                    </p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                <div class="flex items-center">
+                  <div class="ml-3">
+                    <p class="text-gray-900 whitespace-no-wrap">
+                      {{api.author}}
+                    </p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                <div class="flex items-center">
+                  <div class="ml-3">
+                    <p class="text-gray-900 whitespace-no-wrap">
+                      {{api.method}}
+                    </p>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          {%endfor%}
+        </tbody>
+      </table>
+    </div>
+    <div id="configuration"></div>
   </div>
 </div>
 {% endblock %}

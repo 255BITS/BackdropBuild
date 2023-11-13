@@ -1,0 +1,43 @@
+<div class="container mx-auto px-6 py-8 bg-gray-50">
+    <form class="space-y-4 bg-white shadow-sm rounded-lg p-4" action="/actions/1" method="GET">
+        <div>
+            <label for="mount" class="block text-sm font-medium text-gray-700">Mount</label>
+            <input id="mount" name="mount" type="text" value="{{api.default_mount}}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+        </div>
+        {% for field in api.fields %}
+            {% for name, type in field.items() %}
+                <label for="{{name}}" class="block text-sm font-medium text-gray-700">{{name}}</label>
+                <div class="grid gap-4 md:grid-cols-2">
+                    {% if type == "credential" %}
+                        <div class="flex gap-2 items-center">
+                            <select id="{{name}}" name="credentials" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 w-140">
+                                <option value="aws_secret_key">AWS Secret Key(SNS)</option>
+                                <option value="aws_secret_key">AWS Access Key(SNS)</option>
+                            </select>
+                            <a href="/" class="inline-block hover:text-blue-800 text-blue-500 py-1 px-3 rounded-md w-80">
+                                <i class="fas fa-plus-circle"></i> Add credential
+                            </a>
+                        </div>
+                    {% elif type == "string" %}
+                        <select id="{{name}}" name="source" hx-get="/api/options" hx-trigger="change" hx-target="#{{name}}_options" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500">
+                            <option value="GPT">Set by GPT</option>
+                            <option value="Constant">Constant value</option>
+                        </select>
+                        <div id="{{name}}_options" class="mt-1"></div>
+                    {% else %}
+                        <div class="text-sm text-red-500">{{type}} not supported</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% endfor %}
+        <div class="justify-between items-center">
+            <button type="button" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                Test
+            </button>
+            <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                Save
+            </button>
+        </div>
+    </form>
+</div>
+

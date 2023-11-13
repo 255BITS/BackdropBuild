@@ -51,24 +51,40 @@ def actions_link_api(id):
     apis = [
         {
             "value": "api1",
-            "description": "Example GET API",
+            "description": "Get last message from queue",
             "author": "apiauthor1",
-            "name": "API 1",
+            "name": "AWS SNS",
+            "id": "1",
             "method": "GET"
         },
         {
             "value": "api2",
-            "description": "Example POST API",
-            "name": "API 2",
+            "description": "POST message to queue",
+            "name": "AWS SNS",
             "author": "apiauthor1",
+            "id": "2",
             "method": "POST"
         }
     ]
-    return render_template('actions_link_api.html', apis=apis)
+    return render_template('actions_link_api.html', apis=apis, id=id)
 
-@app.route('/actions/<id>/usage')
-def actions_usage(id):
-    return render_template('actions_usage.html')
+@app.route('/actions/<id>/link_api/<api_id>/new')
+def actions_link_api_new(id, api_id):
+    api = {
+            "default_mount": "/apiPath",
+            "fields": [
+                {
+                    "api key": "credential",
+                    "bucket": "string",
+                    "message": "string"
+                 }
+            ],
+    }
+    return render_template('actions_link_api_new.html', api=api)
+
+@app.route('/api/options')
+def actions_link_api_options():
+    return render_template('actions_link_api_options.html')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=10002)
