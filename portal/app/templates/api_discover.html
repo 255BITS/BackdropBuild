@@ -6,7 +6,7 @@
     {% for api in apis %}
     <div class="bg-white shadow-lg rounded-lg p-6">
       <div class="mb-2">
-        <a href="/apis/1" class="text-lg font-semibold text-blue-500 hover:text-blue-600">
+        <a href="/apis/{{api['_id']}}" class="text-lg font-semibold text-blue-500 hover:text-blue-600">
           {{api['name']}}
         </a>
         <p class="text-s text-gray-600 align-bottom items-end">
