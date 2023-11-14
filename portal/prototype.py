@@ -1,10 +1,9 @@
 from flask import Flask, render_template, redirect, request, jsonify, url_for
-from auth_service import validate_password, create_user, UserExistsError
-import os
+from app.services.auth_service import validate_password, create_user, UserExistsError
 import re
+from app import create_app
 
-app = Flask(__name__)
-app.secret_key = os.environ.get("FLASK_SECRET", 'development')
+app = create_app()
 
 @app.route('/')
 def home():
