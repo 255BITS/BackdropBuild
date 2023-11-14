@@ -1,3 +1,9 @@
+import sys
+from pathlib import Path
+shared_path = str(Path(__file__).resolve().parent.parent.parent)
+print("--", shared_path)
+sys.path.append(shared_path)
+
 from flask import Flask
 import os
 from app.routes.auth_routes import auth_bp
