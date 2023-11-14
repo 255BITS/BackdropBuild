@@ -2,8 +2,25 @@ from passlib.hash import bcrypt
 from shared.couch import db
 from flask import session
 
-class UserExistsError(ValueError):
+class AuthError(ValueError):
     pass
+
+class InvalidPasswordError(AuthError):
+    pass
+
+class UserExistsError(AuthError):
+    pass
+
+class UserNotFoundError(AuthError):
+    pass
+
+def authenticate_user(email, password):
+    user = db.get_user_by_email(email)
+    if user is None:
+        raise UserNotFoundError("This user does not exist.")
+    if not bcrypt.verify(password, user["password_hash"]):
+        raise InvalidPasswordError("Invalid Password.")
+    return user
 
 def create_user(email, password):
     if db.get_user_by_email(email):
