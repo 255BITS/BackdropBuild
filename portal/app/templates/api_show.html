@@ -3,78 +3,75 @@
 {% block maincontent %}
 <div class="container mx-auto px-6 py-8">
     <div class="bg-white shadow-lg rounded-lg p-6 grid max-w-3xl">
-        <form action="/apis/new" method="get">
-            <div class="mb-4">
-                <label for="name" class="block text-gray-700 text-xl font-bold mb-2">pdf2latex <i class="fas fa-edit"></i></label>
-            </div>
-            <div class="mb-4">
-                <label for="name" class="block text-gray-700 text-md font-bold mb-2">Default Function Name</label>
-                <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">create_pdf_from_latex</p>
-            </div>
-            <div class="mb-8">
-                <label for="url" class="block text-gray-700 text-md font-bold mb-2">URL </label>
-                <div class="flex items-center mb-2">
-                    <select id="param0" disabled="" name="method" class="shadow-b border-b rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline disabled">
-                        <option value="GET">GET</option>
-                        <option value="POST" selected>POST</option>
-                        <option value="PUT">PUT</option>
-                        <option value="PATCH">PATCH</option>
-                        <option value="DELETE">DELETE</option>
-                    </select>
-                    <div class="flex-grow">
-                        <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">https://...</p>
-                    </div>
+        <div class="mb-4">
+            <label for="name" class="block text-gray-700 text-xl font-bold mb-2">{{api["name"]}} <i class="fas fa-edit"></i></label>
+        </div>
+        <div class="mb-4">
+            <label for="name" class="block text-gray-700 text-md font-bold mb-2">Default Function Name</label>
+            <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{api["defaultFunctionName"]}}</p>
+        </div>
+        <div class="mb-8">
+            <label for="url" class="block text-gray-700 text-md font-bold mb-2">URL </label>
+            <div class="flex items-center mb-2">
+                <select id="method" disabled="" class="shadow-b border-b rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline disabled">
+                    <option selected>{{api["method"]}}</option>
+                </select>
+                <div class="flex-grow">
+                    <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{api["url"]}}</p>
                 </div>
             </div>
-            <div class="mb-4">
-                <label for="actionSetName" class="block text-gray-700 text-md font-bold mb-2">Short Description </label>
-                <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">Create PDFs from Latex!</p>
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-md font-bold mb-2">Short Description </label>
+            <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{api["shortDescription"]}}</p>
+        </div>
+        <div class="mb-8">
+            <label for="params" class="block text-gray-700 text-lg font-semibold mb-2">
+                Parameters
+            </label>
+            {% for param in api['params'] %}
+            <div class="flex items-center mb-2 pt-4">
+                <select id="param{{ loop.index0 }}" disabled="" name="method" class="shadow-b border-b rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline disabled">
+                    <option value="Integer" {% if param[0] == "Integer" %}selected{% endif %}>Integer</option>
+                    <option value="Float" {% if param[0] == "Float" %}selected{% endif %}>Float</option>
+                    <option value="String" {% if param[0] == "String" %}selected{% endif %}>String</option>
+                    <option value="Credential" {% if param[0] == "Credential" %}selected{% endif %}>Credential</option>
+                </select>
+                <div class="flex-grow">
+                    <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ param[1] }}</p>
+                </div>
             </div>
-            <div class="mb-8">
-              <label for="params" class="block text-gray-700 text-lg font-semibold mb-2">
-                  Parameters 
-              </label>
-              <div class="flex items-center mb-2 pt-4">
-                  <select id="param0" disabled="" name="method" class="shadow-b border-b rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline disabled">
-                      <option value="GET">Integer</option>
-                      <option value="GET">Float</option>
-                      <option value="POST">String</option>
-                      <option value="POST" selected>Credential</option>
-                  </select>
-                  <div class="flex-grow">
-                      <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">API_KEY</p>
-                  </div>
-              </div>
-              <div class="flex items-center mb-2 pt-4">
-                  <select id="param0" disabled="" name="method" class="shadow-b border-b rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline disabled">
-                      <option value="GET">Integer</option>
-                      <option value="GET">Float</option>
-                      <option value="POST" selected>String</option>
-                      <option value="POST">Credential</option>
-                  </select>
-                  <div class="flex-grow">
-                      <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">latex</p>
-                  </div>
-              </div>
-            </div>
-            <div class="mb-4">
-                <label for="actionSetName" class="block text-gray-700 text-sm font-bold mb-2">Privacy Policy</label>
-                <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">...</p>
-            </div>
+            {% endfor %}
+        </div>
+        <div class="mb-4">
+            <label class="block text-gray-700 text-sm font-bold mb-2">Privacy Policy</label>
+            <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{api['privacyPolicy']}}<p>
+        </div>
+        {% if 'visibility' not in api or api['visibility'] == "Private" %}
+        <form action="/apis/{{api["_id"]}}/publish" method="post">
             <!-- Button to Add New Action -->
-              <div class="flex items-center mb-2 pt-4">
-                  <select id="pparam0" name="method" class="shadow-b border-b rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
-                      <option value="GET">Private</option>
-                      <option value="POST" selected>Public</option>
-                  </select>
-                  <div class="flex-grow">
-                      <button type="button" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                          Change Visibility
-                      </button>
-                  </div>
-              </div>
- 
+            <div class="flex items-center mb-2 pt-4">
+                <span class="text-gray-800 font-semibold mr-2 rounded dark:bg-blue-200 dark:text-blue-900">Private API</span>
+                <div class="flex-grow">
+                    <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                        Publish
+                    </button>
+                </div>
+            </div>
         </form>
+        {% else %}
+        <form action="/apis/{{api["_id"]}}/unpublish" method="post">
+            <!-- Button to Add New Action -->
+            <div class="flex items-center mb-2 pt-4">
+                <span class="text-green-800 font-semibold mr-2 rounded dark:bg-green-200 dark:text-green-900">Public API</span>
+                <div class="flex-grow">
+                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                        Unpublish
+                    </button>
+                </div>
+            </div>
+        </form>
+        {% endif %}
     </div>
 </div>
 

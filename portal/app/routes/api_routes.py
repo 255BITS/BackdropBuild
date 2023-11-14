@@ -1,4 +1,5 @@
 from flask import Flask, render_template, redirect, request, jsonify, url_for, flash
+from shared.couch import db
 import re
 
 from flask import Blueprint
@@ -58,6 +59,10 @@ def apis_create():
         else:
             break
 
+    # If there are errors, render the api_new template with errors
+    if errors:
+        return render_template('api_new.html', errors=errors, name=name, defaultFunctionName=defaultFunctionName, method=method, url=url, shortDescription=shortDescription, params=params)
+
     api_object = {
         "name": name,
         "defaultFunctionName": defaultFunctionName,
@@ -67,17 +72,31 @@ def apis_create():
         "type": "API",
         "params": params
     }
-
-    # If there are errors, render the api_new template with errors
-    if errors:
-        return render_template('api_new.html', errors=errors, name=name, defaultFunctionName=defaultFunctionName, method=method, url=url, shortDescription=shortDescription, params=params)
+    new_api_object = db.save(api_object)
 
     # Add your logic here to handle the attributes and 'params' list
-    return redirect('/apis/1')
+    return redirect('/apis/'+new_api_object["_id"])
 
-@api_bp.route('/apis/<id>')
+@api_bp.route('/apis/<id>', methods=["GET"])
 def apis_show(id):
-    return render_template('api_show.html')
+    api = db.get(id)
+    print(api)
+    return render_template('api_show.html', api=api)
+
+@api_bp.route('/apis/<id>/publish', methods=["POST"])
+def apis_publish(id):
+    api = db.get(id)
+    api["visibility"]="Public"
+    db.save(api)
+    return render_template('api_show.html', api=api)
+
+@api_bp.route('/apis/<id>/unpublish', methods=["POST"])
+def apis_unpublish(id):
+    api = db.get(id)
+    api["visibility"]="Private"
+    db.save(api)
+    return render_template('api_show.html', api=api)
+
 
 @api_bp.route('/apis/<id>/usage')
 def apis_show_usage(id):
