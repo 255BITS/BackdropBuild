@@ -19,7 +19,6 @@ class UserNotFoundError(AuthError):
 class UnauthorizedError(AuthError):
     pass
 
-
 def assert_logged_in():
     if g.current_user is None:
         raise UnauthorizedError("You must be logged in to access this page.", "warning")

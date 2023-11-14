@@ -1,7 +1,11 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, request, g
+from app.services.actions_service import ActionsService
 from app.services.auth_service import assert_logged_in
 
 actions_bp = Blueprint('actions', __name__)
+
+def actions_service():
+    return ActionsService(g.current_user)
 
 @actions_bp.route('/dashboard')
 def dashboard():
@@ -34,7 +38,9 @@ def new():
 
 @actions_bp.post("/actions")
 def create():
-    return redirect(url_for("actions.edit", id="1"))
+    name = request.form.get('name')
+    actions = actions_service().create(name)
+    return redirect(url_for("actions.edit", id=actions['_id']))
 
 @actions_bp.route('/actions/<id>')
 def show(id):
