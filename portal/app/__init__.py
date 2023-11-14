@@ -8,6 +8,7 @@ import os
 from app.routes.actions_routes import actions_bp
 from app.routes.auth_routes import auth_bp
 from app.routes.api_routes import api_bp
+from app.services.auth_service import register_app_error_handlers
 
 def create_app():
     app = Flask(__name__)
@@ -15,4 +16,5 @@ def create_app():
     app.register_blueprint(actions_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(api_bp)
+    register_app_error_handlers(app)
     return app

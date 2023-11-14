@@ -18,11 +18,16 @@
 {% endmacro %}
 
 {% macro flash_alerts() %}
-    {% with messages = get_flashed_messages() %}
+    {% with messages = get_flashed_messages(with_categories=True) %}
         {% if messages %}
             <ul class="flashes mb-4">
-                {% for message in messages %}
-                    <li class="bg-red-500 text-white p-4 shadow-md">{{ message }}</li>
+                {% for category, message in messages %}
+                    <li class="{{ 'bg-red-100 border border-red-400 text-red-700' if category == 'error' else
+                                 'bg-yellow-100 border text-yellow-700 border-yellow-500' if category == 'warning' else
+                                 'bg-blue-500' if category == 'info' else
+                                 'bg-green-600' }} text-white p-4 shadow-md">
+                        {{ message }}
+                    </li>
                 {% endfor %}
             </ul>
         {% endif %}

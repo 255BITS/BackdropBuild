@@ -11,13 +11,8 @@ def post_login():
     form = request.form
     email = form.get('email')
     password = form.get('password')
-    try:
-        user = authenticate_user(email, password)
-        login_user(user)
-    except AuthError as e:
-        flash(str(e), 'error')
-        return redirect(url_for('auth.login'))
-
+    user = authenticate_user(email, password)
+    login_user(user)
     return redirect("dashboard")
 
 @auth_bp.post('/logout')
@@ -45,15 +40,11 @@ def post_signup():
         flash('Invalid password', 'error')
         return redirect(url_for('auth.signup'))
 
-    try:
-        user = create_user(email, password)
-    except AuthError as e:
-        flash(str(e), 'error')
-        return redirect(url_for('auth.signup'))
+    user = create_user(email, password)
 
-    flash('Your account has been created. Welcome!', 'info')
+    flash('Your account has been created. Welcome!', 'success')
     login_user(user)
-    return redirect(url_for('dashboard'))
+    return redirect(url_for('actions.dashboard'))
 
 @auth_bp.before_app_request
 def load_current():

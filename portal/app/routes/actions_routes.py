@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template
+from app.services.auth_service import assert_logged_in
 
 actions_bp = Blueprint('actions', __name__)
 
 @actions_bp.route('/dashboard')
 def dashboard():
+    assert_logged_in()
     actions_list = [
         {
             "id": "abcd",

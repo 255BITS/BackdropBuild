@@ -1,9 +1,11 @@
 from passlib.hash import bcrypt
 from shared.couch import db
-from flask import session
+from flask import session, g, flash, redirect, url_for
 
 class AuthError(ValueError):
-    pass
+   def __init__(self, message, level='error'):
+       self.message = message
+       self.level = level
 
 class InvalidPasswordError(AuthError):
     pass
@@ -13,6 +15,14 @@ class UserExistsError(AuthError):
 
 class UserNotFoundError(AuthError):
     pass
+
+class UnauthorizedError(AuthError):
+    pass
+
+
+def assert_logged_in():
+    if g.current_user is None:
+        raise UnauthorizedError("You must be logged in to access this page.", "warning")
 
 def authenticate_user(email, password):
     user = db.get_user_by_email(email)
@@ -44,6 +54,12 @@ def login_user(user):
 
 def logout_user():
     del session["user_id"]
+
+def register_app_error_handlers(app):
+    @app.errorhandler(AuthError)
+    def handle_auth_error(error):
+        flash(error.message, error.level)
+        return redirect(url_for('auth.login'))
 
 def validate_password(password):
     #TODO check for good enough password
