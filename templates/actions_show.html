@@ -50,14 +50,12 @@
             <!-- Authentication Key -->
             <div class="mb-6">
                     <h3 class="text-lg font-semibold mb-2">Authentication</h3>
-                    <table>
-                      <tr><th>Type</th><th>Value</th></tr>
                       {%for auth in auths%}
-                        <tr><td>{{auth["type"]}}</td><td>{{auth["value"]}}</td></tr>
+                          <div class="grid grid-cols-2 w-2/3"> 
+                              <span class="p-4">{{auth["type"]}}</span>
+                              <span class="rounded-lg bg-gray-200 p-4">{{auth["value_encoded"]}}<i class="far fa-eye ml-4"></i><i class="ml-4 far fa-copy"></i></span>
+                          </div>
                       {%endfor%}
-                      </table>
-
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="button">Create API Key</button>
             </div>
 
     <div class="mb-6 relative">
@@ -88,8 +86,15 @@
 }</code></pre>
                 </div>
                 <div class="mb-6">
-                        <h3 class="text-lg font-semibold mb-2">Privacy Policy</h3>
-                        <input type="text" readonly value="https://gptactionhub.com/privacy_policy/ah323..." class="w-full"/>
+                        <h3 class="text-lg font-semibold mt-4">Privacy Policy</h3>
+                        <div class="relative w-2/3">
+                          <input type="text" readonly value="https://gptactionhub.com/privacy_policy/ah323..." class='w-full p-4 border rounded-lg'/>
+                          <button class="absolute top-4 right-2 text-gray-500 hover:text-gray-700">
+                            <i class="far fa-copy"></i> <!-- This is your Font Awesome Copy Icon -->
+                          </button>
+                        </div>
+
+
                 </div>
 
         </div>

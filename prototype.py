@@ -44,7 +44,7 @@ def actions_create():
 
 @app.route('/actions/<id>')
 def actions_show(id):
-    return render_template('actions_show.html', actions=["Action 1", "Action 2"], auths=[{"type": "basic_apikey", "value":"b#gv7IiKP#bj9lXO"}])
+    return render_template('actions_show.html', actions=["Action 1", "Action 2"], auths=[{"type": "Basic", "value":"b#gv7IiKP#bj9lXO", "value_encoded": "**************"}])
 
 @app.route('/actions/<id>/edit')
 def actions_edit(id):
