@@ -15,3 +15,10 @@ class ActionsService:
             "name": name
         })
         return action
+
+    def get(self, id):
+        #TODO 404
+        #TODO doc type check
+        actions = db.get(id)
+        apis = db.get_apis_for_actions(actions["_id"])
+        return actions | { "apis": apis }

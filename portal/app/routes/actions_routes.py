@@ -48,4 +48,5 @@ def show(id):
 
 @actions_bp.route('/actions/<id>/edit')
 def edit(id):
-    return render_template('actions_show.html', actions=[])
+    actions = actions_service().get(id)
+    return render_template('actions_show.html', actions=actions)
