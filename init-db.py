@@ -43,4 +43,3 @@ permission_response = requests.put(security_url, json=permissions, auth=HTTPBasi
 
 # Output the responses
 print(user_creation_response.json(), db_creation_response.json(), permission_response.json())
-

@@ -114,3 +114,10 @@ class DB:
 
     def get(self, _id):
         return self.db.get(_id)
+
+    def get_user_by_email(self, email):
+        """
+        Get a user by subdomain, and username.
+        """
+        users = self.query_view('users', 'by_email', key=email)
+        return users[0] if users else None

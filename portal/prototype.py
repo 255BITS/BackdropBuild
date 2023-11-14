@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, jsonify, url_for
+from flask import Flask, render_template, redirect, request, jsonify, url_for, flash
 from app.services.auth_service import validate_password, create_user, UserExistsError
 import re
 from app import create_app
@@ -33,7 +33,7 @@ def post_signup():
         flash(str(e), 'error')
         return redirect(url_for('course.index'))
 
-    flash('Your account has been created. Welcome!', 'error')
+    flash('Your account has been created. Welcome!', 'info')
     return redirect(url_for('dashboard'))
 
 
