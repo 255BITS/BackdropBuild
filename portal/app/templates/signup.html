@@ -4,7 +4,8 @@
 <div class="min-h-screen flex items-center justify-center bg-gray-800">
     <div class="max-w-md w-full bg-white p-6 rounded-lg shadow-lg">
         <div>
-            <form action="{{url_for("post_signup")}}" method="POST">
+            {{ macros.flash_alerts() }}
+            <form action="{{url_for("auth.post_signup")}}" method="POST">
                 <div class="mb-4">
                     <label class="block text-gray-700 text-sm font-bold mb-2" for="email">
                         Email

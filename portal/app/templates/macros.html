@@ -16,3 +16,15 @@
   </ol>
 </nav>
 {% endmacro %}
+
+{% macro flash_alerts() %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="flashes mb-4">
+                {% for message in messages %}
+                    <li class="bg-red-500 text-white p-4 shadow-md">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+{% endmacro %}
