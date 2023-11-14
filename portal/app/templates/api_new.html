@@ -3,15 +3,19 @@
 {% block maincontent %}
 <div class="container mx-auto px-6 py-8">
     <div class="bg-white shadow-lg rounded-lg p-6 grid max-w-3xl">
-        <h2 class="text-2xl font-semibold mb-4">Create API</h2>
-        <form action="/apis/create" method="POST">
+        {% if "_id" in api %}
+          <h2 class="text-2xl font-semibold mb-4">Update API</h2>
+        {% else %}
+          <h2 class="text-2xl font-semibold mb-4">Create API</h2>
+        {% endif %}
+        <form {% if "_id" in api %} action="/apis/{{api["_id"]}}/update" {% else %} action="/apis/create" {% endif %} method="POST">
             <div class="mb-4">
                 <label for="name" class="block text-gray-700 text-md font-bold mb-2">Name</label>
-                <input type="text" id="name" name="name" placeholder="latex2pdf" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <input type="text" id="name" name="name" placeholder="latex2pdf" value="{{api['name']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-4">
                 <label for="name" class="block text-gray-700 text-md font-bold mb-2">Default Function Name</label>
-                <input type="text" id="defaultFunctionName" name="defaultFunctionName" placeholder="createPdfFromLatex" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <input type="text" id="defaultFunctionName" name="defaultFunctionName" value="{{api['defaultFunctionName']}}" placeholder="createPdfFromLatex" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-8">
                 <label for="url" class="block text-gray-700 text-md font-bold mb-2">URL</label>
@@ -24,57 +28,79 @@
                         <option value="DELETE">DELETE</option>
                     </select>
                     <div class="flex-grow">
-                        <input type="text" id="url" name="url" placeholder="https://..." class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                      <input type="text" id="url" name="url" placeholder="https://..." value="{{api['url']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     </div>
                 </div>
             </div>
             <div class="mb-4">
                 <label for="shortDescription" class="block text-gray-700 text-md font-bold mb-2">Short Description</label>
-                <input type="text" id="shortDescription" name="shortDescription" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Convert latex to pdf documents">
+                <input type="text" id="shortDescription" name="shortDescription" value="{{api['shortDescription']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Convert latex to pdf documents">
             </div>
             <div class="mb-8">
-              <label for="params" class="block text-gray-700 text-lg font-semibold mb-2">
-                Parameters<!--<a href="#" class="text-blue-600 text-sm ml-1">(?)</a>-->
-              </label>
-              <div class="flex items-center mb-2 border-t pt-4">
-                  <i class="fas fa-trash mr-4 ml-4"></i>
-                  <select id="param0-type" name="param0-type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
-                      <option value="Integer">Integer</option>
-                      <option value="Float">Float</option>
-                      <option value="String">String</option>
-                      <option value="Credential" selected>Credential</option>
-                  </select>
-                  <div class="flex-grow">
-                      <input type="text" id="param0-input" name="param0-input" placeholder="API_KEY" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <label for="params" class="block text-gray-700 text-lg font-semibold mb-2">
+                    Parameters<!--<a href="#" class="text-blue-600 text-sm ml-1">(?)</a>-->
+                </label>
+                {% if "params" not in api %}
+                  <div class="flex items-center mb-2 border-t pt-4">
+                      <i class="fas fa-trash mr-4 ml-4"></i>
+                      <select id="param0-type" name="param0-type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
+                          <option value="Integer">Integer</option>
+                          <option value="Float">Float</option>
+                          <option value="String">String</option>
+                          <option value="Credential" selected>Credential</option>
+                      </select>
+                      <div class="flex-grow">
+                          <input type="text" id="param0-input" name="param0-input" placeholder="API_KEY" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                      </div>
                   </div>
-              </div>
-              <div class="flex items-center mb-2 border-t pt-4">
-                  <i class="fas fa-trash mr-4 ml-4"></i>
-                  <select id="param1-type" name="param1-type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
-                      <option value="Integer">Integer</option>
-                      <option value="Float">Float</option>
-                      <option value="String" selected>String</option>
-                      <option value="Credential">Credential</option>
-                  </select>
-                  <div class="flex-grow">
-                      <input type="text" id="param1-input" name="param1-input" placeholder="latex" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                  <div class="flex items-center mb-2 border-t pt-4">
+                      <i class="fas fa-trash mr-4 ml-4"></i>
+                      <select id="param1-type" name="param1-type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
+                          <option value="Integer">Integer</option>
+                          <option value="Float">Float</option>
+                          <option value="String" selected>String</option>
+                          <option value="Credential">Credential</option>
+                      </select>
+                      <div class="flex-grow">
+                          <input type="text" id="param1-input" name="param1-input" placeholder="latex" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                      </div>
                   </div>
-              </div>
-              <div class="flex justify-end">
-                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    <i class="fas fa-plus"></i> Parameter
-                </button>
-              </div>
+                {% else %}
+
+                {% for param in api['params'] %}
+                <div class="flex items-center mb-2 border-t pt-4">
+                    <i class="fas fa-trash mr-4 ml-4"></i>
+                    <select id="param{{ loop.index0 }}-type" name="param{{ loop.index0 }}-type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
+                        <option value="Integer" {% if param[0] == "Integer" %}selected{% endif %}>Integer</option>
+                        <option value="Float" {% if param[0] == "Float" %}selected{% endif %}>Float</option>
+                        <option value="String" {% if param[0] == "String" %}selected{% endif %}>String</option>
+                        <option value="Credential" {% if param[0] == "Credential" %}selected{% endif %}>Credential</option>
+                    </select>
+                    <div class="flex-grow">
+                        <input type="text" id="param{{ loop.index0 }}-input" name="param{{ loop.index0 }}-input" placeholder="{{ param[1] }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ param[1] }}">
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="flex justify-end">
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <i class="fas fa-plus"></i> Parameter
+                    </button>
+                </div>
+            {% endif %}
             </div>
- 
             <div class="mb-4">
                 <label for="privacyPolicy" class="block text-gray-700 text-sm font-bold mb-2">Privacy Policy</label>
-                <textarea name="privacyPolicy" id="privacyPolicy" class="shadow appearance-none w-full border rounded text-gray-700 focus:outline-none focus:shadow-outline"></textarea>
+                <textarea name="privacyPolicy" id="privacyPolicy" value="{{api['privacyPolicy']}}" class="shadow appearance-none w-full border rounded text-gray-700 focus:outline-none focus:shadow-outline"></textarea>
             </div>
-            <!-- Button to Add New Action -->
-            <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                Create API
-            </button>
+            {% if "_id" in api %}
+                <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                    Update API
+                </button>
+            {% else %}
+                <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                    Create API
+                </button>
+            {% endif %}
         </form>
     </div>
 </div>
