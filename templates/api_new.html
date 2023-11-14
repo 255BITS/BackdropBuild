@@ -4,19 +4,19 @@
 <div class="container mx-auto px-6 py-8">
     <div class="bg-white shadow-lg rounded-lg p-6 grid max-w-3xl">
         <h2 class="text-2xl font-semibold mb-4">Create API</h2>
-        <form action="/apis/new" method="get">
+        <form action="/apis/create" method="POST">
             <div class="mb-4">
                 <label for="name" class="block text-gray-700 text-md font-bold mb-2">Name</label>
                 <input type="text" id="name" name="name" placeholder="latex2pdf" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-4">
                 <label for="name" class="block text-gray-700 text-md font-bold mb-2">Default Function Name</label>
-                <input type="text" id="name" name="name" placeholder="createPdfFromLatex" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <input type="text" id="defaultFunctionName" name="defaultFunctionName" placeholder="createPdfFromLatex" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-8">
                 <label for="url" class="block text-gray-700 text-md font-bold mb-2">URL</label>
                 <div class="flex items-center mb-2">
-                    <select id="param0" name="method" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <select id="method" name="method" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                         <option value="GET">GET</option>
                         <option value="POST" selected>POST</option>
                         <option value="PUT">PUT</option>
@@ -29,8 +29,8 @@
                 </div>
             </div>
             <div class="mb-4">
-                <label for="actionSetName" class="block text-gray-700 text-md font-bold mb-2">Short Description</label>
-                <input type="text" id="url" name="url" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Convert latex to pdf documents">
+                <label for="shortDescription" class="block text-gray-700 text-md font-bold mb-2">Short Description</label>
+                <input type="text" id="shortDescription" name="shortDescription" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Convert latex to pdf documents">
             </div>
             <div class="mb-8">
               <label for="params" class="block text-gray-700 text-lg font-semibold mb-2">
@@ -38,26 +38,26 @@
               </label>
               <div class="flex items-center mb-2 border-t pt-4">
                   <i class="fas fa-trash mr-4 ml-4"></i>
-                  <select id="pparam0" name="method" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
-                      <option value="GET">Integer</option>
-                      <option value="GET">Float</option>
-                      <option value="POST">String</option>
-                      <option value="POST" selected>Credential</option>
+                  <select id="param0-type" name="param0-type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
+                      <option value="Integer">Integer</option>
+                      <option value="Float">Float</option>
+                      <option value="String">String</option>
+                      <option value="Credential" selected>Credential</option>
                   </select>
                   <div class="flex-grow">
-                      <input type="text" id="pparam0-input" name="param0-input" placeholder="API_KEY" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                      <input type="text" id="param0-input" name="param0-input" placeholder="API_KEY" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                   </div>
               </div>
               <div class="flex items-center mb-2 border-t pt-4">
                   <i class="fas fa-trash mr-4 ml-4"></i>
-                  <select id="pparam0" name="method" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
-                      <option value="GET">Integer</option>
-                      <option value="GET">Float</option>
-                      <option value="POST" selected>String</option>
-                      <option value="POST">Credential</option>
+                  <select id="param1-type" name="param1-type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
+                      <option value="Integer">Integer</option>
+                      <option value="Float">Float</option>
+                      <option value="String" selected>String</option>
+                      <option value="Credential">Credential</option>
                   </select>
                   <div class="flex-grow">
-                      <input type="text" id="pparam0-input" name="param0-input" placeholder="latex" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                      <input type="text" id="param1-input" name="param1-input" placeholder="latex" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                   </div>
               </div>
               <div class="flex justify-end">
@@ -68,11 +68,11 @@
             </div>
  
             <div class="mb-4">
-                <label for="actionSetName" class="block text-gray-700 text-sm font-bold mb-2">Privacy Policy</label>
-                <textarea class="shadow appearance-none w-full border rounded text-gray-700 focus:outline-none focus:shadow-outline"></textarea>
+                <label for="privacyPolicy" class="block text-gray-700 text-sm font-bold mb-2">Privacy Policy</label>
+                <textarea name="privacyPolicy" id="privacyPolicy" class="shadow appearance-none w-full border rounded text-gray-700 focus:outline-none focus:shadow-outline"></textarea>
             </div>
             <!-- Button to Add New Action -->
-            <button type="button" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+            <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
                 Create API
             </button>
         </form>
