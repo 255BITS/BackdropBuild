@@ -1,16 +1,43 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, flash, request, redirect, url_for
+from auth_service import validate_password, create_user, UserExistsError
+import os
 
 app = Flask(__name__)
+app.secret_key = os.environ.get("FLASK_SECRET", 'development')
 
 @app.route('/')
 def home():
     return render_template('landing.html', count_apis=123)
 
-@app.route('/signup')
+@app.get('/signup')
 def signup():
     return render_template('signup.html')
 
-@app.route('/login')
+@app.post('/signup')
+def post_signup():
+    form = request.form
+    email = form.get('email')
+    password = form.get('password')
+    password_confirmation = form.get('password_confirmation')
+    if password != password_confirmation:
+        flash('Invalid password', 'error')
+        return redirect(url_for('signup'))
+
+    if not validate_password(password):
+        flash('Invalid password', 'error')
+        return redirect(url_for('signup'))
+
+    try:
+        user = create_user(email, password)
+    except UserExistsError as e:
+        flash(str(e), 'error')
+        return redirect(url_for('course.index'))
+
+    flash('Your account has been created. Welcome!', 'error')
+    return redirect(url_for('dashboard'))
+
+
+@app.get('/login')
 def login():
     return render_template('login.html')
 
