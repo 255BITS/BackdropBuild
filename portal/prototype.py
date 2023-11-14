@@ -8,10 +8,6 @@ app = create_app()
 def home():
     return render_template('landing.html', count_apis=123)
 
-@app.route('/dashboard')
-def dashboard():
-    return render_template('dashboard.html')
-
 @app.route('/actions/new')
 def actions_create():
     return render_template('actions_create.html')

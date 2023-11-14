@@ -23,79 +23,44 @@
                       </select>
                   </div>
                 </div>
-                <div class="bg-white p-6 relative grid grid-cols-2 border-grey-200 border">
-                    <div>
-                        <h3 class="text-lg font-semibold">
-                            <a href="/actions/1" class="text-blue-500 hover:text-blue-600">
-                                Calculator
+                {% for action in actions_list %}
+                    <div class="bg-white p-6 relative grid grid-cols-2 border-grey-200 border">
+                        <div>
+                            <h3 class="text-lg font-semibold">
+                                <a href="/actions/{{ action.id }}" class="text-blue-500 hover:text-blue-600">
+                                    {{ action.name }}
+                                </a>
+                            </h3>
+                            <div class="flex mt-4">
+                                <div class="flex items-center">
+                                    <i class="fas fa-project-diagram"></i>
+                                    <span class="ml-2 text-gray-700 w-4">{{ action.apis }}</span>
+                                </div>
+                                <div class="flex items-center ml-4">
+                                    <i class="fas fa-robot"></i>
+                                    <span class="ml-2 text-gray-700 w-4">{{ action.gpts }}</span>
+                                </div>
+                                <div class="flex items-center ml-4">
+                                    <i class="fas fa-play"></i>
+                                    <span class="ml-2 text-gray-700 w-4">{{ action.uses }}</span>
+                                </div>
+                                <span class="text-xs text-gray-500 ml-4 align-bottom items-end text-xs pt-1">Updated: {{ action.last_updated }}</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-end">
+                            <a href="/actions/{{ action.id }}/usage" class="flex justify-end text-xs ml-4 pt-1 text-blue-500 hover:text-blue-600">
+                                <svg class="text-gray-500" width="300" height="48">
+                                    <polyline
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        points="{{ action.sparkline_data }}"
+                                    ></polyline>
+                                </svg>
                             </a>
-                        </h3>
-                        <div class="flex mt-4">
-                            <div class="flex items-center">
-                                <i class="fas fa-project-diagram"></i>
-                                <span class="ml-2 text-gray-700 w-4">2</span>
-                            </div>
-                            <div class="flex items-center ml-4">
-                                <i class="fas fa-robot"></i>
-                                <span class="ml-2 text-gray-700 w-4">4</span>
-                            </div>
-                            <div class="flex items-center ml-4">
-                                <i class="fas fa-play"></i>
-                                <span class="ml-2 text-gray-700 w-4">27</span>
-                            </div>
-                            <span class="text-xs text-gray-500 ml-4 align-bottom items-end text-xs pt-1">Updated: 3 hours ago</span>
                         </div>
                     </div>
-                    <div class="flex justify-end">
-                        <a href="/actions/1/usage" class="flex justify-end text-xs ml-4 pt-1 text-blue-500 hover:text-blue-600">
-                            <svg class="text-gray-500" width="300" height="48">
-                                <polyline
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    points="0,48 60,24 120,36 180,40 240,24 300,0"
-                                ></polyline>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-                <div class="bg-white p-6 relative grid grid-cols-2 border-grey-200 border">
-                    <div>
-                        <h3 class="text-lg font-semibold">
-                            <a href="/actions/1" class="text-blue-500 hover:text-blue-600">
-                                PDF tools
-                            </a>
-                        </h3>
-                        <div class="flex mt-4">
-                            <div class="flex items-center">
-                                <i class="fas fa-project-diagram"></i>
-                                <span class="ml-2 text-gray-700 w-4">0</span>
-                            </div>
-                            <div class="flex items-center ml-4">
-                                <i class="fas fa-robot"></i>
-                                <span class="ml-2 text-gray-700 w-4">0</span>
-                            </div>
-                            <div class="flex items-center ml-4">
-                                <i class="fas fa-play"></i>
-                                <span class="ml-2 text-gray-700 w-4">0</span>
-                            </div>
-                            <span class="text-xs text-gray-500 ml-4 align-bottom items-end text-xs pt-1">Updated: 6 days ago</span>
-                        </div>
-                    </div>
-                    <div class="flex justify-end">
-                        <a href="/actions/1/usage" class="flex justify-end text-xs ml-4 pt-1 text-blue-500 hover:text-blue-600">
-                            <svg class="text-gray-500" width="300" height="48">
-                                <polyline
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    points="0,48 60,48 120,48 180,48 240,48 300,48"
-                                ></polyline>
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-
+                {% endfor %}
             </div>
         </div>
     </main>
