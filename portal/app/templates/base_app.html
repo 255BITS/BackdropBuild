@@ -12,9 +12,12 @@
                 <a href="/dashboard" class="text-xl font-semibold text-gray-300">GPTActionHub</a>
             </div>
             <div class="relative">
-                <img src="/static/profile.webp" alt="Profile" class="profile-image hover-trigger">
+                <div class="flex justify-between items-center">
+                    <span class='text-gray-300 mr-4'>{{current_user.email}}</span>
+                    <img src="/static/profile.webp" alt="Profile" class="profile-image hover-trigger">
+                </div>
                 <div class="dropdown-menu hidden absolute right-0 py-2 w-48 bg-white rounded-lg shadow-xl">
-                    <a href="/logout" hx-post="/logout" class="block px-4 py-2 text-gray-300">Logout</a>
+                    <a href="{{url_for("auth.logout")}}" hx-post="{{url_for("auth.logout")}}" class="block px-4 py-2 text-gray-300">Logout</a>
                 </div>
             </div>
         </header>

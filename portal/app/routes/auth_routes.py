@@ -1,9 +1,27 @@
-from flask import Blueprint, Flask, render_template, redirect, request, url_for, flash, make_response
-from app.services.auth_service import validate_password, create_user, login_user, logout_user, UserExistsError
+from flask import Blueprint, Flask, render_template, redirect, request, url_for, flash, make_response, g
+from app.services.auth_service import validate_password, authenticate_user, create_user, load_current_user, login_user, logout_user, AuthError
 auth_bp = Blueprint('auth', __name__)
 
-@auth_bp.post('/logout')
+@auth_bp.get('/login')
 def login():
+    return render_template('login.html')
+
+@auth_bp.post('/login')
+def post_login():
+    form = request.form
+    email = form.get('email')
+    password = form.get('password')
+    try:
+        user = authenticate_user(email, password)
+        login_user(user)
+    except AuthError as e:
+        flash(str(e), 'error')
+        return redirect(url_for('auth.login'))
+
+    return redirect("dashboard")
+
+@auth_bp.post('/logout')
+def logout():
     logout_user()
     response = make_response("", 200)
     response.headers['HX-Redirect'] = '/'
@@ -29,10 +47,18 @@ def post_signup():
 
     try:
         user = create_user(email, password)
-    except UserExistsError as e:
+    except AuthError as e:
         flash(str(e), 'error')
         return redirect(url_for('auth.signup'))
 
     flash('Your account has been created. Welcome!', 'info')
     login_user(user)
     return redirect(url_for('dashboard'))
+
+@auth_bp.before_app_request
+def load_current():
+    g.current_user = load_current_user()
+
+@auth_bp.app_context_processor
+def inject_globals():
+    return dict(current_user=g.get('current_user', None))

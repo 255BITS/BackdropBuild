@@ -17,11 +17,16 @@ def create_user(email, password):
     })
     return new_user
 
+def load_current_user():
+    if 'user_id' in session:
+        return db.get(session['user_id'])
+    return None
+
 def login_user(user):
     session["user_id"] = user["_id"]
 
 def logout_user():
-    session["user_id"] = None
+    del session["user_id"]
 
 def validate_password(password):
     #TODO check for good enough password
