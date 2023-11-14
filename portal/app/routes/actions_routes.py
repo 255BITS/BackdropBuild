@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, redirect, url_for
 from app.services.auth_service import assert_logged_in
 
 actions_bp = Blueprint('actions', __name__)
@@ -27,3 +27,19 @@ def dashboard():
         },
     ]
     return render_template('dashboard.html', actions_list=actions_list)
+
+@actions_bp.route('/actions/new')
+def new():
+    return render_template('actions_new.html')
+
+@actions_bp.post("/actions")
+def create():
+    return redirect(url_for("actions.edit", id="1"))
+
+@actions_bp.route('/actions/<id>')
+def show(id):
+    return render_template('actions_show.html', actions=["Action 1", "Action 2"], auths=[{"type": "Basic", "value":"b#gv7IiKP#bj9lXO", "value_encoded": "**************"}])
+
+@actions_bp.route('/actions/<id>/edit')
+def edit(id):
+    return render_template('actions_show.html', actions=[])

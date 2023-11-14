@@ -25,11 +25,11 @@
             <!-- Left Sidebar -->
             <div class="bg-card-background-color w-64 p-6 hidden sm:block">
                 <nav>
-                    <a href="/dashboard" class="nav-link">
+                    <a href="{{url_for("actions.dashboard")}}" class="nav-link">
                       <i class="fas fa-bolt nav-icon w-5"></i>
                       My Actions
                     </a>
-                    <a href="/actions/new" class="nav-link">
+                    <a href="{{url_for("actions.new")}}" class="nav-link">
                       <i class="fas fa-plus-square nav-icon w-5"></i>
                       New Actions
                     </a>
