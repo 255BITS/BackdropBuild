@@ -7,7 +7,8 @@ api_bp = Blueprint('apis', __name__)
 
 @api_bp.route('/discover-apis')
 def apis_discover():
-    return render_template('api_discover.html')
+    apis = db.query_view('apis', 'public')
+    return render_template('api_discover.html', apis=apis)
 
 @api_bp.route('/apis')
 def apis_my():
