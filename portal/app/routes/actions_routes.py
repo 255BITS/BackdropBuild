@@ -94,4 +94,3 @@ def actions_link_api_new(id, api_id):
 @actions_bp.route('/api/options')
 def actions_link_api_options():
     return render_template('actions_link_api_options.html')
-
