@@ -107,7 +107,7 @@ class DB:
                                 } 
                             }"""
         public = """function(doc) { 
-                                if (doc.type === 'API' && doc.visibility === 'Public') { 
+                                if (doc.type === 'API' && doc.visibility === 'public') { 
                                     emit(doc._id, doc); 
                                 } 
                             }"""

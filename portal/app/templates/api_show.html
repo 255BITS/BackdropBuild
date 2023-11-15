@@ -47,7 +47,7 @@
             <label class="block text-gray-700 text-sm font-bold mb-2">Privacy Policy</label>
             <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{api['privacy_policy']}}<p>
         </div>
-        {% if 'visibility' not in api or api['visibility'] == "Private" %}
+        {% if 'visibility' not in api or api['visibility'] == "private" %}
         <form action="/apis/{{api["_id"]}}/publish" method="post">
             <!-- Button to Add New Action -->
             <div class="flex items-center mb-2 pt-4">

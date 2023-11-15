@@ -71,7 +71,7 @@ def apis_update(id):
 def apis_publish(id):
     api = db.get(id)
     assert_owner(api)
-    api["visibility"]="Public"
+    api["visibility"]="public"
     db.save(api)
     return render_template('api_show.html', api=api)
 
@@ -80,7 +80,7 @@ def apis_unpublish(id):
     api = db.get(id)
     assert_owner(api)
     api = db.get(id)
-    api["visibility"]="Private"
+    api["visibility"]="private"
     db.save(api)
     return render_template('api_show.html', api=api)
 
