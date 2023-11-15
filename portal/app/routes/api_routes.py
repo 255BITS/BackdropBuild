@@ -58,13 +58,14 @@ def apis_update(id):
     api = db.get(id)
     assert_owner(api)
     errors, api_object = parse_api_object(request)
-    api_object["id"]=id
     if errors:
         for k, v in errors.items():
             flash(v, 'error')
         return render_template('api_new.html', errors=errors, api=api_object)
+    for k, v in api_object.items():
+        api[k]=v
 
-    db.save(api_object)
+    saved = db.save(api)
     return render_template('api_show.html', errors={}, api=api_object)
 
 @api_bp.route('/apis/<id>/publish', methods=["POST"])
@@ -88,4 +89,4 @@ def apis_unpublish(id):
 def apis_show_usage(id):
     api = db.get(id)
     assert_owner(api)
-    return render_template('api_usage.html')
+    return render_template('api_usage.html', api=api)

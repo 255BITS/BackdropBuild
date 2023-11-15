@@ -1,4 +1,5 @@
 import couchdb
+import traceback
 from typing import List, Union
 from shared import utils
 
@@ -162,6 +163,7 @@ class DB:
             doc_id, doc_rev = self.db.save(defaults | data)
             return self.db[doc_id]
         except couchdb.http.ResourceConflict:
+            traceback.print_exc()
             # Handle conflict if necessary
             return None
 
