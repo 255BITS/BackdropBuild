@@ -59,6 +59,11 @@ def apis_update(id):
     assert_owner(api)
     errors, api_object = parse_api_object(request)
     api_object["id"]=id
+    if errors:
+        for k, v in errors.items():
+            flash(v, 'error')
+        return render_template('api_new.html', errors=errors, api=api_object)
+
     db.save(api_object)
     return render_template('api_show.html', errors={}, api=api_object)
 

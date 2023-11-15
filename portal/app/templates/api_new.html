@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
             <div class="mb-4">
                 <label for="privacyPolicy" class="block {% if 'privacyPolicy' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-gray-700 text-sm font-bold mb-2">Privacy Policy</label>
-                <textarea name="privacyPolicy" id="privacyPolicy" value="{{api['privacyPolicy']}}" class="shadow appearance-none w-full border rounded text-gray-700 focus:outline-none focus:shadow-outline"></textarea>
+                <textarea name="privacyPolicy" id="privacyPolicy" class="p-2 shadow appearance-none w-full border rounded text-gray-700 focus:outline-none focus:shadow-outline">{{api['privacyPolicy']}}</textarea>
             </div>
             {% if "_id" in api %}
                 <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">

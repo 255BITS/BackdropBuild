@@ -9,6 +9,7 @@ def parse_api_object(request):
     method = request.form.get("method", "")
     url = request.form.get("url", "")
     shortDescription = request.form.get("shortDescription", "")
+    privacyPolicy = request.form.get("privacyPolicy", "")
 
     # Validation checks
     if not name:
@@ -35,6 +36,8 @@ def parse_api_object(request):
         # Check if both keys exist in the form data
         if param_type_key in request.form and param_input_key in request.form:
             params.append([request.form[param_type_key], request.form[param_input_key]])
+            if request.form[param_input_key] == '':
+                errors[param_input_key] = "Parameter "+str(i)+" must have a name"
             i += 1
         else:
             break
@@ -46,7 +49,8 @@ def parse_api_object(request):
         "url": url,
         "shortDescription": shortDescription,
         "type": "API",
-        "params": params
+        "params": params,
+        "privacyPolicy": privacyPolicy
     }
 
     return errors, api_object
