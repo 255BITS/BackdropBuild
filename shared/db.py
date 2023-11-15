@@ -1,6 +1,6 @@
 import couchdb
 from typing import List, Union
-from shared.utils import get_current_datetime_iso8601
+from shared import utils
 
 class DB:
     def __init__(self, couch_credentials):
@@ -83,7 +83,6 @@ class DB:
                                 }
                             }"""
 
-
         self.create_view_ddoc("actions", "by_user", by_user)
 
     def create_auth_views(self):
@@ -153,7 +152,7 @@ class DB:
 
     def save(self, data):
         try:
-            current_datetime = get_current_datetime_iso8601()
+            current_datetime = utils.get_current_datetime_iso8601()
             defaults = {
                 "created_at": current_datetime,
                 "updated_at": current_datetime

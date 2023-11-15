@@ -1,5 +1,7 @@
 from passlib.hash import bcrypt
+from shared import utils
 from shared.couch import db
+import arrow
 import secrets
 import string
 
@@ -19,8 +21,15 @@ class ActionsService:
     def __init__(self, user):
         self.user = user
 
+    def add_computed_values(self, actions):
+        computed = {
+            "last_updated" : arrow.get(actions["updated_at"]).humanize()
+        }
+        return computed | actions
+
     def list(self):
         actions_list = db.get_actions_for_user(self.user["_id"])
+        actions_list = [self.add_computed_values(actions) for actions in actions_list]
         return actions_list
 
     def create(self, name):
