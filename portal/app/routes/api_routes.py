@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, request, jsonify, url_for, flash, g
 from shared.couch import db
 from app.services.api_service import parse_api_object
-from app.services.auth_service import assert_creator, assert_logged_in
+from app.services.auth_service import assert_owner, assert_logged_in
 
 from flask import Blueprint
 api_bp = Blueprint('apis', __name__)
@@ -30,7 +30,7 @@ def apis_create():
         return jsonify({"error": "Content type must be application/x-www-form-urlencoded"}), 400
 
     errors, api_object = parse_api_object(request)
-    api_object["creator_id"] = g.current_user.id
+    api_object["user_id"] = g.current_user.id
     # If there are errors, render the api_new template with errors
     if errors:
         for k, v in errors.items():
@@ -50,13 +50,13 @@ def apis_show(id):
 @api_bp.route('/apis/<id>/edit', methods=["GET"])
 def apis_edit(id):
     api = db.get(id)
-    assert_creator(api)
+    assert_owner(api)
     return render_template('api_new.html', errors={}, api=api)
 
 @api_bp.route('/apis/<id>/update', methods=["POST"])
 def apis_update(id):
     api = db.get(id)
-    assert_creator(api)
+    assert_owner(api)
     errors, api_object = parse_api_object(request)
     api_object["id"]=id
     db.save(api_object)
@@ -65,7 +65,7 @@ def apis_update(id):
 @api_bp.route('/apis/<id>/publish', methods=["POST"])
 def apis_publish(id):
     api = db.get(id)
-    assert_creator(api)
+    assert_owner(api)
     api["visibility"]="Public"
     db.save(api)
     return render_template('api_show.html', api=api)
@@ -73,7 +73,7 @@ def apis_publish(id):
 @api_bp.route('/apis/<id>/unpublish', methods=["POST"])
 def apis_unpublish(id):
     api = db.get(id)
-    assert_creator(api)
+    assert_owner(api)
     api = db.get(id)
     api["visibility"]="Private"
     db.save(api)
@@ -82,5 +82,5 @@ def apis_unpublish(id):
 @api_bp.route('/apis/<id>/usage')
 def apis_show_usage(id):
     api = db.get(id)
-    assert_creator(api)
+    assert_owner(api)
     return render_template('api_usage.html')

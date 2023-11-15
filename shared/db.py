@@ -86,7 +86,7 @@ class DB:
                             }"""
         by_user = """function(doc) { 
                                 if (doc.type === 'API') { 
-                                    emit(doc.creator_id, doc); 
+                                    emit(doc.user_id, doc); 
                                 } 
                             }"""
 
