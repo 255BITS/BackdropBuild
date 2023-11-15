@@ -13,7 +13,9 @@ class DB:
         self.create_views()
 
     def create_views(self):
+        self.create_actions_views()
         self.create_api_views()
+        self.create_auth_views()
         self.create_user_views()
 
     def insert(self, data):
@@ -69,6 +71,31 @@ class DB:
         # Update the design document in the database if needed
         if update_needed:
             self.db[design_doc_id] = current_design_doc
+
+    def create_actions_views(self):
+        """
+        Create views related to actions.
+        """
+        by_user = """function(doc) {
+                                if (doc.type === 'actions') {
+                                    emit(doc.user_id, doc);
+                                }
+                            }"""
+
+
+        self.create_view_ddoc("actions", "by_user", by_user)
+
+    def create_auth_views(self):
+        """
+        Create views related to api keys.
+        """
+        by_actions = """function(doc) {
+                                if (doc.type === 'auth') {
+                                    emit(doc.actions_id, doc);
+                                }
+                            }"""
+
+        self.create_view_ddoc("auths", "by_actions", by_actions)
 
     def create_api_views(self):
         """
@@ -136,10 +163,9 @@ class DB:
         users = self.query_view('users', 'by_email', key=email)
         return users[0] if users else None
 
-    def get_apis_for_actions(self, actions):
+    def get_apis_for_actions(self, actions_id):
         #TODO
         return []
 
-    def get_auths_for_actions(self, actions):
-        #TODO
-        return []
+    def get_auths_for_actions(self, actions_id):
+        return self.query_view('auths', 'by_actions', key=actions_id)

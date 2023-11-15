@@ -20,6 +20,11 @@
             // Optional: Show a tooltip or message that the content was copied!
         }
 
+        function toggleApiKey() {
+          document.querySelectorAll('.toggle-apikey').forEach(element => {
+            element.classList.toggle('hidden');
+          });
+        }
     </script>
 
 {% endblock%}
@@ -50,12 +55,18 @@
             <!-- Authentication Key -->
             <div class="mb-6">
                     <h3 class="text-lg font-semibold mb-2">Authentication</h3>
-                      {%for auth in auths%}
+                      {% for auth in actions.auths %}
                           <div class="grid grid-cols-2 w-2/3"> 
                               <span class="p-4">{{auth["type"]}}</span>
-                              <span class="rounded-lg bg-gray-200 p-4">{{auth["value_encoded"]}}<i class="far fa-eye ml-4"></i><i class="ml-4 far fa-copy"></i></span>
+                              <span class="rounded-lg bg-gray-200 p-4 toggle-apikey font-mono">{{auth.value_encoded}}
+                                <i class="far fa-eye ml-4 cursor-pointer" onclick="toggleApiKey()"></i>
+                                <i class="ml-4 far fa-copy cursor-pointer"></i>
+                              </span>
+                              <span class="rounded-lg bg-gray-200 p-4 hidden toggle-apikey font-mono">{{auth.value}}
+                                <i class="far fa-eye ml-4 cursor-pointer" onclick="toggleApiKey()"></i>
+                                <i class="ml-4 far fa-copy cursor-pointer"></i></span>
                           </div>
-                      {%endfor%}
+                      {% endfor %}
             </div>
 
     <div class="mb-6 relative">
@@ -65,7 +76,7 @@
           <i class="far fa-copy"></i> <!-- This is your Font Awesome Copy Icon -->
         </button>
 
-        <pre class="bg-gray-100 p-4 rounded max-h-64 overflow-y-auto"><code id='openapi-spec'>{
+        <pre class="bg-gray-100 p-4 rounded max-h-64 overflow-y-auto font-mono"><code id='openapi-spec'>{
     "openapi": "3.1.0",
     "info": {
         "title": "Sample API",
@@ -88,7 +99,7 @@
                 <div class="mb-6">
                         <h3 class="text-lg font-semibold mt-4">Privacy Policy</h3>
                         <div class="relative w-2/3">
-                          <input type="text" readonly value="https://gptactionhub.com/privacy_policy/ah323..." class='w-full p-4 border rounded-lg'/>
+                          <input type="text" readonly value="https://gptactionhub.com/privacy_policy/ah323..." class='w-full p-4 border rounded-lg font-mono'/>
                           <button class="absolute top-4 right-2 text-gray-500 hover:text-gray-700">
                             <i class="far fa-copy"></i> <!-- This is your Font Awesome Copy Icon -->
                           </button>

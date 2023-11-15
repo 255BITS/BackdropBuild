@@ -1,5 +1,15 @@
 from passlib.hash import bcrypt
 from shared.couch import db
+import secrets
+import string
+
+def decode_auth(auth):
+    if auth["auth_type"] == "api_key_basic":
+        value = f"{auth['username']}:{auth['password']}"
+        return auth | {
+            "value_encoded": ''.join(['*' for _ in value]),
+            "value": value
+        }
 
 def generate_random_string(length=8):
     alphabet = string.ascii_letters + string.digits
@@ -14,24 +24,24 @@ class ActionsService:
 
     def create(self, name):
         #TODO validate name
-        action = db.save({
-            "user_id": self.user["_id"],
+        actions = db.save({
+            "name": name,
             "type": "actions",
-            "name": name
+            "user_id": self.user["_id"],
         })
         username = generate_random_string()
         password = generate_random_string()
         password_hash = bcrypt.hash(password)
-        action = db.save({
-            "action_id": action["_id"],
-            "user_id": self.user["_id"],
-            "type": "auth",
+        auth = db.save({
+            "actions_id": actions["_id"],
             "auth_type": "api_key_basic",
+            "type": "auth",
+            "user_id": self.user["_id"],
             "username": username,
             "password": password, #TODO encrypt
-            "password_hash": password_hash
+            "password_hash": password_hash,
         })
-        return action
+        return actions
 
     def get(self, id):
         #TODO 404
@@ -39,4 +49,5 @@ class ActionsService:
         actions = db.get(id)
         apis = db.get_apis_for_actions(actions["_id"])
         auths = db.get_auths_for_actions(actions["_id"])
-        return actions | { "apis": apis }
+        auths = [decode_auth(auth) for auth in auths]
+        return actions | { "apis": apis, "auths": auths }
