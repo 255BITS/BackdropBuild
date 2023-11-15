@@ -20,7 +20,8 @@ class ActionsService:
         self.user = user
 
     def list(self):
-        pass
+        actions_list = db.get_actions_for_user(self.user["_id"])
+        return actions_list
 
     def create(self, name):
         #TODO validate name

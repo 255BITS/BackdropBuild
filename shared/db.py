@@ -163,6 +163,9 @@ class DB:
         users = self.query_view('users', 'by_email', key=email)
         return users[0] if users else None
 
+    def get_actions_for_user(self, user_id):
+        return self.query_view('actions', 'by_user', key=user_id)
+
     def get_apis_for_actions(self, actions_id):
         #TODO
         return []

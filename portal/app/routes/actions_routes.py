@@ -7,12 +7,15 @@ actions_bp = Blueprint('actions', __name__)
 def actions_service():
     return ActionsService(g.current_user)
 
+@actions_bp.before_request
+def before_request():
+    assert_logged_in()
+
 @actions_bp.route('/dashboard')
 def dashboard():
-    assert_logged_in()
     actions_list = [
         {
-            "id": "abcd",
+            "_id": "abcd",
             "name": "Calculator",
             "apis": 2,
             "gpts": 4,
@@ -21,7 +24,7 @@ def dashboard():
             "sparkline_data": "0,48 60,24 120,36 180,40 240,24 300,0"
         },
         {
-            "id": "efgh",
+            "_id": "efgh",
             "name": "PDF tools",
             "apis": 0,
             "gpts": 0,
@@ -30,6 +33,7 @@ def dashboard():
             "sparkline_data": "0,48 60,48 120,48 180,48 240,48 300,48"
         },
     ]
+    actions_list += actions_service().list() #TODO pagination, order
     return render_template('dashboard.html', actions_list=actions_list)
 
 @actions_bp.route('/actions/new')
@@ -44,9 +48,9 @@ def create():
 
 @actions_bp.route('/actions/<id>')
 def show(id):
-    return render_template('actions_show.html', actions=["Action 1", "Action 2"], auths=[{"type": "Basic", "value":"b#gv7IiKP#bj9lXO", "value_encoded": "**************"}])
+    actions = actions_service().get(id)
+    return render_template('actions_show.html', actions=actions)
 
 @actions_bp.route('/actions/<id>/edit')
 def edit(id):
-    actions = actions_service().get(id)
-    return render_template('actions_show.html', actions=actions)
+    return redirect(url_for('actions.show', id=id))
