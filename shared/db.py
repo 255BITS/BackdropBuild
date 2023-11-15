@@ -1,5 +1,6 @@
 import couchdb
 from typing import List, Union
+from shared.utils import get_current_datetime_iso8601
 
 class DB:
     def __init__(self, couch_credentials):
@@ -152,7 +153,14 @@ class DB:
 
     def save(self, data):
         try:
-            doc_id, doc_rev = self.db.save(data)
+            current_datetime = get_current_datetime_iso8601()
+            defaults = {
+                "created_at": current_datetime,
+                "updated_at": current_datetime
+            }
+            if "updated_at" in data:
+                data["updated_at"] = current_datetime
+            doc_id, doc_rev = self.db.save(defaults | data)
             return self.db[doc_id]
         except couchdb.http.ResourceConflict:
             # Handle conflict if necessary
