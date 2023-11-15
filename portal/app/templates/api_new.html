@@ -1,12 +1,70 @@
 {% extends 'base_app.html' %}
 
 {% block maincontent %}
+<script>
+function warnOnParameterChange() {
+    document.getElementById("changeWarning").style.display='block';
+}
+document.addEventListener('DOMContentLoaded', function () {
+    const paramsContainer = document.getElementById('paramsContainer'); // ID of the div containing the rows
+    const addButton = document.getElementById('addParamButton'); // ID of the 'Add Parameter' button
+
+    // Function to update indexes
+    function updateIndexes() {
+        const allRows = paramsContainer.querySelectorAll('.param-row');
+        allRows.forEach((row, index) => {
+            row.querySelector('select').id = `param${index}-type`;
+            row.querySelector('select').name = `param${index}-type`;
+            row.querySelector('input').id = `param${index}-input`;
+            row.querySelector('input').name = `param${index}-input`;
+        });
+        warnOnParameterChange();
+    }
+
+    // Function to add a new row
+    function addParam() {
+        const newIndex = paramsContainer.querySelectorAll('.param-row').length;
+        const newRow = document.createElement('div');
+        newRow.classList.add('flex', 'items-center', 'mb-2', 'border-t', 'pt-4', 'param-row');
+        newRow.innerHTML = `
+          <i class="fas fa-trash text-red-500 hover:text-red-700 mr-4 ml-4 cursor-pointer"></i>
+          <select id="param${newIndex}-type" name="param${newIndex}-type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
+              <option value="Integer">Integer</option>
+              <option value="Float">Float</option>
+              <option value="String" selected>String</option>
+              <option value="Credential">Credential</option>
+          </select>
+          <div class="flex-grow">
+              <input type="text" id="param${newIndex}-input" name="param${newIndex}-input" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="parameter">
+          </div>
+       `;
+        const addParamButton = document.getElementById('addParamButton'); // Or use a different selector if your button is identified differently
+        paramsContainer.insertBefore(newRow, addParamButton.parentNode);
+        updateIndexes(); // Update indexes each time a new row is added
+    }
+
+    // Function to delete a row
+    function deleteParam(event) {
+        if (event.target.classList.contains('fa-trash')) {
+            const row = event.target.closest('div');
+            paramsContainer.removeChild(row);
+            updateIndexes(); // Update indexes after deletion
+        }
+    }
+
+    // Event listeners
+    addButton.addEventListener('click', addParam);
+    paramsContainer.addEventListener('click', deleteParam);
+});
+</script>
 <div class="container mx-auto px-6 py-8">
     <div class="bg-white shadow-lg rounded-lg p-6 grid max-w-3xl">
         {% if "_id" in api %}
           <h2 class="text-2xl font-semibold mb-4">Update API</h2>
+          <div id='changeWarning' class='p-4 mb-4 bg-yellow-100 border text-yellow-700 border-yellow-500' style='display: none'>Warning: Changing parameters could break existing Actions</div>
         {% else %}
           <h2 class="text-2xl font-semibold mb-4">Create API</h2>
+          <div id='changeWarning'></div>
         {% endif %}
         <form {% if "_id" in api %} action="/apis/{{api["_id"]}}/update" {% else %} action="/apis/create" {% endif %} method="POST">
             <div class="mb-4">
@@ -36,13 +94,13 @@
                 <label for="shortDescription" class="block {% if 'shortDescription' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-gray-700 text-md font-bold mb-2">Short Description</label>
                 <input type="text" id="shortDescription" name="shortDescription" value="{{api['shortDescription']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Convert latex to pdf documents">
             </div>
-            <div class="mb-8">
+            <div id='paramsContainer' class="mb-8">
                 <label for="params" class="block text-gray-700 text-lg font-semibold mb-2">
                     Parameters<!--<a href="#" class="text-blue-600 text-sm ml-1">(?)</a>-->
                 </label>
                 {% if "params" not in api %}
-                  <div class="flex items-center mb-2 border-t pt-4">
-                      <i class="fas fa-trash mr-4 ml-4"></i>
+                  <div class="flex items-center mb-2 border-t pt-4 param-row">
+                      <i class="fas fa-trash text-red-500 hover:text-red-700 mr-4 ml-4 cursor-pointer"></i>
                       <select id="param0-type" name="param0-type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
                           <option value="Integer">Integer</option>
                           <option value="Float">Float</option>
@@ -53,8 +111,8 @@
                           <input type="text" id="param0-input" name="param0-input" placeholder="API_KEY" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                       </div>
                   </div>
-                  <div class="flex items-center mb-2 border-t pt-4">
-                      <i class="fas fa-trash mr-4 ml-4"></i>
+                  <div class="flex items-center mb-2 border-t pt-4 param-row">
+                      <i class="fas fa-trash text-red-500 hover:text-red-700 mr-4 ml-4 cursor-pointer"></i>
                       <select id="param1-type" name="param1-type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
                           <option value="Integer">Integer</option>
                           <option value="Float">Float</option>
@@ -68,25 +126,25 @@
                 {% else %}
 
                 {% for param in api['params'] %}
-                <div class="flex items-center mb-2 border-t pt-4">
-                    <i class="fas fa-trash mr-4 ml-4"></i>
-                    <select id="param{{ loop.index0 }}-type" name="param{{ loop.index0 }}-type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
+                <div class="flex items-center mb-2 border-t pt-4 param-row">
+                    <i class="fas fa-trash text-red-500 hover:text-red-700 mr-4 ml-4 cursor-pointer"></i>
+                    <select id="param{{ loop.index0 }}-type" name="param{{ loop.index0 }}-type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4" onchange="javascript:warnOnParameterChange()">
                         <option value="Integer" {% if param[0] == "Integer" %}selected{% endif %}>Integer</option>
                         <option value="Float" {% if param[0] == "Float" %}selected{% endif %}>Float</option>
                         <option value="String" {% if param[0] == "String" %}selected{% endif %}>String</option>
                         <option value="Credential" {% if param[0] == "Credential" %}selected{% endif %}>Credential</option>
                     </select>
                     <div class="flex-grow">
-                        <input type="text" id="param{{ loop.index0 }}-input" name="param{{ loop.index0 }}-input" placeholder="{{ param[1] }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ param[1] }}">
+                        <input oninput="warnOnParameterChange()" type="text" id="param{{ loop.index0 }}-input" name="param{{ loop.index0 }}-input" placeholder="{{ param[1] }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ param[1] }}">
                     </div>
                 </div>
                 {% endfor %}
+                {% endif %}
                 <div class="flex justify-end">
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                    <button id="addParamButton" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                         <i class="fas fa-plus"></i> Parameter
                     </button>
                 </div>
-            {% endif %}
             </div>
             <div class="mb-4">
                 <label for="privacyPolicy" class="block {% if 'privacyPolicy' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-gray-700 text-sm font-bold mb-2">Privacy Policy</label>
