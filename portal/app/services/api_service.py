@@ -5,20 +5,20 @@ def parse_api_object(request):
 
     # Extract the fixed attributes
     name = request.form.get("name", "")
-    defaultFunctionName = request.form.get("defaultFunctionName", "")
+    default_function_name = request.form.get("default_function_name", "")
     method = request.form.get("method", "")
     url = request.form.get("url", "")
-    shortDescription = request.form.get("shortDescription", "")
-    privacyPolicy = request.form.get("privacyPolicy", "")
+    description = request.form.get("description", "")
+    privacy_policy = request.form.get("privacy_policy", "")
 
     # Validation checks
     if not name:
         errors['name'] = 'Name cannot be empty.'
     # TODO: Check for name uniqueness in the database or data store
-    if not shortDescription:
-        errors['shortDescription'] = 'Short description cannot be empty.'
-    if not defaultFunctionName:
-        errors['defaultFunctionName'] = 'Default function name cannot be empty.'
+    if not description:
+        errors['description'] = 'Short description cannot be empty.'
+    if not default_function_name:
+        errors['default_function_name'] = 'Default function name cannot be empty.'
     if not url:
         errors['url'] = 'URL cannot be empty.'
     elif not re.match(r'^https://', url):
@@ -44,13 +44,13 @@ def parse_api_object(request):
 
     api_object = {
         "name": name,
-        "defaultFunctionName": defaultFunctionName,
+        "default_function_name": default_function_name,
         "method": method,
         "url": url,
-        "shortDescription": shortDescription,
+        "description": description,
         "type": "API",
         "params": params,
-        "privacyPolicy": privacyPolicy
+        "privacy_policy": privacy_policy
     }
 
     return errors, api_object

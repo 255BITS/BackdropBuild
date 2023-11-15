@@ -8,7 +8,7 @@
         </div>
         <div class="mb-4">
             <label for="name" class="block text-gray-700 text-md font-bold mb-2">Default Function Name</label>
-            <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{api["defaultFunctionName"]}}</p>
+            <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{api["default_function_name"]}}</p>
         </div>
         <div class="mb-8">
             <label for="url" class="block text-gray-700 text-md font-bold mb-2">URL </label>
@@ -23,7 +23,7 @@
         </div>
         <div class="mb-4">
             <label class="block text-gray-700 text-md font-bold mb-2">Short Description </label>
-            <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{api["shortDescription"]}}</p>
+            <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{api["description"]}}</p>
         </div>
         <div class="mb-8">
             <label for="params" class="block text-gray-700 text-lg font-semibold mb-2">
@@ -45,7 +45,7 @@
         </div>
         <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2">Privacy Policy</label>
-            <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{api['privacyPolicy']}}<p>
+            <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{api['privacy_policy']}}<p>
         </div>
         {% if 'visibility' not in api or api['visibility'] == "Private" %}
         <form action="/apis/{{api["_id"]}}/publish" method="post">

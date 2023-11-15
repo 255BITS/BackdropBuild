@@ -72,8 +72,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 <input type="text" id="name" name="name" placeholder="latex2pdf" value="{{api['name']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-4">
-                <label for="name" class="block {% if 'defaultFunctionName' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-md font-bold mb-2">Default Function Name</label>
-                <input type="text" id="defaultFunctionName" name="defaultFunctionName" value="{{api['defaultFunctionName']}}" placeholder="createPdfFromLatex" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <label for="name" class="block {% if 'default_function_name' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-md font-bold mb-2">Default Function Name</label>
+                <input type="text" id="default_function_name" name="default_function_name" value="{{api['default_function_name']}}" placeholder="createPdfFromLatex" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-8">
                 <label for="url" class="block {% if 'url' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-md font-bold mb-2">URL</label>
@@ -91,8 +91,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 </div>
             </div>
             <div class="mb-4">
-                <label for="shortDescription" class="block {% if 'shortDescription' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-gray-700 text-md font-bold mb-2">Short Description</label>
-                <input type="text" id="shortDescription" name="shortDescription" value="{{api['shortDescription']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Convert latex to pdf documents">
+                <label for="description" class="block {% if 'description' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-gray-700 text-md font-bold mb-2">Short Description</label>
+                <input type="text" id="description" name="description" value="{{api['description']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Convert latex to pdf documents">
             </div>
             <div id='paramsContainer' class="mb-8">
                 <label for="params" class="block text-gray-700 text-lg font-semibold mb-2">
@@ -147,8 +147,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 </div>
             </div>
             <div class="mb-4">
-                <label for="privacyPolicy" class="block {% if 'privacyPolicy' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-gray-700 text-sm font-bold mb-2">Privacy Policy</label>
-                <textarea name="privacyPolicy" id="privacyPolicy" class="p-2 shadow appearance-none w-full border rounded text-gray-700 focus:outline-none focus:shadow-outline">{{api['privacyPolicy']}}</textarea>
+                <label for="privacy_policy" class="block {% if 'privacy_policy' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-gray-700 text-sm font-bold mb-2">Privacy Policy</label>
+                <textarea name="privacy_policy" id="privacy_policy" class="p-2 shadow appearance-none w-full border rounded text-gray-700 focus:outline-none focus:shadow-outline">{{api['privacy_policy']}}</textarea>
             </div>
             {% if "_id" in api %}
                 <button type="submit" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
