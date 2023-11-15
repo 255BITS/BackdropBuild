@@ -137,4 +137,9 @@ class DB:
         return users[0] if users else None
 
     def get_apis_for_actions(self, actions):
+        #TODO
+        return []
+
+    def get_auths_for_actions(self, actions):
+        #TODO
         return []
