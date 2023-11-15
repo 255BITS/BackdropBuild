@@ -10,15 +10,15 @@
         {% endif %}
         <form {% if "_id" in api %} action="/apis/{{api["_id"]}}/update" {% else %} action="/apis/create" {% endif %} method="POST">
             <div class="mb-4">
-                <label for="name" class="block text-gray-700 text-md font-bold mb-2">Name</label>
+                <label for="name" class="block {% if 'name' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-md font-bold mb-2">Name</label>
                 <input type="text" id="name" name="name" placeholder="latex2pdf" value="{{api['name']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-4">
-                <label for="name" class="block text-gray-700 text-md font-bold mb-2">Default Function Name</label>
+                <label for="name" class="block {% if 'defaultFunctionName' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-md font-bold mb-2">Default Function Name</label>
                 <input type="text" id="defaultFunctionName" name="defaultFunctionName" value="{{api['defaultFunctionName']}}" placeholder="createPdfFromLatex" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-8">
-                <label for="url" class="block text-gray-700 text-md font-bold mb-2">URL</label>
+                <label for="url" class="block {% if 'url' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-md font-bold mb-2">URL</label>
                 <div class="flex items-center mb-2">
                     <select id="method" name="method" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                         <option value="GET">GET</option>
@@ -33,7 +33,7 @@
                 </div>
             </div>
             <div class="mb-4">
-                <label for="shortDescription" class="block text-gray-700 text-md font-bold mb-2">Short Description</label>
+                <label for="shortDescription" class="block {% if 'shortDescription' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-gray-700 text-md font-bold mb-2">Short Description</label>
                 <input type="text" id="shortDescription" name="shortDescription" value="{{api['shortDescription']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Convert latex to pdf documents">
             </div>
             <div class="mb-8">
@@ -89,7 +89,7 @@
             {% endif %}
             </div>
             <div class="mb-4">
-                <label for="privacyPolicy" class="block text-gray-700 text-sm font-bold mb-2">Privacy Policy</label>
+                <label for="privacyPolicy" class="block {% if 'privacyPolicy' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-gray-700 text-sm font-bold mb-2">Privacy Policy</label>
                 <textarea name="privacyPolicy" id="privacyPolicy" value="{{api['privacyPolicy']}}" class="shadow appearance-none w-full border rounded text-gray-700 focus:outline-none focus:shadow-outline"></textarea>
             </div>
             {% if "_id" in api %}

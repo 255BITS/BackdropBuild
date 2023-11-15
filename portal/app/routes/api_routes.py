@@ -33,7 +33,9 @@ def apis_create():
     api_object["creator_id"] = g.current_user.id
     # If there are errors, render the api_new template with errors
     if errors:
-        return render_template('api_new.html', errors=errors, api={"name":name, "defaultFunctionName":defaultFunctionName, "method":method, "url":url, "shortDescription":shortDescription, "params":params})
+        for k, v in errors.items():
+            flash(v, 'error')
+        return render_template('api_new.html', errors=errors, api=api_object)
     new_api_object = db.save(api_object)
 
     # Add your logic here to handle the attributes and 'params' list
@@ -49,7 +51,7 @@ def apis_show(id):
 def apis_edit(id):
     api = db.get(id)
     assert_creator(api)
-    return render_template('api_new.html', errors=[], api=api)
+    return render_template('api_new.html', errors={}, api=api)
 
 @api_bp.route('/apis/<id>/update', methods=["POST"])
 def apis_update(id):
@@ -58,7 +60,7 @@ def apis_update(id):
     errors, api_object = parse_api_object(request)
     api_object["id"]=id
     db.save(api_object)
-    return render_template('api_show.html', errors=[], api=api_object)
+    return render_template('api_show.html', errors={}, api=api_object)
 
 @api_bp.route('/apis/<id>/publish', methods=["POST"])
 def apis_publish(id):

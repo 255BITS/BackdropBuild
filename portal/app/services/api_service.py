@@ -16,6 +16,8 @@ def parse_api_object(request):
     # TODO: Check for name uniqueness in the database or data store
     if not shortDescription:
         errors['shortDescription'] = 'Short description cannot be empty.'
+    if not defaultFunctionName:
+        errors['defaultFunctionName'] = 'Default function name cannot be empty.'
     if not url:
         errors['url'] = 'URL cannot be empty.'
     elif not re.match(r'^https://', url):
