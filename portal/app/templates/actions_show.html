@@ -31,7 +31,7 @@
 
 {% block maincontent %}
 <div class="container mx-auto px-6 py-8">
-        <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
+        <div class="bg-white shadow-lg rounded-lg p-6 mb-6 max-w-3xl">
                 <h2 class="text-2xl font-semibold mb-4">Actions Name
                 <i class="fas fa-edit"></i>
                 </h2>
@@ -56,8 +56,8 @@
             <div class="mb-6">
                     <h3 class="text-lg font-semibold mb-2">Authentication</h3>
                       {% for auth in actions.auths %}
-                          <div class="grid grid-cols-2 w-2/3"> 
-                              <span class="p-4">{{auth["type"]}}</span>
+                          <div class="grid grid-cols-2 w-full">
+                              <span class="p-4">{{auth["auth_type"]}}</span>
                               <span class="rounded-lg bg-gray-200 p-4 toggle-apikey font-mono">{{auth.value_encoded}}
                                 <i class="far fa-eye ml-4 cursor-pointer" onclick="toggleApiKey()"></i>
                                 <i class="ml-4 far fa-copy cursor-pointer"></i>
@@ -70,44 +70,22 @@
             </div>
 
     <div class="mb-6 relative">
-      <h3 class="text-lg font-semibold mb-2">OpenAPI Specification</h3>
-      <div class="relative w-2/3">
-        <button onclick="copyToClipboard()" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
-          <i class="far fa-copy"></i> <!-- This is your Font Awesome Copy Icon -->
-        </button>
-
-        <pre class="bg-gray-100 p-4 rounded max-h-64 overflow-y-auto font-mono"><code id='openapi-spec'>{
-    "openapi": "3.1.0",
-    "info": {
-        "title": "Sample API",
-        "version": "0.1.0"
-    },
-    "paths": {
-        "/path": {
-            "get": {
-                "summary": "Your GET endpoint",
-                "responses": {
-                    "200": {
-                        "description": "A successful response."
-                    }
-                }
-            }
-        }
-    }
-}</code></pre>
-                </div>
-                <div class="mb-6">
-                        <h3 class="text-lg font-semibold mt-4">Privacy Policy</h3>
-                        <div class="relative w-2/3">
-                          <input type="text" readonly value="https://gptactionhub.com/privacy_policy/ah323..." class='w-full p-4 border rounded-lg font-mono'/>
-                          <button class="absolute top-4 right-2 text-gray-500 hover:text-gray-700">
-                            <i class="far fa-copy"></i> <!-- This is your Font Awesome Copy Icon -->
-                          </button>
-                        </div>
-
-
-                </div>
-
+        <h3 class="text-lg font-semibold mb-2">OpenAPI Specification URL</h3>
+        <div class="relative w-full">
+            <input type="text" readonly value="https://gptactionhub.com/openapi/ah323..." class='w-full p-4 border rounded-lg font-mono'/>
+            <button class="absolute top-4 right-2 text-gray-500 hover:text-gray-700">
+                <i class="far fa-copy"></i>
+            </button>
         </div>
+        <div class="mb-6">
+            <h3 class="text-lg font-semibold mt-4">Privacy Policy</h3>
+            <div class="relative w-full">
+                <input type="text" readonly value="https://gptactionhub.com/privacy_policy/ah323..." class='w-full p-4 border rounded-lg font-mono'/>
+                <button class="absolute top-4 right-2 text-gray-500 hover:text-gray-700">
+                    <i class="far fa-copy"></i>
+              </button>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
