@@ -84,9 +84,16 @@ class DB:
                                     emit(doc._id, doc); 
                                 } 
                             }"""
+        by_user = """function(doc) { 
+                                if (doc.type === 'API') { 
+                                    emit(doc.creator_id, doc); 
+                                } 
+                            }"""
+
 
         self.create_view_ddoc("apis", "count", map_count, reduce_func="_count")
         self.create_view_ddoc("apis", "public", public)
+        self.create_view_ddoc("apis", "by_user", by_user)
 
     def create_user_views(self):
         map_users_by_email = """function(doc) {

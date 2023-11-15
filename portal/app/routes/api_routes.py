@@ -1,6 +1,7 @@
-from flask import Flask, render_template, redirect, request, jsonify, url_for, flash
+from flask import Flask, render_template, redirect, request, jsonify, url_for, flash, g
 from shared.couch import db
 from app.services.api_service import parse_api_object
+from app.services.auth_service import assert_creator, assert_logged_in
 
 from flask import Blueprint
 api_bp = Blueprint('apis', __name__)
@@ -12,19 +13,24 @@ def apis_discover():
 
 @api_bp.route('/apis')
 def apis_my():
-    return render_template('api_list.html')
+    assert_logged_in()
+    apis = db.query_view('apis', 'by_user', key=g.current_user.id)
+    return render_template('api_list.html', apis=apis)
 
 @api_bp.route('/apis/new')
 def apis_new():
+    assert_logged_in()
     return render_template('api_new.html', errors={}, api={})
 
 @api_bp.route('/apis/create', methods=["POST"])
 def apis_create():
+    assert_logged_in()
     # Check if request content type is form data
     if request.content_type != 'application/x-www-form-urlencoded':
         return jsonify({"error": "Content type must be application/x-www-form-urlencoded"}), 400
 
     errors, api_object = parse_api_object(request)
+    api_object["creator_id"] = g.current_user.id
     # If there are errors, render the api_new template with errors
     if errors:
         return render_template('api_new.html', errors=errors, api={"name":name, "defaultFunctionName":defaultFunctionName, "method":method, "url":url, "shortDescription":shortDescription, "params":params})
@@ -35,19 +41,20 @@ def apis_create():
 
 @api_bp.route('/apis/<id>', methods=["GET"])
 def apis_show(id):
-    # TODO security
+    assert_logged_in()
     api = db.get(id)
-    return render_template('api_show.html', api=api)
+    return render_template('api_show.html', api=api, current_user=g.current_user)
 
 @api_bp.route('/apis/<id>/edit', methods=["GET"])
 def apis_edit(id):
-    # TODO security
     api = db.get(id)
+    assert_creator(api)
     return render_template('api_new.html', errors=[], api=api)
 
 @api_bp.route('/apis/<id>/update', methods=["POST"])
 def apis_update(id):
-    # TODO security
+    api = db.get(id)
+    assert_creator(api)
     errors, api_object = parse_api_object(request)
     api_object["id"]=id
     db.save(api_object)
@@ -55,24 +62,23 @@ def apis_update(id):
 
 @api_bp.route('/apis/<id>/publish', methods=["POST"])
 def apis_publish(id):
-    # TODO security
     api = db.get(id)
+    assert_creator(api)
     api["visibility"]="Public"
     db.save(api)
     return render_template('api_show.html', api=api)
 
 @api_bp.route('/apis/<id>/unpublish', methods=["POST"])
 def apis_unpublish(id):
-    # TODO security
+    api = db.get(id)
+    assert_creator(api)
     api = db.get(id)
     api["visibility"]="Private"
     db.save(api)
     return render_template('api_show.html', api=api)
 
-
 @api_bp.route('/apis/<id>/usage')
 def apis_show_usage(id):
-    # TODO security
+    api = db.get(id)
+    assert_creator(api)
     return render_template('api_usage.html')
-
-

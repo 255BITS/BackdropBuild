@@ -23,6 +23,12 @@ def assert_logged_in():
     if g.current_user is None:
         raise UnauthorizedError("You must be logged in to access this page.", "warning")
 
+def assert_creator(doc):
+    if g.current_user is None:
+        raise UnauthorizedError("You must be logged in to access this page.", "warning")
+    if "creator_id" not in doc or doc["creator_id"] != g.current_user.id:
+        raise UnauthorizedError("Document creator must match current user.", "warning")
+
 def authenticate_user(email, password):
     user = db.get_user_by_email(email)
     if user is None:
