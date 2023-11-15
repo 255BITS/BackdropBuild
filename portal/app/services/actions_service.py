@@ -52,3 +52,8 @@ class ActionsService:
         auths = db.get_auths_for_actions(actions["_id"])
         auths = [decode_auth(auth) for auth in auths]
         return actions | { "apis": apis, "auths": auths }
+
+    def get_link_apis(self):
+        apis = db.query_view('apis', 'public')
+        apis += db.query_view('apis', 'by_user', key=self.user['_id'])
+        return apis

@@ -57,24 +57,7 @@ def edit(id):
 
 @actions_bp.route('/actions/<id>/link_api')
 def actions_link_api(id):
-    apis = [
-        {
-            "value": "api1",
-            "description": "Get last message from queue",
-            "author": "apiauthor1",
-            "name": "AWS SNS",
-            "id": "1",
-            "method": "GET"
-        },
-        {
-            "value": "api2",
-            "description": "POST message to queue",
-            "name": "AWS SNS",
-            "author": "apiauthor1",
-            "id": "2",
-            "method": "POST"
-        }
-    ]
+    apis = actions_service().get_link_apis()
     return render_template('actions_link_api.html', apis=apis, id=id)
 
 @actions_bp.route('/actions/<id>/link_api/<api_id>/new')
