@@ -54,3 +54,44 @@ def show(id):
 @actions_bp.route('/actions/<id>/edit')
 def edit(id):
     return redirect(url_for('actions.show', id=id))
+
+@actions_bp.route('/actions/<id>/link_api')
+def actions_link_api(id):
+    apis = [
+        {
+            "value": "api1",
+            "description": "Get last message from queue",
+            "author": "apiauthor1",
+            "name": "AWS SNS",
+            "id": "1",
+            "method": "GET"
+        },
+        {
+            "value": "api2",
+            "description": "POST message to queue",
+            "name": "AWS SNS",
+            "author": "apiauthor1",
+            "id": "2",
+            "method": "POST"
+        }
+    ]
+    return render_template('actions_link_api.html', apis=apis, id=id)
+
+@actions_bp.route('/actions/<id>/link_api/<api_id>/new')
+def actions_link_api_new(id, api_id):
+    api = {
+            "default_name": "apiCall",
+            "fields": [
+                {
+                    "api key": "credential",
+                    "bucket": "string",
+                    "message": "string"
+                 }
+            ],
+    }
+    return render_template('actions_link_api_new.html', api=api)
+
+@actions_bp.route('/api/options')
+def actions_link_api_options():
+    return render_template('actions_link_api_options.html')
+
