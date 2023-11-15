@@ -1,5 +1,3 @@
-from flask import Flask, render_template, redirect, request, jsonify, url_for, flash
-import re
 from app import create_app
 
 app = create_app()
