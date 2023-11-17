@@ -49,7 +49,6 @@ def api_link(id):
 
 @actions_bp.post('/actions/<id>/api_link/<api_id>')
 def api_link_add(id, api_id):
-    api_id = request.form.get('api_id')
     actions_service().add_api_link(id, api_id, request.form.to_dict())
     return redirect(url_for("actions.show", id=id))
 
