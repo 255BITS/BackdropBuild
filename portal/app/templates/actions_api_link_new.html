@@ -1,7 +1,7 @@
 <div class="container mx-auto px-6 py-8 bg-gray-50">
-    <form class="space-y-4 bg-white shadow-sm rounded-lg p-4" action="{{url_for("actions.add_api_link", id=actions._id)}}" method="POST">
+    <form class="space-y-4 bg-white shadow-sm rounded-lg p-4" action="{{url_for("actions.api_link_add", id=actions._id, api_id=api._id)}}" method="POST">
         <div>
-            <label for="name" class="block text-sm font-medium text-gray-700">{{actions.name}}</label>
+            <h2 class="block font-medium text-gray-700">{{api.name}}</h2>
         </div>
         {% for param in api.params %}
             <div>

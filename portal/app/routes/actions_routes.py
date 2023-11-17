@@ -42,17 +42,23 @@ def update(id):
     actions_service().update(id, {"name": name})
     return redirect(url_for('actions.show', id=id))
 
-@actions_bp.route('/actions/<id>/link_api')
-def link_api(id):
-    apis = actions_service().get_link_apis()
-    return render_template('actions_link_api.html', apis=apis, id=id)
+@actions_bp.get('/actions/<id>/api_link')
+def api_link(id):
+    apis = actions_service().get_apis()
+    return render_template('actions_api_link.html', apis=apis, id=id)
 
-@actions_bp.route('/actions/<id>/link_api/<api_id>/new')
-def link_api_new(id, api_id):
+@actions_bp.post('/actions/<id>/api_link/<api_id>')
+def api_link_add(id, api_id):
+    api_id = request.form.get('api_id')
+    actions_service().add_api_link(id, api_id, request.form.to_dict())
+    return redirect(url_for("actions.show", id=id))
+
+@actions_bp.route('/actions/<id>/api_link/<api_id>/new')
+def api_link_new(id, api_id):
     api = db.get(api_id)
     actions = actions_service().get(id)
-    return render_template('actions_link_api_new.html', api=api, actions=actions)
+    return render_template('actions_api_link_new.html', api=api, actions=actions)
 
 @actions_bp.route('/api/options')
-def link_api_options():
-    return render_template('actions_link_api_options.html')
+def api_link_options():
+    return render_template('actions_api_link_options.html')

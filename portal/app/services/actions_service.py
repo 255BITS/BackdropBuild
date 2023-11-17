@@ -53,20 +53,32 @@ class ActionsService:
         })
         return actions
 
+    def add_api_link(self, id, api_id, params):
+        actions = self.get(id)
+        if "api_links" not in actions:
+            actions["api_links"] = []
+        actions["api_links"] += [
+            {
+                "api_id": api_id,
+                "params": params
+            }
+        ]
+        return db.save(actions)
+
+
     def get(self, id):
         #TODO 404
         #TODO doc type check
         actions = db.get(id)
-        apis = db.get_apis_for_actions(actions["_id"])
         auths = db.get_auths_for_actions(actions["_id"])
         auths = [decode_auth(auth) for auth in auths]
-        return actions | { "apis": apis, "auths": auths }
+        return actions | { "auths": auths }
 
     def update(self, id, update_dict):
         actions = db.get(id)
-        db.save(actions | update_dict)
+        db.save(actions | update)
 
-    def get_link_apis(self):
+    def get_apis(self):
         apis = db.query_view('apis', 'public')
         apis += db.query_view('apis', 'by_user', key=self.user['_id'])
         return apis

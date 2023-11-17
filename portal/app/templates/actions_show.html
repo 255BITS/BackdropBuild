@@ -16,8 +16,7 @@
             // Remove the temporary textarea
             document.body.removeChild(el);
 
-            $('.copy-notification').fadeIn(400).delay(2000).fadeOut(400);
-            // Optional: Show a tooltip or message that the content was copied!
+            $('.copy-notification').fadeIn(400).delay(2000).fadeOut(400); // Optional: Show a tooltip or message that the content was copied!
         }
 
         function toggleApiKey() {
@@ -51,7 +50,7 @@
             <div class="mb-6">
             <h3 class="text-lg font-semibold mb-2">Available APIs</h3>
             <ul>
-              {% for api in actions.apis %}
+              {% for api in actions.api_links %}
               <li>
                   {{api}}
                   <i class="fas fa-edit ml-2"></i>
@@ -59,7 +58,7 @@
               </li>
               {% endfor %}
             </ul>
-            <form action="{{url_for("actions.link_api", id=actions.id)}}" method="GET">
+            <form action="{{url_for("actions.api_link", id=actions._id)}}" method="GET">
                     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Link API</button>
                 </form>
             </div>
