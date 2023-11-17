@@ -13,7 +13,7 @@ def post_login():
     password = form.get('password')
     user = authenticate_user(email, password)
     login_user(user)
-    return redirect("actions.index")
+    return redirect(url_for("actions.index"))
 
 @auth_bp.get('/login/github')
 def login_github():
