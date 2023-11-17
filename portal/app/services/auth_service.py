@@ -2,6 +2,9 @@ from passlib.hash import bcrypt
 from shared.couch import db
 from flask import session, g, flash, redirect, url_for
 
+GITHUB_CLIENT_SECRET = os.getenv('GITHUB_OAUTH_CONSUMER_SECRET', None)
+GITHUB_CLIENT_ID = os.getenv('GITHUB_OAUTH_CONSUMER_KEY', None)
+
 class AuthError(ValueError):
    def __init__(self, message, level='error'):
        self.message = message
@@ -54,6 +57,21 @@ def load_current_user():
         return db.get(session['user_id'])
     return None
 
+def login_github_user(token):
+    resp = oauth.github.get('user')
+    user_info = resp.json()
+    user = db.get_user_by_email(user_info["email"])
+    if user is None:
+        user = db.save({
+            "email": email,
+            "verified": True,
+            "type": "user",
+            "profile_image" : user_info["avatar_url"],
+            "github": user_info
+        })
+
+    session['user_id'] = user["_id"]
+
 def login_user(user):
     session["user_id"] = user["_id"]
 
@@ -65,6 +83,20 @@ def register_app_error_handlers(app):
     def handle_auth_error(error):
         flash(error.message, error.level)
         return redirect(url_for('auth.login'))
+
+def setup_oauth(app):
+    oauth.init_app(app)
+        oauth.register(
+            name='github',
+            client_id=GITHUB_CLIENT_ID,
+            client_secret=GITHUB_CLIENT_SECRET,
+            access_token_url='https://github.com/login/oauth/access_token',
+            access_token_params=None,
+            authorize_url='https://github.com/login/oauth/authorize',
+            authorize_params=None,
+            api_base_url='https://api.github.com/',
+            client_kwargs={'scope': 'user:email'}
+        )
 
 def validate_password(password):
     #TODO check for good enough password

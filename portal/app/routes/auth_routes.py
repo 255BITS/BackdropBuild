@@ -1,6 +1,10 @@
 from flask import Blueprint, Flask, render_template, redirect, request, url_for, flash, make_response, g
-from app.services.auth_service import validate_password, authenticate_user, create_user, load_current_user, login_user, logout_user, AuthError
+from app.services.auth_service import validate_password, authenticate_user, create_user, load_current_user, login_github, login_user, logout_user, oauth, AuthError
 auth_bp = Blueprint('auth', __name__)
+
+@auth_bp.get('/login')
+def login():
+    return render_template('login.html')
 
 @auth_bp.get('/login')
 def login():
@@ -14,6 +18,24 @@ def post_login():
     user = authenticate_user(email, password)
     login_user(user)
     return redirect("dashboard")
+
+@auth_bp.get('/login/github')
+def login_github():
+    scheme = "http" if request.remote_addr == '127.0.0.1' else "https"
+    redirect_uri = url_for('auth.authorized_github', _external=True, _scheme=scheme)
+    return oauth.github.authorize_redirect(redirect_uri)
+
+@auth_bp.route('/login/github/authorized')
+def login_github_authorized():
+    token = oauth.github.authorize_access_token()
+    if token is None or token.get('access_token') is None:
+        return 'Access denied: reason={} error={}'.format(
+            request.args['error_reason'],
+            request.args['error_description']
+        )
+
+    login_github_user(token)
+    return redirect(url_for('actions.dashboard'))
 
 @auth_bp.post('/logout')
 def logout():
