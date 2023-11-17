@@ -2,11 +2,37 @@
 
 {% block head %}
     {{super()}}
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s;
+        }
+
+        .fade-out {
+            animation: fadeOut 2s;
+        }
+        #copy-notification {
+            z-index: 1000;
+        }
+    </style>
+
     <script>
-        function copyToClipboard() {
+        var fadeOutTimeoutId, hideTimeoutId;
+        function copyToClipboard(event, text) {
+            clearTimeout(fadeOutTimeoutId);
+            clearTimeout(hideTimeoutId);
             // Create a new textarea element and give it the JSON as content
             const el = document.createElement('textarea');
-            el.value = document.getElementById("openapi-spec").innerText;
+            el.value = text;
             document.body.appendChild(el);
 
             // Select the content and copy it to the clipboard
@@ -16,7 +42,31 @@
             // Remove the temporary textarea
             document.body.removeChild(el);
 
-            $('.copy-notification').fadeIn(400).delay(2000).fadeOut(400); // Optional: Show a tooltip or message that the content was copied!
+            var notification = document.getElementById("copy-notification");
+            var x = event.clientX;
+            var y = event.clientY;
+
+            // Set the location of the notification
+            notification.style.left = x + 'px';
+            notification.style.top = y + 'px';
+
+            // Reset the animation
+            notification.classList.remove("fade-in", "fade-out");
+            void notification.offsetWidth;
+
+            // Show the notification
+            notification.classList.add("fade-in");
+            notification.style.display = "block";
+
+            // Schedule the fade-out and hide animations
+            fadeOutTimeoutId = setTimeout(function() {
+                notification.classList.add("fade-out");
+                hideTimeoutId = setTimeout(function() {
+                    notification.style.display = "none";
+                    notification.classList.remove("fade-out");
+                }, 2000); // same as fade-out animation duration
+            }, 1000); // display time before fade-out
+
         }
 
         function toggleApiKey() {
@@ -62,6 +112,7 @@
                     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Link API</button>
                 </form>
             </div>
+            <div id="copy-notification" class="absolute bg-white border border-gray-300 rounded p-2" style="display: none;">Copied!</div>
 
             <!-- Authentication Key -->
             <div class="mb-6">
@@ -71,11 +122,11 @@
                               <span class="p-4">{{auth["auth_type"]}}</span>
                               <span class="rounded-lg bg-gray-200 p-4 toggle-apikey font-mono">{{auth.value_encoded}}
                                 <i class="far fa-eye ml-4 cursor-pointer" onclick="toggleApiKey()"></i>
-                                <i class="ml-4 far fa-copy cursor-pointer"></i>
+                                <i class="ml-4 far fa-copy cursor-pointer" onclick="copyToClipboard(event, '{{auth.value}}')"></i>
                               </span>
                               <span class="rounded-lg bg-gray-200 p-4 hidden toggle-apikey font-mono">{{auth.value}}
                                 <i class="far fa-eye ml-4 cursor-pointer" onclick="toggleApiKey()"></i>
-                                <i class="ml-4 far fa-copy cursor-pointer"></i></span>
+                                <i class="ml-4 far fa-copy cursor-pointer" onclick="copyToClipboard(event, '{{auth.value}}')"></i></span>
                           </div>
                       {% endfor %}
             </div>
@@ -85,7 +136,7 @@
         <div class="relative w-full">
             <input type="text" readonly value="https://gptactionhub.com/openapi/ah323..." class='w-full p-4 border rounded-lg font-mono'/>
             <button class="absolute top-4 right-2 text-gray-500 hover:text-gray-700">
-                <i class="far fa-copy"></i>
+                <i class="far fa-copy" onclick="copyToClipboard(event, 'https://gptactionhub.com/openapi/ah323...')"></i>
             </button>
         </div>
         <div class="mb-6">
@@ -93,7 +144,7 @@
             <div class="relative w-full">
                 <input type="text" readonly value="https://gptactionhub.com/privacy_policy/ah323..." class='w-full p-4 border rounded-lg font-mono'/>
                 <button class="absolute top-4 right-2 text-gray-500 hover:text-gray-700">
-                    <i class="far fa-copy"></i>
+                    <i class="far fa-copy" onclick="copyToClipboard(event, 'https://gptactionhub.com/openapi/ah323...')"></i>
               </button>
             </div>
         </div>
