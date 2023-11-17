@@ -7,16 +7,19 @@
             <div>
                 <label for="{{param[1]}}" class="block text-sm font-medium text-gray-700">{{param[1]}}</label>
                 <div class="grid gap-4 md:grid-cols-2">
-                    {% if param[0] == 'Credential' %}
+                    {% if param[0] == 'credential' %}
                         <div class="flex gap-2 items-center">
-                            <input id="{{param[1]}}" name="{{param[1]}}" type='password' class='mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 border p-2'/>
+                            <input type="hidden" name="params[{{loop.index0}}][type]" value="credential"/>
+                            <input type="hidden" name="params[{{loop.index0}}][name]" value="{{param[1]}}"/>
+                            <input id="params[{{loop.index0}}][value]" name="params[{{loop.index0}}][value]" type='password' class='mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 border p-2'/>
                         </div>
-                    {% elif param[0] == 'String' %}
-                       <select id="{{name}}" name="source" hx-get="/api/options" hx-trigger="change" hx-target="#{{name}}_options" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 border p-2">
-                            <option value="GPT">Set by GPT</option>
-                            <option value="Constant">Constant value</option>
+                    {% elif param[0] == 'string' %}
+                        <select id="params[{{ loop.index0 }}][type]" name="params[{{ loop.index0 }}][type]" hx-get="/api/options?index={{loop.index0}}" hx-trigger="change" hx-target="#{{param[1]}}_options" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 border p-2">
+                            <option value="gpt">Set by GPT</option>
+                            <option value="constant">Constant value</option>
                         </select>
-                        <div id="{{name}}_options" class="mt-1"></div>
+                        <input type="hidden" name="params[{{ loop.index0 }}][name]" value="{{ param[1] }}"/>
+                        <div id="{{param[1]}}_options" class="mt-1"></div>
                     {% else %}
                         <div class="text-sm text-red-500">{{param[0]}} not supported</div>
                     {% endif %}

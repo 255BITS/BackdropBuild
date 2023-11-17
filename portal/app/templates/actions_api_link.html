@@ -18,7 +18,7 @@
 {% block maincontent %}
 <div class="container mx-auto px-6 py-8">
   <div class="max-w">
-    {{macros.breadcrumbs([{"Action Name": "/actions/{{actions._id}}"}, "Link API"])}}
+    {{macros.breadcrumbs([{actions.name: "/actions/" ~ actions._id}, "Link API"])}}
   </div>
   <div class="container mx-auto px-6 py-8">
     <div class="bg-white shadow rounded-lg mb-6 p-4">
@@ -54,7 +54,7 @@
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                 <div class="flex items-center">
                   <div class="ml-3">
-                    <input type="radio" name="api" value="{{api.value}}" hx-get="/actions/{{id}}/api_link/{{api._id}}/new" hx-trigger="change, click" hx-target="#configuration">
+                    <input type="radio" name="api" value="{{api.value}}" hx-get="/actions/{{actions._id}}/api_link/{{api._id}}/new" hx-trigger="change, click" hx-target="#configuration">
                   </div>
                 </div>
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">

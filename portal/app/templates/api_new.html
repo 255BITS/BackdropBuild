@@ -29,10 +29,10 @@ document.addEventListener('DOMContentLoaded', function () {
         newRow.innerHTML = `
           <i class="fas fa-trash text-red-500 hover:text-red-700 mr-4 ml-4 cursor-pointer"></i>
           <select id="param${newIndex}-type" name="param${newIndex}-type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
-              <option value="Integer">Integer</option>
-              <option value="Float">Float</option>
-              <option value="String" selected>String</option>
-              <option value="Credential">Credential</option>
+              <option value="integer">Integer</option>
+              <option value="float">Float</option>
+              <option value="string" selected>String</option>
+              <option value="credential">Credential</option>
           </select>
           <div class="flex-grow">
               <input type="text" id="param${newIndex}-input" name="param${newIndex}-input" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="parameter">
@@ -102,10 +102,10 @@ document.addEventListener('DOMContentLoaded', function () {
                   <div class="flex items-center mb-2 border-t pt-4 param-row">
                       <i class="fas fa-trash text-red-500 hover:text-red-700 mr-4 ml-4 cursor-pointer"></i>
                       <select id="param0-type" name="param0-type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
-                          <option value="Integer">Integer</option>
-                          <option value="Float">Float</option>
-                          <option value="String">String</option>
-                          <option value="Credential" selected>Credential</option>
+                          <option value="integer">Integer</option>
+                          <option value="float">Float</option>
+                          <option value="string">String</option>
+                          <option value="credential" selected>Credential</option>
                       </select>
                       <div class="flex-grow">
                           <input type="text" id="param0-input" name="param0-input" placeholder="API_KEY" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
@@ -114,10 +114,10 @@ document.addEventListener('DOMContentLoaded', function () {
                   <div class="flex items-center mb-2 border-t pt-4 param-row">
                       <i class="fas fa-trash text-red-500 hover:text-red-700 mr-4 ml-4 cursor-pointer"></i>
                       <select id="param1-type" name="param1-type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
-                          <option value="Integer">Integer</option>
-                          <option value="Float">Float</option>
-                          <option value="String" selected>String</option>
-                          <option value="Credential">Credential</option>
+                          <option value="integer">Integer</option>
+                          <option value="float">Float</option>
+                          <option value="string" selected>String</option>
+                          <option value="credential">Credential</option>
                       </select>
                       <div class="flex-grow">
                           <input type="text" id="param1-input" name="param1-input" placeholder="latex" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
@@ -129,10 +129,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="flex items-center mb-2 border-t pt-4 param-row">
                     <i class="fas fa-trash text-red-500 hover:text-red-700 mr-4 ml-4 cursor-pointer"></i>
                     <select id="param{{ loop.index0 }}-type" name="param{{ loop.index0 }}-type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4" onchange="javascript:warnOnParameterChange()">
-                        <option value="Integer" {% if param[0] == "Integer" %}selected{% endif %}>Integer</option>
-                        <option value="Float" {% if param[0] == "Float" %}selected{% endif %}>Float</option>
-                        <option value="String" {% if param[0] == "String" %}selected{% endif %}>String</option>
-                        <option value="Credential" {% if param[0] == "Credential" %}selected{% endif %}>Credential</option>
+                        <option value="integer" {% if param[0] == "integer" %}selected{% endif %}>Integer</option>
+                        <option value="float" {% if param[0] == "float" %}selected{% endif %}>Float</option>
+                        <option value="string" {% if param[0] == "string" %}selected{% endif %}>String</option>
+                        <option value="credential" {% if param[0] == "credential" %}selected{% endif %}>Credential</option>
                     </select>
                     <div class="flex-grow">
                         <input oninput="warnOnParameterChange()" type="text" id="param{{ loop.index0 }}-input" name="param{{ loop.index0 }}-input" placeholder="{{ param[1] }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ param[1] }}">
