@@ -30,6 +30,26 @@ class ActionsService:
     def list(self):
         actions_list = db.get_actions_for_user(self.user["_id"])
         actions_list = [self.add_computed_values(actions) for actions in actions_list]
+        actions_list += [
+            {
+                "_id": "abcd",
+                "name": "Calculator",
+                "apis": 2,
+                "gpts": 4,
+                "uses": 27,
+                "last_updated": "3 hours ago",
+                "sparkline_data": "0,48 60,24 120,36 180,40 240,24 300,0"
+            },
+            {
+                "_id": "efgh",
+                "name": "PDF tools",
+                "apis": 0,
+                "gpts": 0,
+                "uses": 0,
+                "last_updated": "6 days ago",
+                "sparkline_data": "0,48 60,48 120,48 180,48 240,48 300,48"
+            },
+        ]
         return actions_list
 
     def create(self, name):
