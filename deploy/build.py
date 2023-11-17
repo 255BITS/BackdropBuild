@@ -13,6 +13,8 @@ def docker_build_push(service_path, service, ecr, version):
         'linux/arm64', 
         '-t', 
         f'{ecr}/{service}:{version}', 
+        '-f',
+        'portal/Dockerfile',
         '--push', 
         '.'
     ]

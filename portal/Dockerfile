@@ -11,14 +11,15 @@ WORKDIR /app
 RUN mkdir -p /root/.aws
 
 # Install dependencies
-COPY requirements.txt .
+COPY portal/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # If Uvicorn isn't in your requirements.txt, install it explicitly
 RUN pip install gunicorn
 
 # Copy app files into container
-COPY . .
+COPY portal/ .
+COPY shared ./shared
 
 # Command to run the application using Uvicorn
 CMD ["bash", "start.sh"]

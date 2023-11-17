@@ -8,6 +8,10 @@ services:
     - ENV=production
     - 'VIRTUAL_HOST=https://gptactionhub.com'
     - VIRTUAL_HOST_WEIGHT=1
+    - COUCHDB_USER=$COUCHDB_USER
+    - COUCHDB_PASSWORD=$COUCHDB_PASSWORD
+    - COUCHDB_HOST=$COUCHDB_HOST
+    - COUCHDB_DATABASE=$COUCHDB_DATABASE
    deploy:
      replicas: 1
      placement:

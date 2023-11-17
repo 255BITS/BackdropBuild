@@ -50,9 +50,10 @@ async def fetch_api_url_mapping():
         except httpx.RequestError:
             return url_api_lookup_table  # Return current mapping on failure
 
-async def fetch_action_url_mapping():
+async def fetch_action_mapping():
     async with httpx.AsyncClient() as client:
         try:
+            print("Updating action lookup table")
             response = await client.get(MAPPING_ACTION_URL)
             if response.status_code == 200:
                 return response.json()
@@ -65,6 +66,7 @@ async def fetch_action_url_mapping():
 # TODO can we just subscribe to the views?
 async def update_api_lookup_table(breakloop):
     while True:
+        print("Updating api lookup table")
         api_urls = await fetch_api_url_mapping()
         if api_urls:
             url_api_lookup_table.update(api_urls)
@@ -74,9 +76,9 @@ async def update_api_lookup_table(breakloop):
 
 async def update_action_lookup_table(breakloop):
     while True:
-        action_urls = await fetch_action_url_mapping()
-        if action_urls:
-            url_action_lookup_table.update(action_urls)
+        action_info = await fetch_action_mapping()
+        if action_info:
+            url_action_lookup_table.update(action_info)
         if breakloop:
             break
         await asyncio.sleep(60)  # Wait for 1 minute before next update
@@ -114,11 +116,11 @@ async def passthrough(id):
     return jsonify(response_data), response.status_code
 
 #TODO
-#async def shutdown():
-#    print("Shutting down active calls", 'api calls', len(api_call_tasks), 'logs', len(logging_tasks))
-#    all_tasks = logging_tasks.union(api_call_tasks)
-#    while len(all_tasks)>0:
-#        await asyncio.wait(all_tasks)
+async def shutdown():
+    print("Shutting down active calls", 'api calls', len(api_call_tasks), 'logs', len(logging_tasks))
+    all_tasks = logging_tasks.union(api_call_tasks)
+    while len(all_tasks)>0:
+        await asyncio.wait(all_tasks)
 
 @app.before_serving
 async def before_serving():
@@ -127,9 +129,9 @@ async def before_serving():
     await update_api_lookup_table(True)  # Perform initial update of URL lookup table
     await update_action_lookup_table(True)  # Perform initial update of URL lookup table
     # TODO
-    #asyncio.create_task(update_api_lookup_table())  # Start the task to update URL lookup table periodically
-    #asyncio.create_task(update_action_lookup_table())  # Start the task to update URL lookup table periodically
+    asyncio.create_task(update_api_lookup_table(False))  # Start the task to update URL lookup table periodically
+    asyncio.create_task(update_action_lookup_table(False))  # Start the task to update URL lookup table periodically
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=10004)
 
