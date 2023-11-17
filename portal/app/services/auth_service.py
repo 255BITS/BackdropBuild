@@ -1,9 +1,12 @@
+from authlib.integrations.flask_client import OAuth
+from flask import session, g, flash, redirect, url_for
 from passlib.hash import bcrypt
 from shared.couch import db
-from flask import session, g, flash, redirect, url_for
+import os
 
-GITHUB_CLIENT_SECRET = os.getenv('GITHUB_OAUTH_CONSUMER_SECRET', None)
-GITHUB_CLIENT_ID = os.getenv('GITHUB_OAUTH_CONSUMER_KEY', None)
+GITHUB_CLIENT_SECRET = os.getenv('GITHUB_CLIENT_SECRET', None)
+GITHUB_CLIENT_ID = os.getenv('GITHUB_CLIENT_ID', None)
+oauth = OAuth()
 
 class AuthError(ValueError):
    def __init__(self, message, level='error'):
@@ -60,7 +63,8 @@ def load_current_user():
 def login_github_user(token):
     resp = oauth.github.get('user')
     user_info = resp.json()
-    user = db.get_user_by_email(user_info["email"])
+    email = user_info["email"]
+    user = db.get_user_by_email(email)
     if user is None:
         user = db.save({
             "email": email,
@@ -86,17 +90,17 @@ def register_app_error_handlers(app):
 
 def setup_oauth(app):
     oauth.init_app(app)
-        oauth.register(
-            name='github',
-            client_id=GITHUB_CLIENT_ID,
-            client_secret=GITHUB_CLIENT_SECRET,
-            access_token_url='https://github.com/login/oauth/access_token',
-            access_token_params=None,
-            authorize_url='https://github.com/login/oauth/authorize',
-            authorize_params=None,
-            api_base_url='https://api.github.com/',
-            client_kwargs={'scope': 'user:email'}
-        )
+    oauth.register(
+        name='github',
+        client_id=GITHUB_CLIENT_ID,
+        client_secret=GITHUB_CLIENT_SECRET,
+        access_token_url='https://github.com/login/oauth/access_token',
+        access_token_params=None,
+        authorize_url='https://github.com/login/oauth/authorize',
+        authorize_params=None,
+        api_base_url='https://api.github.com/',
+        client_kwargs={'scope': 'user:email'}
+    )
 
 def validate_password(password):
     #TODO check for good enough password

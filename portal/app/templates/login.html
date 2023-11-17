@@ -6,8 +6,10 @@
         {{ macros.flash_alerts() }}
         <div class="mb-4">
             <!-- OAuth Section -->
-            <a href="#" class="block w-full bg-gray-900 text-white text-center py-2 rounded hover:bg-gray-700 transition duration-300">
-                Login with GitHub
+            <a href="{{url_for('auth.login_github')}}" class="flex items-center justify-center bg-gray-800 text-white p-2 rounded w-full mb-4"
+>
+                <span class="mr-2">Login with GitHub</span>
+                <img src="/static/github-mark-white.svg" alt="GitHub" class="h-4">
             </a>
         </div>
 

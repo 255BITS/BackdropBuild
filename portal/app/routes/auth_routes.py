@@ -1,10 +1,6 @@
 from flask import Blueprint, Flask, render_template, redirect, request, url_for, flash, make_response, g
-from app.services.auth_service import validate_password, authenticate_user, create_user, load_current_user, login_github, login_user, logout_user, oauth, AuthError
+from app.services.auth_service import validate_password, authenticate_user, create_user, load_current_user, login_github_user, login_user, logout_user, oauth, AuthError
 auth_bp = Blueprint('auth', __name__)
-
-@auth_bp.get('/login')
-def login():
-    return render_template('login.html')
 
 @auth_bp.get('/login')
 def login():
@@ -22,7 +18,7 @@ def post_login():
 @auth_bp.get('/login/github')
 def login_github():
     scheme = "http" if request.remote_addr == '127.0.0.1' else "https"
-    redirect_uri = url_for('auth.authorized_github', _external=True, _scheme=scheme)
+    redirect_uri = url_for('auth.login_github_authorized', _external=True, _scheme=scheme)
     return oauth.github.authorize_redirect(redirect_uri)
 
 @auth_bp.route('/login/github/authorized')
