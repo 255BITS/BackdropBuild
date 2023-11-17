@@ -1,30 +1,27 @@
 <div class="container mx-auto px-6 py-8 bg-gray-50">
-    <form class="space-y-4 bg-white shadow-sm rounded-lg p-4" action="/actions/1" method="GET">
+    <form class="space-y-4 bg-white shadow-sm rounded-lg p-4" action="{{url_for("actions.add_api_link", id=actions._id)}}" method="POST">
         <div>
-            <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-            <div class="grid gap-4 md:grid-cols-2">
-              <input id="name" name="name" type="text" value="{{api.default_name}}" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 border p-2">
-            </div>
+            <label for="name" class="block text-sm font-medium text-gray-700">{{actions.name}}</label>
         </div>
-        {% for field in api.fields %}
-            {% for name, type in field.items() %}
-                <label for="{{name}}" class="block text-sm font-medium text-gray-700">{{name}}</label>
+        {% for param in api.params %}
+            <div>
+                <label for="{{param[1]}}" class="block text-sm font-medium text-gray-700">{{param[1]}}</label>
                 <div class="grid gap-4 md:grid-cols-2">
-                    {% if type == "credential" %}
+                    {% if param[0] == 'Credential' %}
                         <div class="flex gap-2 items-center">
-                            <input type='password' value='enter' class='border p-2 w-full'/>
+                            <input id="{{param[1]}}" name="{{param[1]}}" type='password' class='mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 border p-2'/>
                         </div>
-                    {% elif type == "string" %}
-                        <select id="{{name}}" name="source" hx-get="/api/options" hx-trigger="change" hx-target="#{{name}}_options" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 border p-2">
+                    {% elif param[0] == 'String' %}
+                       <select id="{{name}}" name="source" hx-get="/api/options" hx-trigger="change" hx-target="#{{name}}_options" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 border p-2">
                             <option value="GPT">Set by GPT</option>
                             <option value="Constant">Constant value</option>
                         </select>
                         <div id="{{name}}_options" class="mt-1"></div>
                     {% else %}
-                        <div class="text-sm text-red-500">{{type}} not supported</div>
+                        <div class="text-sm text-red-500">{{param[0]}} not supported</div>
                     {% endif %}
                 </div>
-            {% endfor %}
+            </div>
         {% endfor %}
         <div class="justify-between items-center">
             <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-green-500 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
@@ -33,4 +30,3 @@
         </div>
     </form>
 </div>
-

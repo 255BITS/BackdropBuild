@@ -1,5 +1,20 @@
 {% extends 'base_app.html' %}
 
+{% block head %}
+{{super()}}
+<script>
+  function selectAPI(row) {
+    // Find the radio button inside this row
+    const radio = row.querySelector('input[type=radio]');
+    if (radio) {
+      radio.checked = true;
+      // Manually trigger the change event
+      radio.dispatchEvent(new Event('change'));
+    }
+  }
+</script>
+{% endblock %}
+
 {% block maincontent %}
 <div class="container mx-auto px-6 py-8">
   <div class="max-w">
@@ -38,7 +53,7 @@
         </thead>
         <tbody>
           {%for api in apis%}
-            <tr>
+            <tr onclick="selectAPI(this)" class="cursor-pointer">
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                 <div class="flex items-center">
                   <div class="ml-3">
