@@ -12,6 +12,8 @@ api_call_tasks = set()
 url_api_lookup_table = {}
 url_action_lookup_table = {}
 
+
+# TODO use variables from db.py
 # URL for fetching the mapping
 DEFAULT_DATABASE = "gptactionhub"
 DEFAULT_HOST = "localhost:5984"
@@ -25,7 +27,7 @@ COUCHDB_USER = os.getenv("COUCHDB_USER", DEFAULT_USER)
 COUCHDB_PROTOCOL = os.getenv("COUCHDB_PROTOCOL", DEFAULT_PROTOCOL)
 MAPPING_API_URL = COUCHDB_PROTOCOL+COUCHDB_USER+":"+COUCHDB_PASSWORD+"@"+COUCHDB_HOST+"/"+COUCHDB_DATABASE+"/_design/apis/_views/urls"
 #TODO create view, check abstraction
-MAPPING_ACTION_URL = COUCHDB_PROTOCOL+COUCHDB_USER+":"+COUCHDB_PASSWORD+"@"+COUCHDB_HOST+"/"+COUCHDB_DATABASE+"/_design/apis/_views/schema"
+MAPPING_ACTION_URL = COUCHDB_PROTOCOL+COUCHDB_USER+":"+COUCHDB_PASSWORD+"@"+COUCHDB_HOST+"/"+COUCHDB_DATABASE+"/_design/actions/_views/action_links"
 
 # Setup asynchronous logging
 logger = logging.getLogger("quart.app")
@@ -83,13 +85,18 @@ async def update_action_lookup_table(breakloop):
             break
         await asyncio.sleep(60)  # Wait for 1 minute before next update
 
-@app.route('/<id>', methods=['GET', 'POST', 'PUT', 'DELETE', "PATCH"])
-async def passthrough(id):
+@app.route('/<action_id>/<api_id>', methods=['GET', 'POST', 'PUT', 'DELETE', "PATCH"])
+async def passthrough(action_link_id):
     start_time = time.time()
     method = request.method
     data = await request.get_data()
     headers = dict(request.headers)
 
+    # TODO
+    # look up action-link
+    # verify apikey
+    # verify api in action links
+    # find the url for action-link
     target_url = url_lookup_table.get(id)
     if target_url is None:
         return jsonify({"error": "API not found"}, 404)
@@ -104,6 +111,7 @@ async def passthrough(id):
             response = await api_call_task
             response_data = response.text
         except httpx.RequestError as e:
+            # dont await the log
             await async_log(data, "Upstream request failed", 0)
             return jsonify({"error": "Upstream request failed"}), 502
 
