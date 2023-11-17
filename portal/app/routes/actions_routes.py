@@ -35,6 +35,12 @@ def show(id):
 def edit(id):
     return redirect(url_for('actions.show', id=id))
 
+@actions_bp.post('/actions/<id>/update')
+def update(id):
+    name = request.form.get('name')
+    actions_service().update(id, {"name": name})
+    return redirect(url_for('actions.show', id=id))
+
 @actions_bp.route('/actions/<id>/link_api')
 def actions_link_api(id):
     apis = actions_service().get_link_apis()
