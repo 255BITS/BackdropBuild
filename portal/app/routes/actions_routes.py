@@ -11,10 +11,10 @@ def actions_service():
 def before_request():
     assert_logged_in()
 
-@actions_bp.route('/dashboard')
-def dashboard():
+@actions_bp.route('/actions')
+def index():
     actions_list = actions_service().list() #TODO pagination, order
-    return render_template('dashboard.html', actions_list=actions_list)
+    return render_template('actions_index.html', actions_list=actions_list)
 
 @actions_bp.route('/actions/new')
 def new():

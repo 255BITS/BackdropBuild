@@ -13,7 +13,7 @@ def post_login():
     password = form.get('password')
     user = authenticate_user(email, password)
     login_user(user)
-    return redirect("dashboard")
+    return redirect("actions.index")
 
 @auth_bp.get('/login/github')
 def login_github():
@@ -31,7 +31,7 @@ def login_github_authorized():
         )
 
     login_github_user(token)
-    return redirect(url_for('actions.dashboard'))
+    return redirect(url_for('actions.index'))
 
 @auth_bp.post('/logout')
 def logout():
@@ -62,7 +62,7 @@ def post_signup():
 
     flash('Your account has been created. Welcome!', 'success')
     login_user(user)
-    return redirect(url_for('actions.dashboard'))
+    return redirect(url_for('actions.index'))
 
 @auth_bp.before_app_request
 def load_current():

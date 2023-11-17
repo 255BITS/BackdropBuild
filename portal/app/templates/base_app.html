@@ -9,7 +9,7 @@
     <body class="bg-primary text-primary h-screen overflow-hidden">
         <header class="flex justify-between items-center p-6 border-b py-3">
             <div>
-                <a href="/dashboard" class="text-xl font-semibold text-gray-300">GPTActionHub</a>
+                <a href="{{url_for("actions.index")}}" class="text-xl font-semibold text-gray-300">GPTActionHub</a>
             </div>
             <div class="relative">
                 <div class="flex justify-between items-center cursor-pointer">
@@ -25,7 +25,7 @@
             <!-- Left Sidebar -->
             <div class="bg-card-background-color w-64 p-6 hidden sm:block">
                 <nav>
-                    <a href="{{url_for("actions.dashboard")}}" class="nav-link">
+                    <a href="{{url_for("actions.index")}}" class="nav-link">
                       <i class="fas fa-bolt nav-icon w-5"></i>
                       My Actions
                     </a>

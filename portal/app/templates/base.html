@@ -21,7 +21,7 @@
                     <div>
                         <ul class="flex items-center">
                             {% if current_user %}
-                                <li><a href="/dashboard" class="text-gray-700 hover:text-gray-900 px-3 py-2">Dashboard</a></li>
+                                <li><a href="{{url_for("actions.index")}}" class="text-gray-700 hover:text-gray-900 px-3 py-2">Dashboard</a></li>
                             {% else %}
                                 <li><a href="/signup" class="text-gray-700 hover:text-gray-900 px-3 py-2">Signup</a></li>
                                 <li><a href="/login" class="text-gray-700 hover:text-gray-900 px-3 py-2">Login</a></li>
