@@ -28,7 +28,7 @@
                     <a href="/apis/{{api["_id"]}}" class="text-blue-500 hover:text-blue-600">
                         {{api["name"]}}
                     </a>
-                    <span class="text-xs bg-green-100 text-green-800 font-semibold mr-2 px-2.5 py-0.5 rounded dark:bg-green-200 dark:text-green-900">Public</span>
+                    {{ macros.visibility_tag(api) }}
                 </h3>
                 <p class="text-s text-gray-600 align-bottom items-end">
                   {{api["description"]}}
