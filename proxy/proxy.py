@@ -1,4 +1,5 @@
 from quart import Quart, request, jsonify
+from pprint import pprint
 import httpx
 from httpx import Timeout
 import time
@@ -29,7 +30,6 @@ COUCHDB_USER = os.getenv("COUCHDB_USER", DEFAULT_USER)
 COUCHDB_PROTOCOL = os.getenv("COUCHDB_PROTOCOL", DEFAULT_PROTOCOL)
 COUCHDB_URL = COUCHDB_PROTOCOL+COUCHDB_USER+":"+COUCHDB_PASSWORD+"@"+COUCHDB_HOST+"/"+COUCHDB_DATABASE
 MAPPING_API_URL = COUCHDB_URL+"/_design/apis/_view/urls"
-#TODO create view, check abstraction
 MAPPING_ACTION_URL = COUCHDB_URL+"/_design/actions/_view/api_links"
 
 # Setup asynchronous logging
@@ -100,7 +100,6 @@ async def listen_to_changes(last_seq):
                 print(f"An error occurred:", e)
                 traceback.print_exc()
 
-# TODO can we just subscribe to the views?
 async def update_api_lookup_table():
     print("Updating api lookup table")
     api_urls = await fetch_api_url_mapping()
@@ -116,22 +115,31 @@ async def update_action_lookup_table():
     async with write_lock:
         for a in action_info:
             action_lookup_table[a['id']]=a['value']
+        pprint(action_lookup_table)
 
 @app.route('/<action_id>/<api_id>', methods=['GET', 'POST', 'PUT', 'DELETE', "PATCH"])
-async def passthrough(action_link_id):
+async def passthrough(action_id, api_id):
     start_time = time.time()
     method = request.method
     data = await request.get_data()
     headers = dict(request.headers)
 
-    # TODO
-    # look up action-link
-    # verify apikey
-    # verify api in action links
-    # find the url for action-link
-    target_url = url_lookup_table.get(id)
-    if target_url is None:
+    if action_id not in action_lookup_table:
+        return jsonify({"error": "Action not found"}, 404)
+    actions_api_links = action_lookup_table[action_id]
+    api = None
+    for a in actions_api_links:
+        if a['api_id']==api_id:
+            api = a
+
+    if api is None:
         return jsonify({"error": "API not found"}, 404)
+    if api['api_id'] not in url_api_lookup_table:
+        return jsonify({"error": "API link found in action but not in API"}, 404)
+
+    target = url_api_lookup_table[api['api_id']] #example : {'params': [['String', 'memory']], 'url': 'https://43bd-38-13-52-224.ngrok.io/memwrite'}
+
+    #TODO: auth
 
     async with httpx.AsyncClient() as client:
         api_call = client.request(method, f"{target_url}/{id}", content=data, headers=headers)
@@ -178,7 +186,6 @@ async def before_serving():
     #asyncio.get_event_loop().add_signal_handler(signal.SIGINT, lambda: asyncio.create_task(shutdown()))
     await update_api_lookup_table()  # Perform initial update of URL lookup table
     await update_action_lookup_table()  # Perform initial update of URL lookup table
-    # TODO
     current_last_seq = await get_current_last_seq()
     listen_task = asyncio.create_task(listen_to_changes(current_last_seq))
 
