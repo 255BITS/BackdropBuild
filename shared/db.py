@@ -174,8 +174,11 @@ class DB:
             # Handle conflict if necessary
             return None
 
-    def get(self, _id):
-        return self.db.get(_id)
+    def get(self, ids):
+        is_single_id = isinstance(ids, str)
+        keys = [ids] if is_single_id else ids
+        documents = [row.doc for row in self.db.view('_all_docs', keys=keys, include_docs=True)]
+        return documents[0] if is_single_id and documents else documents
 
     def get_user_by_email(self, email):
         """
@@ -188,4 +191,7 @@ class DB:
         return self.query_view('actions', 'by_user', key=user_id)
 
     def get_auths_for_actions(self, actions_id):
+        return self.query_view('auths', 'by_actions', key=actions_id)
+
+    def get_apis(self, actions_id):
         return self.query_view('auths', 'by_actions', key=actions_id)

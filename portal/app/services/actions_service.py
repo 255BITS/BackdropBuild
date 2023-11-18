@@ -58,12 +58,13 @@ class ActionsService:
             "name": name,
             "type": "actions",
             "user_id": self.user["_id"],
-        })
+            })
         username = generate_random_string()
         password = generate_random_string()
         password_hash = bcrypt.hash(password)
         auth = db.save({
             "actions_id": actions["_id"],
+            "api_links": [],
             "auth_type": "api_key_basic",
             "type": "auth",
             "user_id": self.user["_id"],
@@ -75,8 +76,6 @@ class ActionsService:
 
     def add_api_link(self, id, api_id, params):
         actions = self.get(id)
-        if "api_links" not in actions:
-            actions["api_links"] = []
         actions["api_links"] += [
             {
                 "api_id": api_id,
@@ -85,14 +84,14 @@ class ActionsService:
         ]
         return db.save(actions)
 
-
     def get(self, id):
         #TODO 404
         #TODO doc type check
         actions = db.get(id)
         auths = db.get_auths_for_actions(actions["_id"])
+        apis = db.get([link['api_id'] for link in actions["api_links"]])
         auths = [decode_auth(auth) for auth in auths]
-        return actions | { "auths": auths }
+        return actions | { "auths": auths, "apis": apis }
 
     def update(self, id, update_dict):
         actions = db.get(id)

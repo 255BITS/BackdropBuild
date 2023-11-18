@@ -20,4 +20,5 @@ def create_app():
     app.register_blueprint(public_bp)
     register_app_error_handlers(app)
     setup_oauth(app)
+    app.jinja_env.filters['zip'] = zip
     return app
