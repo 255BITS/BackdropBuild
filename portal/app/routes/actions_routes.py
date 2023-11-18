@@ -30,8 +30,8 @@ def create():
 
 @actions_bp.route('/actions/<id>')
 def show(id):
-    actions = actions_service().get(id)
-    return render_template('actions_show.html', actions=actions)
+    actions, apis, auths = actions_service().get_details(id)
+    return render_template('actions_show.html', actions=actions, apis=apis, auths=auths)
 
 @actions_bp.route('/actions/<id>/edit')
 def edit(id):
@@ -46,12 +46,13 @@ def update(id):
 @actions_bp.get('/actions/<id>/api_link')
 def api_link(id):
     apis = actions_service().get_apis()
-    actions = actions_service().get(id)
+    actions = db.get(id)
     return render_template('actions_api_link.html', apis=apis, actions=actions)
 
 @actions_bp.post('/actions/<id>/api_link/<api_id>')
 def api_link_add(id, api_id):
     form_data = request.form
+    action_name = form_data["action_name"]
     params = []
     indexed_params = {}
 
@@ -68,13 +69,13 @@ def api_link_add(id, api_id):
     for index in indexed_params:
         params.append(indexed_params[index])
 
-    actions_service().add_api_link(id, api_id, params)
+    actions_service().add_api_link(id, api_id, action_name, params)
     return redirect(url_for("actions.show", id=id))
 
 @actions_bp.route('/actions/<id>/api_link/<api_id>/new')
 def api_link_new(id, api_id):
     api = db.get(api_id)
-    actions = actions_service().get(id)
+    actions = db.get(id)
     return render_template('actions_api_link_new.html', api=api, actions=actions)
 
 @actions_bp.route('/api/options')

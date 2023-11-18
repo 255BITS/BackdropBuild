@@ -100,10 +100,10 @@
             <div class="mb-6">
             <h3 class="text-lg font-semibold mb-2">Available APIs</h3>
             <ul>
-              {% for api, api_link in actions.apis | zip(actions.api_links) %}
+              {% for api, api_link in apis | zip(actions.api_links) %}
               <li>
-                  {{api_link}}
-                  {{api}}
+                  {{api.method}}
+                  {{api_link.action_name}}
                   <i class="fas fa-edit ml-2"></i>
                   <i class="fas fa-trash ml-2"></i>
               </li>
@@ -118,7 +118,7 @@
             <!-- Authentication Key -->
             <div class="mb-6">
                     <h3 class="text-lg font-semibold mb-2">Authentication</h3>
-                      {% for auth in actions.auths %}
+                      {% for auth in auths %}
                           <div class="grid grid-cols-2 w-full">
                               <span class="p-4">{{auth["auth_type"]}}</span>
                               <span class="rounded-lg bg-gray-200 p-4 toggle-apikey font-mono">{{auth.value_encoded}}

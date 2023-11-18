@@ -48,13 +48,14 @@ class ActionsService:
                 "uses": 0,
                 "last_updated": "6 days ago",
                 "sparkline_data": "0,48 60,48 120,48 180,48 240,48 300,48"
-            },
-        ]
+                },
+            ]
         return actions_list
 
     def create(self, name):
         #TODO validate name
         actions = db.save({
+            "api_links": [],
             "name": name,
             "type": "actions",
             "user_id": self.user["_id"],
@@ -64,7 +65,6 @@ class ActionsService:
         password_hash = bcrypt.hash(password)
         auth = db.save({
             "actions_id": actions["_id"],
-            "api_links": [],
             "auth_type": "api_key_basic",
             "type": "auth",
             "user_id": self.user["_id"],
@@ -74,24 +74,25 @@ class ActionsService:
         })
         return actions
 
-    def add_api_link(self, id, api_id, params):
-        actions = self.get(id)
+    def add_api_link(self, id, api_id, action_name, params):
+        actions = db.get(id)
         actions["api_links"] += [
             {
                 "api_id": api_id,
+                "action_name": action_name,
                 "params": params
             }
         ]
         return db.save(actions)
 
-    def get(self, id):
+    def get_details(self, id):
         #TODO 404
         #TODO doc type check
         actions = db.get(id)
         auths = db.get_auths_for_actions(actions["_id"])
         apis = db.get([link['api_id'] for link in actions["api_links"]])
         auths = [decode_auth(auth) for auth in auths]
-        return actions | { "auths": auths, "apis": apis }
+        return actions, apis, auths
 
     def update(self, id, update_dict):
         actions = db.get(id)
