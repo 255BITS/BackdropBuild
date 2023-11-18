@@ -83,8 +83,15 @@ class DB:
                                     emit(doc.user_id, doc);
                                 }
                             }"""
+        api_links = """function(doc) {
+                                if (doc.type === 'actions') {
+                                    emit(doc._id, doc.api_links);
+                                }
+                            }"""
+
 
         self.create_view_ddoc("actions", "by_user", by_user)
+        self.create_view_ddoc("actions", "api_links", api_links)
 
     def create_auth_views(self):
         """
@@ -119,7 +126,7 @@ class DB:
                             }"""
         urls = """function(doc) { 
                                 if (doc.type === 'API') { 
-                                    emit(null, doc.url); 
+                                    emit(null, {params: doc.params, url: doc.url}); 
                                 } 
                             }"""
 
