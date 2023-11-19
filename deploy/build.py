@@ -4,7 +4,7 @@ import subprocess
 
 def docker_build_push(service_path, service, ecr, version):
     original_dir = os.getcwd()
-    os.chdir('../' + service_path)
+    os.chdir('../')
     cmd = [
         'docker', 
         'buildx', 
@@ -14,7 +14,7 @@ def docker_build_push(service_path, service, ecr, version):
         '-t', 
         f'{ecr}/{service}:{version}', 
         '-f',
-        'portal/Dockerfile',
+        f'{service_path}/Dockerfile',
         '--push', 
         '.'
     ]
@@ -35,10 +35,11 @@ def main():
 
     print("build push and tag docker image")
 
-    services = ['gptactionhub']
+    services = ['gptactionhub', 'gptactionhubproxy']
     version = '1.0'
     service_paths = {
-        'gptactionhub': '.',
+        'gptactionhub': 'portal',
+        'gptactionhubproxy': 'proxy',
     }
 
     for service in services:
@@ -46,7 +47,9 @@ def main():
             service_path = service
             if service in service_paths:
                 service_path = service_paths[service]
-            docker_build_push(service_path, service, ecr, version)
+                docker_build_push(service_path, service, ecr, version)
+            else:
+                print("Skipping ", service)
 
     print("Project has been built but not redeployed.  To redeploy run:")
     print("   ./deploy.sh")

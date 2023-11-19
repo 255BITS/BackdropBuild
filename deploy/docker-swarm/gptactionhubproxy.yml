@@ -1,0 +1,19 @@
+version: '3'
+services:
+  gptactionhubproxy:
+   image: '532091552808.dkr.ecr.us-west-2.amazonaws.com/gptactionhubproxy:1.0'
+   ports:
+     - 10004:10004
+   environment:
+    - ENV=production
+    - 'VIRTUAL_HOST=https://api.gptactionhub.com'
+    - COUCHDB_USER=$COUCHDB_USER
+    - COUCHDB_PASSWORD=$COUCHDB_PASSWORD
+    - COUCHDB_HOST=$COUCHDB_HOST
+    - COUCHDB_DATABASE=$COUCHDB_DATABASE
+   deploy:
+     replicas: 1
+     placement:
+       constraints: 
+         - node.role == worker
+         - node.labels.couchdb!=true

@@ -117,6 +117,9 @@ async def update_action_lookup_table():
             action_lookup_table[a['id']]=a['value']
         pprint(action_lookup_table)
 
+@app.route('/', methods=['GET'])
+def ready():
+    return "ready"
 @app.route('/<action_id>/<api_id>', methods=['GET', 'POST', 'PUT', 'DELETE', "PATCH"])
 async def passthrough(action_id, api_id):
     start_time = time.time()
@@ -190,4 +193,4 @@ async def before_serving():
     listen_task = asyncio.create_task(listen_to_changes(current_last_seq))
 
 if __name__ == '__main__':
-    app.run(debug=True, port=10004)
+    app.run(debug=True, host='0.0.0.0', port=10004)
