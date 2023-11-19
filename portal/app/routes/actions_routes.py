@@ -49,6 +49,19 @@ def api_link(id):
     actions = db.get(id)
     return render_template('actions_api_link.html', apis=apis, actions=actions)
 
+@actions_bp.get('/actions/<id>/api_link/<api_link_id>')
+def api_link_edit(id):
+    apis = actions_service().get_apis()
+    actions = db.get(id)
+    return render_template('actions_api_link.html', apis=apis, actions=actions)
+
+@actions_bp.delete('/actions/<id>/api_link/<api_link_id>')
+def api_link_delete(id, api_link_id):
+    actions = db.get(id)
+    del actions["api_links"][int(api_link_id)]
+    db.save(actions)
+    return ""
+
 @actions_bp.post('/actions/<id>/api_link/<api_id>')
 def api_link_add(id, api_id):
     form_data = request.form

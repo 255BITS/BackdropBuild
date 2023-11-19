@@ -101,11 +101,11 @@
             <h3 class="text-lg font-semibold mb-2">Available APIs</h3>
             <ul>
               {% for api, api_link in apis | zip(actions.api_links) %}
-              <li>
+              <li class="api_link">
                   {{api.method}}
                   {{api_link.action_name}}
-                  <i class="fas fa-edit ml-2"></i>
-                  <i class="fas fa-trash ml-2"></i>
+                  <i class="fas fa-edit ml-2 cursor-pointer" hx-get="{{url_for("actions.api_link_edit", id=actions.id, api_link_id=loop.index0)}}"></i>
+                  <i class="fas fa-trash ml-2 cursor-pointer" hx-swap="outerHTML" hx-delete="{{url_for("actions.api_link_delete", id=actions.id, api_link_id=loop.index0)}}" hx-target="closest .api_link"></i>
               </li>
               {% endfor %}
             </ul>
