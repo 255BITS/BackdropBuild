@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request, g
+from flask import Blueprint, render_template, redirect, url_for, request, g, make_response
 from app.services.actions_service import ActionsService
 from app.services.auth_service import assert_logged_in
 from shared.couch import db
@@ -50,10 +50,17 @@ def api_link(id):
     return render_template('actions_api_link.html', apis=apis, actions=actions)
 
 @actions_bp.get('/actions/<id>/api_link/<api_link_id>')
-def api_link_edit(id):
+def api_link_edit(id, api_link_id):
     apis = actions_service().get_apis()
     actions = db.get(id)
-    return render_template('actions_api_link.html', apis=apis, actions=actions)
+    selected_api_link = actions["api_links"][int(api_link_id)]
+    return render_template('actions_api_link.html', apis=apis, actions=actions, selected_api_link=selected_api_link)
+
+@actions_bp.get('/actions/<id>/api_link/<api_link_id>/clicked')
+def api_link_edit_clicked(id, api_link_id):
+    response = make_response("", 200)
+    response.headers['HX-Redirect'] = url_for("actions.api_link_edit", id=id, api_link_id=api_link_id)
+    return response
 
 @actions_bp.delete('/actions/<id>/api_link/<api_link_id>')
 def api_link_delete(id, api_link_id):

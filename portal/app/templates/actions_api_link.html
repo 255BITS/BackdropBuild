@@ -3,6 +3,12 @@
 {% block head %}
 {{super()}}
 <script>
+{% if selected_api_link %}
+  var selectedApiId = {{ selected_api_link.api_id | tojson | safe }};
+{% else %}
+  var selectedApiId = null;
+{% endif %}
+
   function selectAPI(row) {
     // Find the radio button inside this row
     const radio = row.querySelector('input[type=radio]');
@@ -12,6 +18,14 @@
       radio.dispatchEvent(new Event('change'));
     }
   }
+  document.addEventListener('DOMContentLoaded', function () {
+    if (selectedApiId !== null) {
+      const rowToSelect = document.querySelector(`tr[data-api-id="${selectedApiId}"]`);
+      if (rowToSelect) {
+        selectAPI(rowToSelect);
+      }
+    }
+  });
 </script>
 {% endblock %}
 
@@ -50,7 +64,7 @@
         </thead>
         <tbody>
           {%for api in apis%}
-            <tr onclick="selectAPI(this)" class="cursor-pointer">
+            <tr onclick="selectAPI(this)" class="cursor-pointer" data-api-id="{{api._id}}">
               <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
                 <div class="flex items-center">
                   <div class="ml-3">
