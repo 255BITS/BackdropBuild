@@ -10,4 +10,6 @@ def home():
 
 @public_bp.get('/openapi/<actions_id>.json')
 def get_openapi_spec(actions_id):
-    return generate_openapi_spec_for_actions(actions_id)
+    actions, apis, _ = ActionsService(None).get_details(actions_id)
+    #TODO 404?
+    return generate_openapi_spec_for_actions(actions, apis)
