@@ -1,19 +1,44 @@
 {% extends 'base_app.html' %}
 
 {% block maincontent %}
-<div class="container mx-auto px-6 py-8">
-    <div class="bg-white shadow-lg rounded-lg p-6 max-w-3xl">
+<div class="container mx-auto px-4 py-8">
+    <div class="bg-white shadow-lg rounded-lg p-6">
+        <!-- Create GPT Actions Form -->
         <h2 class="text-2xl font-semibold mb-4">Create GPT Actions</h2>
-        <form action="{{url_for("actions.create")}}" method="post">
+        <!-- Additional text to guide users towards templates -->
+        <form action="{{url_for('actions.create')}}" method="post">
+            <!-- Input field for action name -->
             <div class="mb-4">
                 <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name</label>
                 <input type="text" autofocus value="New GPTs" id="name" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
-
-            <div class="mt-4">
-                <input type="submit" value="Next" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
+            <div class="flex items-center">
+                <input type="submit" value="Next" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded cursor-pointer">
+                <!-- Visual cue for selecting a template -->
+                <span class="text-gray-500 text-sm italic ml-4">or select a template below</span>
             </div>
         </form>
+    </div>
+
+    <!-- Templates Section -->
+    <div class="grid md:grid-cols-3 gap-6 mt-8">
+        {% for template in templates %}
+        <!-- Template Card -->
+        <div class="bg-white rounded-lg shadow-md hover:shadow-lg p-6 flex flex-col items-center cursor-pointer">
+            <!-- Template Icon -->
+            <div class="p-4 bg-blue-100 rounded-full">
+                <i class="{{ template.icon }} fa-2x text-blue-500"></i>
+            </div>
+            <!-- Template Name -->
+            <h3 class="mt-4 text-xl font-semibold">{{ template.name }}</h3>
+            <!-- Template Description -->
+            <p class="text-gray-600 text-sm text-center">{{ template.description }}</p>
+            <!-- 'Use Template' Button -->
+            <button class="mt-6 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded transition-colors duration-200">
+                Use Template
+            </button>
+        </div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

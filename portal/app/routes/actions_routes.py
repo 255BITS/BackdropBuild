@@ -20,7 +20,14 @@ def index():
 
 @actions_bp.route('/actions/new')
 def new():
-    return render_template('actions_new.html')
+    templates = [
+        {'name': 'DEX Trade', 'description': 'Trade on your hot wallet', 'icon': 'fas fa-chart-line'},
+        {'name': 'Send Emails', 'description': 'Send an email', 'icon': 'fas fa-envelope'},
+        {'name': 'Control Robot', 'description': 'Beep boop bop', 'icon': 'fas fa-cog'}
+        # ... Add as many templates as you need
+    ]
+
+    return render_template('actions_new.html', templates=templates)
 
 @actions_bp.post("/actions")
 def create():
