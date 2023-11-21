@@ -21,6 +21,7 @@ class Swagger:
         self.components = {'schemas': {}}
 
     def add_api(self, api, api_link):
+        params = {}
         for api_param, api_link_param in zip(api["params"], api_link["params"]):
             param_type = api_param[0]
             param_name = api_link_param["name"]
@@ -29,22 +30,21 @@ class Swagger:
                 pass
             if api_link_param["type"] == "constant":
                 pass
-            #TODO param
+            params[api["method"].lower()] = {}
+            params[api["method"].lower()][param_name] = {
+                'type': param_type,
+                'description': 'TODO'
+            }
         url = urlparse(api["url"]).path
 
         self.add_action(url, api["method"].lower(), {
             "description": api["description"],
             "operationId": api_link["action_name"],
-            "requestBody": {
-                "required": True,
-                "content": {
-                    'application/json': {
-                        'schema': {
-                            '$ref': '#/components/schemas/AlertMessage'
-                        }
-                    }
+            'schema': {
+                'type': 'object',
+                'properties': {
+                    **params[api["method"].lower()]
                 }
-
             },
             'responses': {
                 '200': {
@@ -59,7 +59,6 @@ class Swagger:
                 }
             }
         })
-        #TODO add path for api_link
         #TODO add i/o types
         #TODO review spec
 

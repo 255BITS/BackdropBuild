@@ -8,6 +8,10 @@
           "type": "credential",
           "name": "API_KEY",
           "value": "ttt"
+        },
+        {
+          "type": "gpt",
+          "name": "test"
         }
       ]
    }

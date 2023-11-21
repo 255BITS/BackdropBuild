@@ -1,0 +1,28 @@
+{
+  "_id": "cfe7253d7deefa1356895e302255f01d",
+  "_rev": "2-c3118e4736fb8adef8cf771f48214937",
+  "created_at": "2023-11-18T08:26:25.433529Z",
+  "updated_at": "2023-11-18T08:26:27.478080Z",
+  "name": "test",
+  "default_function_name": "test",
+  "method": "POST",
+  "url": "https://test.test",
+  "description": "test",
+  "type": "API",
+  "params": [
+    [
+      "credential",
+      "API_KEY"
+    ],
+    [
+      "string",
+      "test"
+    ]
+  ],
+  "response": {
+    "type": "string"
+  },
+  "privacy_policy": "",
+  "user_id": "cfe7253d7deefa1356895e302255e4ce",
+  "visibility": "public"
+}
