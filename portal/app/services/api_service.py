@@ -4,7 +4,7 @@ def parse_api_object(request):
     errors = {}
 
     # Extract the fixed attributes
-    name = request.form.get("name", "")
+    title = request.form.get("title", "")
     operation_id = request.form.get("operation_id", "")
     method = request.form.get("method", "")
     url = request.form.get("url", "")
@@ -12,9 +12,9 @@ def parse_api_object(request):
     privacy_policy = request.form.get("privacy_policy", "")
 
     # Validation checks
-    if not name:
-        errors['name'] = 'Name cannot be empty.'
-    # TODO: Check for name uniqueness in the database or data store
+    if not title:
+        errors['title'] = 'Title cannot be empty.'
+    # TODO: Check for title uniqueness in the database or data store
     if not description:
         errors['description'] = 'Short description cannot be empty.'
     if not operation_id:
@@ -37,13 +37,13 @@ def parse_api_object(request):
         if param_type_key in request.form and param_input_key in request.form:
             params.append([request.form[param_type_key], request.form[param_input_key]])
             if request.form[param_input_key] == '':
-                errors[param_input_key] = "Parameter "+str(i)+" must have a name"
+                errors[param_input_key] = "Parameter "+str(i)+" must have a title"
             i += 1
         else:
             break
 
     api_object = {
-        "name": name,
+        "title": title,
         "paths": [
             {
                 "operation_id": operation_id,
