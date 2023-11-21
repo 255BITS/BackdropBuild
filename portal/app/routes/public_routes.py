@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template
 from shared.couch import db
+from app.services.actions_service import ActionsService
 from app.services.swagger_service import generate_openapi_spec_for_actions
 
 public_bp = Blueprint('public', __name__)

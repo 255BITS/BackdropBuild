@@ -19,6 +19,48 @@ class Swagger:
         self.components = {'schemas': {}}
 
     def add_api(self, api, api_link):
+        print("--API")
+        print(api)
+        for api_param, api_link_param in api["params"], api_link["params"]:
+            param_type = api_param[0]
+            param_name = api_link_param["name"]
+
+            if param_type == "credential":
+                pass
+            if api_link_param["type"] == "constant":
+                pass
+
+            params.append()
+
+        self.add_action(url, api["method"], {
+            "summary": api["description"],
+            "operationId": api_link["name"],
+            "requestBody": {
+                "required": True,
+                "content": {
+                    'application/json': {
+                        'schema': {
+                            '$ref': '#/components/schemas/AlertMessage'
+                        }
+                    }
+                }
+
+            },
+            'responses': {
+                '200': {
+                    'description': 'Message received successfully',
+                    'content': {
+                        'application/json': {
+                            'schema': {
+                                '$ref': '#/components/schemas/ResponseMessage' #TODO
+                            }
+                        }
+                    }
+                }
+            }
+        })
+        print("--api_link")
+        print(api_link)
         #TODO add path for api_link
         #TODO add i/o types
         #TODO review spec
