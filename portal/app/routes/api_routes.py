@@ -20,7 +20,8 @@ def apis_my():
 @api_bp.route('/apis/new')
 def apis_new():
     assert_logged_in()
-    return render_template('api_new.html', errors={}, api={})
+    default_api={"paths":[{"params":[["credential", "API_KEY"],["string", "query"]]}]}
+    return render_template('api_new.html', errors={}, api=default_api)
 
 @api_bp.route('/apis/create', methods=["POST"])
 def apis_create():

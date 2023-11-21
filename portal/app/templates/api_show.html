@@ -7,42 +7,44 @@
             <label for="name" class="block text-gray-700 text-xl font-bold mb-2">{{api["name"]}} <a href='/apis/{{api["_id"]}}/edit' <i class="fas fa-edit"></i></a></label>
         </div>
         <div class="mb-4">
-            <label for="name" class="block text-gray-700 text-md font-bold mb-2">Default Function Name</label>
-            <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{api["default_function_name"]}}</p>
-        </div>
-        <div class="mb-8">
-            <label for="url" class="block text-gray-700 text-md font-bold mb-2">URL </label>
-            <div class="flex items-center mb-2">
-                <select id="method" disabled="" class="shadow-b border-b rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline disabled">
-                    <option selected>{{api["method"]}}</option>
-                </select>
-                <div class="flex-grow">
-                    <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{api["url"]}}</p>
-                </div>
-            </div>
-        </div>
-        <div class="mb-4">
             <label class="block text-gray-700 text-md font-bold mb-2">Short Description </label>
             <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{api["description"]}}</p>
         </div>
-        <div class="mb-8">
-            <label for="params" class="block text-gray-700 text-lg font-semibold mb-2">
-                Parameters
-            </label>
-            {% for param in api['params'] %}
-            <div class="flex items-center mb-2 pt-4">
-                <select id="param{{ loop.index0 }}" disabled="" name="method" class="shadow-b border-b rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline disabled">
-                    <option value="Integer" {% if param[0] == "Integer" %}selected{% endif %}>Integer</option>
-                    <option value="Float" {% if param[0] == "Float" %}selected{% endif %}>Float</option>
-                    <option value="String" {% if param[0] == "String" %}selected{% endif %}>String</option>
-                    <option value="Credential" {% if param[0] == "Credential" %}selected{% endif %}>Credential</option>
-                </select>
-                <div class="flex-grow">
-                    <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ param[1] }}</p>
+        {% for path in api['paths'] %}
+            <div class="mb-4">
+                <label for="name" class="block text-gray-700 text-md font-bold mb-2">Operation ID</label>
+                <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{path["operation_id"]}}</p>
+            </div>
+            <div class="mb-8">
+                <label for="url" class="block text-gray-700 text-md font-bold mb-2">URL </label>
+                <div class="flex items-center mb-2">
+                    <select id="method" disabled="" class="shadow-b border-b rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline disabled">
+                        <option selected>{{path["method"]}}</option>
+                    </select>
+                    <div class="flex-grow">
+                        <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{path["url"]}}</p>
+                    </div>
                 </div>
             </div>
-            {% endfor %}
-        </div>
+            <div class="mb-8">
+                <label for="params" class="block text-gray-700 text-lg font-semibold mb-2">
+                    Parameters
+                </label>
+                {% for param in path['params'] %}
+                <div class="flex items-center mb-2 pt-4">
+                    <select id="param{{ loop.index0 }}" disabled="" name="method" class="shadow-b border-b rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline disabled">
+                        <option value="Integer" {% if param[0] == "Integer" %}selected{% endif %}>Integer</option>
+                        <option value="Float" {% if param[0] == "Float" %}selected{% endif %}>Float</option>
+                        <option value="String" {% if param[0] == "String" %}selected{% endif %}>String</option>
+                        <option value="Credential" {% if param[0] == "Credential" %}selected{% endif %}>Credential</option>
+                    </select>
+                    <div class="flex-grow">
+                        <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ param[1] }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% endfor %}
         <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2">Privacy Policy</label>
             <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{api['privacy_policy']}}<p>

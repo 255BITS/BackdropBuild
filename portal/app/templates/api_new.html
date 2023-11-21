@@ -72,8 +72,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 <input type="text" id="name" name="name" placeholder="latex2pdf" value="{{api['name']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-4">
-                <label for="name" class="block {% if 'default_function_name' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-md font-bold mb-2">Default Function Name</label>
-                <input type="text" id="default_function_name" name="default_function_name" value="{{api['default_function_name']}}" placeholder="createPdfFromLatex" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <label for="description" class="block {% if 'description' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-gray-700 text-md font-bold mb-2">Short Description</label>
+                <input type="text" id="description" name="description" value="{{api['description']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Convert latex to pdf documents">
+            </div>
+            {% for path in api["paths"] %}
+            <div class="mb-4">
+                <label for="operation_id" class="block {% if 'operation_id' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-md font-bold mb-2">Operation ID</label>
+                <input type="text" id="operation_id" name="operation_id" value="{{path['operation_id']}}" placeholder="createPdfFromLatex" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-8">
                 <label for="url" class="block {% if 'url' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-md font-bold mb-2">URL</label>
@@ -86,46 +91,15 @@ document.addEventListener('DOMContentLoaded', function () {
                         <option value="DELETE">DELETE</option>
                     </select>
                     <div class="flex-grow">
-                      <input type="text" id="url" name="url" placeholder="https://..." value="{{api['url']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                      <input type="text" id="url" name="url" placeholder="https://..." value="{{path['url']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     </div>
                 </div>
-            </div>
-            <div class="mb-4">
-                <label for="description" class="block {% if 'description' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-gray-700 text-md font-bold mb-2">Short Description</label>
-                <input type="text" id="description" name="description" value="{{api['description']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Convert latex to pdf documents">
             </div>
             <div id='paramsContainer' class="mb-8">
                 <label for="params" class="block text-gray-700 text-lg font-semibold mb-2">
                     Parameters<!--<a href="#" class="text-blue-600 text-sm ml-1">(?)</a>-->
                 </label>
-                {% if "params" not in api %}
-                  <div class="flex items-center mb-2 border-t pt-4 param-row">
-                      <i class="fas fa-trash text-red-500 hover:text-red-700 mr-4 ml-4 cursor-pointer"></i>
-                      <select id="param0-type" name="param0-type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
-                          <option value="integer">Integer</option>
-                          <option value="float">Float</option>
-                          <option value="string">String</option>
-                          <option value="credential" selected>Credential</option>
-                      </select>
-                      <div class="flex-grow">
-                          <input type="text" id="param0-input" name="param0-input" placeholder="API_KEY" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                      </div>
-                  </div>
-                  <div class="flex items-center mb-2 border-t pt-4 param-row">
-                      <i class="fas fa-trash text-red-500 hover:text-red-700 mr-4 ml-4 cursor-pointer"></i>
-                      <select id="param1-type" name="param1-type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
-                          <option value="integer">Integer</option>
-                          <option value="float">Float</option>
-                          <option value="string" selected>String</option>
-                          <option value="credential">Credential</option>
-                      </select>
-                      <div class="flex-grow">
-                          <input type="text" id="param1-input" name="param1-input" placeholder="latex" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                      </div>
-                  </div>
-                {% else %}
-
-                {% for param in api['params'] %}
+                {% for param in path['params'] %}
                 <div class="flex items-center mb-2 border-t pt-4 param-row">
                     <i class="fas fa-trash text-red-500 hover:text-red-700 mr-4 ml-4 cursor-pointer"></i>
                     <select id="param{{ loop.index0 }}-type" name="param{{ loop.index0 }}-type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4" onchange="javascript:warnOnParameterChange()">
@@ -139,13 +113,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                 </div>
                 {% endfor %}
-                {% endif %}
                 <div class="flex justify-end">
                     <button id="addParamButton" type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                         <i class="fas fa-plus"></i> Parameter
                     </button>
                 </div>
             </div>
+            {% endfor %}
             <div class="mb-4">
                 <label for="privacy_policy" class="block {% if 'privacy_policy' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-gray-700 text-sm font-bold mb-2">Privacy Policy</label>
                 <textarea name="privacy_policy" id="privacy_policy" class="p-2 shadow appearance-none w-full border rounded text-gray-700 focus:outline-none focus:shadow-outline">{{api['privacy_policy']}}</textarea>
