@@ -1,4 +1,20 @@
 {
-  "api_links": [],
+  "api_links": [
+    {
+      "api_id": "cfe7253d7deefa1356895e302255f01d",
+      "action_name": "test9",
+      "params": [
+        {
+          "type": "credential",
+          "name": "API_KEY",
+          "value": "ttt"
+        },
+        {
+          "type": "gpt",
+          "name": "test"
+        }
+      ]
+   }
+  ],
   "name": "Empty"
 }

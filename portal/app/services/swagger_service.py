@@ -1,3 +1,5 @@
+from urllib.parse import urlparse
+
 def generate_openapi_spec_for_actions(actions, apis):
     title = actions["name"]
     version = "1.0" #TODO
@@ -19,9 +21,7 @@ class Swagger:
         self.components = {'schemas': {}}
 
     def add_api(self, api, api_link):
-        print("--API")
-        print(api)
-        for api_param, api_link_param in api["params"], api_link["params"]:
+        for api_param, api_link_param in zip(api["params"], api_link["params"]):
             param_type = api_param[0]
             param_name = api_link_param["name"]
 
@@ -29,12 +29,12 @@ class Swagger:
                 pass
             if api_link_param["type"] == "constant":
                 pass
+            #TODO param
+        url = urlparse(api["url"]).path
 
-            params.append()
-
-        self.add_action(url, api["method"], {
-            "summary": api["description"],
-            "operationId": api_link["name"],
+        self.add_action(url, api["method"].lower(), {
+            "description": api["description"],
+            "operationId": api_link["action_name"],
             "requestBody": {
                 "required": True,
                 "content": {
@@ -52,22 +52,23 @@ class Swagger:
                     'content': {
                         'application/json': {
                             'schema': {
-                                '$ref': '#/components/schemas/ResponseMessage' #TODO
+                                'type': 'string'
                             }
                         }
                     }
                 }
             }
         })
-        print("--api_link")
-        print(api_link)
         #TODO add path for api_link
         #TODO add i/o types
         #TODO review spec
-        pass
 
-    def add_path(self, path, methods):
-        self.paths[path] = methods
+    def add_action(self, path, method, path_data):
+        if path not in self.paths:
+            self.paths[path] = {}
+        if method in self.paths[path]:
+            raise f"Already defined path {path} {method}"
+        self.paths[path][method] = path_data
 
     def add_schema(self, name, schema):
         self.components['schemas'][name] = schema
