@@ -88,7 +88,7 @@ async def listen_to_changes(last_seq):
                         doc = change.get('doc', {})
                         if doc.get('type') == 'API':
                             print(f"Document {doc['_id']} of type {doc['type']} is relevant.")
-                            url_api_lookup_table[doc['_id']] = {'params': doc['params'], 'url': doc['url']}
+                            url_api_lookup_table[doc['_id']] = {'params': doc['params'], 'paths': doc['paths']}
                         elif doc.get('type') == 'actions':
                             print(f"Document {doc['_id']} of type {doc['type']} is relevant.")
                             action_lookup_table[doc['_id']] = {'api_links': doc['api_links'], 'auths': doc['auths']}
@@ -140,9 +140,9 @@ async def passthrough(action_id, api_id):
     if api['api_id'] not in url_api_lookup_table:
         return jsonify({"error": "API link found in action but not in API"}, 404)
 
-    target = url_api_lookup_table[api['api_id']] #example : {'params': [['String', 'memory']], 'url': 'https://43bd-38-13-52-224.ngrok.io/memwrite'}
+    target = url_api_lookup_table[api['api_id']]
 
-    #TODO: auth
+    #TODO: openai token auth on action
 
     async with httpx.AsyncClient() as client:
         api_call = client.request(method, f"{target_url}/{id}", content=data, headers=headers)

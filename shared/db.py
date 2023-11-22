@@ -126,7 +126,7 @@ class DB:
                             }"""
         urls = """function(doc) { 
                                 if (doc.type === 'API') { 
-                                    emit(null, {params: doc.params, url: doc.url}); 
+                                    emit(null, {params: doc.params, paths: doc.paths}); 
                                 } 
                             }"""
 
