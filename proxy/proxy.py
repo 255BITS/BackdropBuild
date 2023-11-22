@@ -120,10 +120,20 @@ async def update_action_lookup_table():
 @app.route('/', methods=['GET'])
 def ready():
     return "ready"
-@app.route('/<action_id>/<api_id>', methods=['GET', 'POST', 'PUT', 'DELETE', "PATCH"])
-async def passthrough(action_id, api_id):
+
+@app.before_request
+async def debug_request_info():
+   app.logger.info(f'Headers: {dict(request.headers)}')
+   app.logger.info(f'Method: {request.method}')
+   app.logger.info(f'URL: {request.url}')
+   app.logger.info(f'Body: {await request.get_data()}')
+
+
+@app.route('/<action_id>/<operation_id>', methods=['GET', 'POST', 'PUT', 'DELETE', "PATCH"])
+async def passthrough(action_id, operation_id):
     start_time = time.time()
     method = request.method
+    params = request.args
     data = await request.get_data()
     headers = dict(request.headers)
 
@@ -131,9 +141,13 @@ async def passthrough(action_id, api_id):
         return jsonify({"error": "Action not found"}, 404)
     actions_api_links = action_lookup_table[action_id]
     api = None
+    active_path_id = None
+    print("Found actions_api_links", actions_api_links)
     for a in actions_api_links:
-        if a['api_id']==api_id:
-            api = a
+        for path in a["paths"]:
+            if path['operation_id']==operation_id:
+                api = a
+                active_path_id = path["path_id"]
 
     if api is None:
         return jsonify({"error": "API not found"}, 404)
@@ -141,11 +155,18 @@ async def passthrough(action_id, api_id):
         return jsonify({"error": "API link found in action but not in API"}, 404)
 
     target = url_api_lookup_table[api['api_id']]
+    target_path = None
+    for path in target["paths"]:
+        if path["path_id"] == active_path_id:
+            target_path = path
 
+    print("TARGET", target)
     #TODO: openai token auth on action
 
     async with httpx.AsyncClient() as client:
-        api_call = client.request(method, f"{target_url}/{id}", content=data, headers=headers)
+        api_url = target_path['url']
+        print("Calling", api_url, data, params, method)
+        api_call = client.request(method=method, url=api_url, params=params)
         api_call_task = asyncio.create_task(api_call)
         api_call_tasks.add(api_call_task)
         api_call_task.add_done_callback(api_call_tasks.discard)

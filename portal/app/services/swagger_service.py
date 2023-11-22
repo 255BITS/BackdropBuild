@@ -6,7 +6,7 @@ def generate_openapi_spec_for_actions(actions, apis, base_url="https://gptaction
     description = "" #TODO is this used?
     swagger = Swagger(title, version, description, base_url)
     for api, api_link in zip(apis, actions["api_links"]):
-        swagger.add_api(api, api_link)
+        swagger.add_api(api, api_link, actions)
     return swagger.generate_spec()
 
 class Swagger:
@@ -19,12 +19,12 @@ class Swagger:
         self.paths = {}
         self.components = {'schemas': {}}
 
-    def add_api(self, api, api_link):
+    def add_api(self, api, api_link, actions):
         params = {}
         for api_path, api_link_path in zip(api["paths"], api_link["paths"]):
             print("--", api_path, api_link_path)
 
-            params[api_path["method"].lower()] = {}
+            params[api_path["method"].lower()] = []
             for api_param, api_link_param in zip(api_path["params"], api_link_path["params"]):
                 #TODO match by path_id
                 #TODO support more than one operation_id
@@ -35,22 +35,22 @@ class Swagger:
                     pass
                 if "source" in api_link_param and api_link_param["source"] == "constant":
                     pass
-                params[api_path["method"].lower()][param_name] = {
-                    'type': param_type,
-                    'description': 'TODO'
-                }
-            url = urlparse(api_path["url"]).path
+                params[api_path["method"].lower()].append({
+                    'schema': {
+                        'type': param_type,
+                    },
+                    "name": param_name,
+                    "in": "query",
+                    'description': 'TODO',
+                    'required': True
+                })
+            path = f"/{actions['_id']}/{api_link_path['operation_id']}"
 
-            self.add_action(url, api_path["method"].lower(), {
+            self.add_path(path, api_path["method"].lower(), {
                 "description": api["description"], #TODO
                 "operationId": api_link_path["operation_id"],
-                'schema': {
-                    'type': 'object',
-                    'properties': {
-                        **params[api_path["method"].lower()]
-                    }
-                },
-                'responses': {
+                "parameters": params[api_path["method"].lower()],
+                 'responses': {
                     '200': {
                         'description': 'Message received successfully',
                         'content': {
@@ -66,7 +66,7 @@ class Swagger:
         #TODO add i/o types
         #TODO review spec
 
-    def add_action(self, path, method, path_data):
+    def add_path(self, path, method, path_data):
         if path not in self.paths:
             self.paths[path] = {}
         if method in self.paths[path]:
