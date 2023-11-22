@@ -13,4 +13,4 @@ def home():
 def get_openapi_spec(actions_id):
     actions, apis, _ = ActionsService(None).get_details(actions_id)
     #TODO 404?
-    return generate_openapi_spec_for_actions(actions, apis)
+    return generate_openapi_spec_for_actions(actions, apis, "https://6230-83-136-182-61.ngrok.io")

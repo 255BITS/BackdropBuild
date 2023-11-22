@@ -136,6 +136,7 @@ async def passthrough(action_id, operation_id):
     params = request.args
     data = await request.get_data()
     headers = dict(request.headers)
+    del headers["Host"]
 
     if action_id not in action_lookup_table:
         return jsonify({"error": "Action not found"}, 404)
@@ -165,8 +166,7 @@ async def passthrough(action_id, operation_id):
 
     async with httpx.AsyncClient() as client:
         api_url = target_path['url']
-        print("Calling", api_url, data, params, method)
-        api_call = client.request(method=method, url=api_url, params=params)
+        api_call = client.request(method=method, url=api_url, content=data, headers=headers, params=params)
         api_call_task = asyncio.create_task(api_call)
         api_call_tasks.add(api_call_task)
         api_call_task.add_done_callback(api_call_tasks.discard)
