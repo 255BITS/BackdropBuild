@@ -26,6 +26,25 @@
     </style>
 
     <script>
+        function toggleLock() {
+          const lockIcon = document.getElementById('lockIcon');
+          const formInputs = document.querySelectorAll('.form-input, .form-select');
+          
+          if (lockIcon.classList.contains('fa-lock')) {
+            // Change to unlocked icon
+            lockIcon.classList.remove('fa-lock');
+            lockIcon.classList.add('fa-unlock');
+            // Enable form inputs
+            formInputs.forEach(input => input.disabled = false);
+          } else {
+            // Change to locked icon
+            lockIcon.classList.remove('fa-unlock');
+            lockIcon.classList.add('fa-lock');
+            // Disable form inputs
+            formInputs.forEach(input => input.disabled = true);
+          }
+        }
+
         var fadeOutTimeoutId, hideTimeoutId;
         function copyToClipboard(event, text) {
             clearTimeout(fadeOutTimeoutId);
@@ -116,46 +135,47 @@
             <div id="copy-notification" class="absolute bg-white border border-gray-300 rounded p-2" style="display: none;">Copied!</div>
 
             <div class="mb-6">
-                <h3 class="text-lg font-semibold mb-2">
-                  API Parameters
-                </h3>
-                <table class="min-w-full leading-normal">
-                  <thead>
-                    <tr>
-                      <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        API
-                      </th>
-                      <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        Parameter Name
-                      </th>
-                      <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        Method
-                      </th>
-                      <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                        Value
-                      </th>
-                      <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                      </th>
-
-                    </tr>
-                  </thead>
-                    <tr>
-                      <td>send emails</td>
-                      <td>To</td>
-                      <td>POST</td>
-                      <td>Constant: test@test.test</td>
-                      <td><i class="fas fa-edit cursor-pointer" onclick="toggleEdit()"></i></td>
-                    </tr>
-                    <tr>
-                      <td>send emails</td>
-                      <td>Subject</td>
-                      <td>POST</td>
-                      <td>Not Set ❌</td>
-                      <td><i class="fas fa-edit cursor-pointer" onclick="toggleEdit()"></i></td>
-                    </tr>
-
-                </table>
-
+              <h3 class="text-lg font-semibold mb-2 flex">
+                API Parameters
+                <button onclick="toggleLock()" class="ml-2 text-blue-500 hover:text-blue-700 focus:outline-none">
+                  <i class="fas fa-unlock" id="lockIcon"></i>
+                </button>
+              </h3>
+              <div class="flex flex-col space-y-4">
+                <!-- API Configuration Entry -->
+                <div class="p-4 bg-white shadow rounded-lg">
+                  <div class="mb-4">
+                    <div class="font-semibold text-gray-700 mb-1">send emails</div>
+                    <!-- API Key -->
+                    <div class="flex items-center mb-2">
+                      <div class="w-1/3 text-gray-500">API_KEY</div>
+                      <input type="text" placeholder="Enter Credentials" class="form-input w-2/3 border-gray-300">
+                    </div>
+                    <!-- To -->
+                    <div class="flex items-center mb-2">
+                      <div class="w-1/3 text-gray-500">To</div>
+                      <div class="flex w-2/3">
+                        <select class="form-select w-1/3 mr-2 border-gray-300">
+                          <option value="constant" selected>Constant</option>
+                          <option value="gpt">Set by GPT</option>
+                          <!-- Add more options as needed -->
+                        </select>
+                        <input type="text" value="test@test.test" class="form-input w-2/3 border-gray-300">
+                      </div>
+                    </div>
+                    <!-- Subject -->
+                    <div class="flex items-center">
+                      <div class="w-1/3 text-gray-500">Subject</div>
+                      <select class="form-select w-1/3 mr-2 border-gray-300">
+                        <option value="set by gpt">Set by GPT</option>
+                        <option value="constant">Constant</option>
+                        <!-- Add more options as needed -->
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <!-- More API Configuration Entries... -->
+              </div>
             </div>
             <!-- Authentication Key -->
             <div class="mb-6">
