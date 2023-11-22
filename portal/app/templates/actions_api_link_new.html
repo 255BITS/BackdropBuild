@@ -7,7 +7,8 @@
           <label for="action_name" class="block text-sm font-medium text-gray-700">Action Name</label>
           <input type="text" name="action_name" class="border border-gray-300 rounded-md p-2" value="{{api.operation_id}}"/>
         </div>
-        {% for param in api.params %}
+        {{api}}
+        {% for param in api.paths[0].params %}
             <div>
                 <label for="{{param[1]}}" class="block text-sm font-medium text-gray-700">{{param[1]}}</label>
                 <div class="grid gap-4 md:grid-cols-2">

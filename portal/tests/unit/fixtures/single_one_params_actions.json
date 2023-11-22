@@ -2,18 +2,20 @@
   "api_links": [
     {
       "api_id": "cfe7253d7deefa1356895e302255f01d",
-      "action_name": "test9",
-      "params": [
-        {
-          "type": "credential",
-          "name": "API_KEY",
-          "value": "ttt"
-        },
-        {
-          "type": "gpt",
-          "name": "test"
-        }
-      ]
+      "paths": [{
+        "operation_id": "test9",
+        "path_id": "1",
+        "params": [
+          {
+            "name": "API_KEY",
+            "value": "ttt"
+          },
+          {
+            "source": "gpt",
+            "name": "test"
+          }
+        ]
+      }]
    }
   ],
   "name": "single"

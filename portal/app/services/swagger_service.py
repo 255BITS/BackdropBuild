@@ -1,10 +1,9 @@
 from urllib.parse import urlparse
 
-def generate_openapi_spec_for_actions(actions, apis):
+def generate_openapi_spec_for_actions(actions, apis, base_url="https://gptactionhub.com"):
     title = actions["name"]
     version = "1.0" #TODO
     description = "" #TODO is this used?
-    base_url = "https://gptactionhub.com" 
     swagger = Swagger(title, version, description, base_url)
     for api, api_link in zip(apis, actions["api_links"]):
         swagger.add_api(api, api_link)
@@ -22,43 +21,48 @@ class Swagger:
 
     def add_api(self, api, api_link):
         params = {}
-        for api_param, api_link_param in zip(api["params"], api_link["params"]):
-            param_type = api_param[0]
-            param_name = api_link_param["name"]
+        for api_path, api_link_path in zip(api["paths"], api_link["paths"]):
+            print("--", api_path, api_link_path)
 
-            if param_type == "credential":
-                pass
-            if api_link_param["type"] == "constant":
-                pass
-            params[api["method"].lower()] = {}
-            params[api["method"].lower()][param_name] = {
-                'type': param_type,
-                'description': 'TODO'
-            }
-        url = urlparse(api["url"]).path
+            params[api_path["method"].lower()] = {}
+            for api_param, api_link_param in zip(api_path["params"], api_link_path["params"]):
+                #TODO match by path_id
+                #TODO support more than one operation_id
+                param_name = api_link_param["name"]
+                param_type = api_param["type"]
 
-        self.add_action(url, api["method"].lower(), {
-            "description": api["description"],
-            "operationId": api_link["action_name"],
-            'schema': {
-                'type': 'object',
-                'properties': {
-                    **params[api["method"].lower()]
+                if api_param['type'] == "credential":
+                    pass
+                if "source" in api_link_param and api_link_param["source"] == "constant":
+                    pass
+                params[api_path["method"].lower()][param_name] = {
+                    'type': param_type,
+                    'description': 'TODO'
                 }
-            },
-            'responses': {
-                '200': {
-                    'description': 'Message received successfully',
-                    'content': {
-                        'application/json': {
-                            'schema': {
-                                'type': 'string'
+            url = urlparse(api_path["url"]).path
+
+            self.add_action(url, api_path["method"].lower(), {
+                "description": api["description"], #TODO
+                "operationId": api_link_path["operation_id"],
+                'schema': {
+                    'type': 'object',
+                    'properties': {
+                        **params[api_path["method"].lower()]
+                    }
+                },
+                'responses': {
+                    '200': {
+                        'description': 'Message received successfully',
+                        'content': {
+                            'application/json': {
+                                'schema': {
+                                    'type': 'string'
+                                }
                             }
                         }
                     }
                 }
-            }
-        })
+            })
         #TODO add i/o types
         #TODO review spec
 

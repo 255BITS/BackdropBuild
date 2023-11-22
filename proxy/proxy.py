@@ -88,10 +88,10 @@ async def listen_to_changes(last_seq):
                         doc = change.get('doc', {})
                         if doc.get('type') == 'API':
                             print(f"Document {doc['_id']} of type {doc['type']} is relevant.")
-                            url_api_lookup_table[doc['_id']] = {'params': doc['params'], 'paths': doc['paths']}
+                            url_api_lookup_table[doc['_id']] = {'paths': doc['paths']}
                         elif doc.get('type') == 'actions':
                             print(f"Document {doc['_id']} of type {doc['type']} is relevant.")
-                            action_lookup_table[doc['_id']] = {'api_links': doc['api_links'], 'auths': doc['auths']}
+                            action_lookup_table[doc['_id']] = {'api_links': doc['api_links'], 'auths': {}} #TODO doc['auths']
             except httpx.ReadTimeout:
                 continue
             except httpx.HTTPStatusError as e:
