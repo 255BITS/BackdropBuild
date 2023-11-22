@@ -96,7 +96,7 @@ class ActionsService:
 
     def update(self, id, update_dict):
         actions = db.get(id)
-        db.save(actions | update)
+        db.save(actions | update_dict)
 
     def get_apis(self):
         apis = db.query_view('apis', 'public')
