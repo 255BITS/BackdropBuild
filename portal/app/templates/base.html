@@ -39,9 +39,10 @@
             <nav class="bg-white px-6 py-3 shadow">
                 <div class="flex justify-between">
                     <div>
+                        <img src="/static/logo-26x26.png" class="pr-2 float-left">
                         <a href="/" class="text-xl font-semibold text-gray-700">GPTActionHub</a>
                     </div>
-                    <div>
+                    <div class="pt-1">
                         <ul class="flex items-center">
                             {% if current_user %}
                                 <li><a href="{{url_for("actions.index")}}" class="text-gray-700 hover:text-gray-900 px-3 py-2">Dashboard</a></li>
