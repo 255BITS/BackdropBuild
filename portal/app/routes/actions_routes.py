@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, redirect, url_for, request, g, make_response
+from flask import Blueprint, render_template, redirect, url_for, request, g, make_response, flash
 from app.services.actions_service import ActionsService
 from app.services.auth_service import assert_logged_in
 from shared.couch import db
@@ -60,21 +60,33 @@ def api_link(id):
 def post_api_link(id):
     apis = actions_service().get_apis()
     actions = db.get(id)
-    #TODO save
+    form_data = request.form
+    api_id = form_data["api"]
+    api = db.get(api_id)
+    print("FOUND api", api)
+    #TODO 404
+    for api_link in actions["api_links"]:
+        if api_id == api_link["api_id"]:
+            flash("That API has already been added.", "info")
+            return redirect(url_for("actions.show", id=id))
+    api_links = { "api_id": api_id, "paths": [] }
+    for path in api["paths"]:
+        api_link_path = dict(path)
+        api_link_path["params"] = []
+        print("--params", path)
+        for param in path["params"]:
+            default_source = "gpt"
+            if param["type"] == "credentials":
+                default_source = "credentials"
+            default_value = ""
+            api_link_param = { "name": param["name"], "source": default_source, "value": default_value }
+            api_link_path["params"].append(api_link_param)
+
+        api_links["paths"].append(api_link_path)
+
+    actions["api_links"].append(api_links) 
+    db.save(actions)
     return redirect(url_for("actions.show", id=id))
-
-@actions_bp.get('/actions/<id>/api_link/<api_link_id>')
-def api_link_edit(id, api_link_id):
-    apis = actions_service().get_apis()
-    actions = db.get(id)
-    selected_api_link = actions["api_links"][int(api_link_id)]
-    return render_template('actions_api_link.html', apis=apis, actions=actions, selected_api_link=selected_api_link)
-
-@actions_bp.get('/actions/<id>/api_link/<api_link_id>/clicked')
-def api_link_edit_clicked(id, api_link_id):
-    response = make_response("", 200)
-    response.headers['HX-Redirect'] = url_for("actions.api_link_edit", id=id, api_link_id=api_link_id)
-    return response
 
 @actions_bp.delete('/actions/<id>/api_link/<api_link_id>')
 def api_link_delete(id, api_link_id):
