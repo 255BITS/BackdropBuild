@@ -74,17 +74,6 @@ class ActionsService:
         })
         return actions
 
-    def add_api_link(self, id, api_id, action_name, params):
-        actions = db.get(id)
-        actions["api_links"] += [
-            {
-                "api_id": api_id,
-                "action_name": action_name,
-                "params": params
-            }
-        ]
-        return db.save(actions)
-
     def get_details(self, id):
         #TODO 404
         #TODO doc type check

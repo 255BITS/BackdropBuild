@@ -53,8 +53,49 @@ def edit_redirect(id):
 
 @actions_bp.post('/actions/<id>/update')
 def update(id):
-    name = request.form.get('name')
-    actions_service().update(id, {"name": name})
+    form_data = request.form
+    name = form_data.get('name')
+
+    actions = db.get(id)
+    api_links = [dict(a) for a in actions["api_links"]]
+
+    param_pattern = re.compile(r'api_links\[(\d+)\]\[paths\]\[(\d+)\]\[params\]\[(\d+)\]\[(\w+)\]')
+    path_pattern = re.compile(r'api_links\[(\d+)\]\[paths\]\[(\d+)\]\[(\w+)\]')
+
+    for key, value in form_data.items():
+        param_match = param_pattern.match(key)
+        path_match = path_pattern.match(key)
+
+        if param_match:
+            api_index, path_index, param_index, field = tuple(map(int, param_match.groups()[:-1])) + (param_match.groups()[-1],)
+            # Ensure the structure is large enough for params
+            while len(api_links) <= api_index:
+                api_links.append({"paths": []})
+            while len(api_links[api_index]["paths"]) <= path_index:
+                api_links[api_index]["paths"].append({"params": []})
+            while len(api_links[api_index]["paths"][path_index]["params"]) <= param_index:
+                api_links[api_index]["paths"][path_index]["params"].append({})
+
+            # Assign the param value
+            api_links[api_index]["paths"][path_index]["params"][param_index][field] = value
+
+        elif path_match:
+            # Extract the api_index and path_index as integers, and field as string
+            api_index, path_index = map(int, path_match.groups()[:-1])
+            field = path_match.groups()[-1]
+
+            # Ensure the structure is large enough for paths
+            while len(api_links) <= api_index:
+                api_links.append({"paths": []})
+            while len(api_links[api_index]["paths"]) <= path_index:
+                api_links[api_index]["paths"].append({})
+
+            # Assign the path value
+            api_links[api_index]["paths"][path_index][field] = value
+
+    actions["api_links"] = api_links
+    db.save(actions)
+
     return redirect(url_for('actions.show', id=id))
 
 @actions_bp.get('/actions/<id>/api_link')
@@ -83,8 +124,8 @@ def post_api_link(id):
         print("--params", path)
         for param in path["params"]:
             default_source = "gpt"
-            if param["type"] == "credentials":
-                default_source = "credentials"
+            if param["type"] == "credential":
+                default_source = "credential"
             default_value = ""
             api_link_param = { "name": param["name"], "source": default_source, "value": default_value }
             api_link_path["params"].append(api_link_param)
@@ -101,26 +142,3 @@ def api_link_delete(id, api_link_id):
     del actions["api_links"][int(api_link_id)]
     db.save(actions)
     return ""
-
-@actions_bp.post('/actions/<id>/api_link/<api_id>')
-def api_link_add(id, api_id):
-    form_data = request.form
-    action_name = form_data["action_name"] #TODO operation_id
-    params = []
-    indexed_params = {}
-
-    # Organize the data by index
-    pattern = re.compile(r'params\[(\d+)\]\[(\w+)\]')
-    for key in form_data:
-        if key.startswith('params'):
-            index, param_key = pattern.match(key).groups()
-            if index not in indexed_params:
-                indexed_params[index] = {}
-            indexed_params[index][param_key] = form_data[key]
-
-    # Convert each indexed group into a dictionary
-    for index in indexed_params:
-        params.append(indexed_params[index])
-
-    actions_service().add_api_link(id, api_id, action_name, params)
-    return redirect(url_for("actions.show", id=id))
