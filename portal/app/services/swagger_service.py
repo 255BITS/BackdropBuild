@@ -1,6 +1,6 @@
 from urllib.parse import urlparse
 
-def generate_openapi_spec_for_actions(actions, apis, base_url="https://gptactionhub.com"):
+def generate_openapi_spec_for_actions(actions, apis, base_url="https://api.gptactionhub.com"):
     title = actions["name"]
     version = "1.0" #TODO
     description = "" #TODO is this used?
