@@ -69,26 +69,27 @@ document.addEventListener('DOMContentLoaded', function () {
         <form {% if "_id" in api %} action="/apis/{{api["_id"]}}/update" {% else %} action="/apis/create" {% endif %} method="POST">
             <div class="mb-4">
                 <label for="title" class="block {% if 'title' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-md font-bold mb-2">Title</label>
-                <input type="text" id="title" name="title" placeholder="latex2pdf" value="{{api['title']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <input type="text" id="path{{path_index}}_title" name="title" placeholder="latex2pdf" value="{{api['title']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-4">
                 <label for="description" class="block {% if 'description' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-gray-700 text-md font-bold mb-2">Short Description</label>
-                <input type="text" id="description" name="description" value="{{api['description']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Convert latex to pdf documents">
+                <input type="text" id="path{{path_index}}_description" name="description" value="{{api['description']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Convert latex to pdf documents">
             </div>
             {% for path in api["paths"] %}
+            {% set path_index = loop.index0 %}
             {% if "path_id" in path %}
-                <input type="hidden" id='path_id' name='path_id' value="{{path["path_id"]}}"/>
+                <input type="hidden" id='path{{path_index}}_path_id' name='path{{path_index}}_path_id' value="{{path["path_id"]}}"/>
             {% else %}
-                <input type="hidden" id='path_id' name='path_id' value="{{uuid.uuid4()}}"/>
+                <input type="hidden" id='path{{path_index}}_path_id' name='path{{path_index}}_path_id' value="{{uuid.uuid4()}}"/>
             {% endif %}
             <div class="mb-4">
-                <label for="operation_id" class="block {% if 'operation_id' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-md font-bold mb-2">Operation ID</label>
-                <input type="text" id="operation_id" name="operation_id" value="{{path['operation_id']}}" placeholder="createPdfFromLatex" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <label for="path{{path_index}}_operation_id" class="block {% if 'operation_id' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-md font-bold mb-2">Operation ID</label>
+                <input type="text" id="path{{path_index}}_operation_id" name="path{{path_index}}_operation_id" value="{{path['operation_id']}}" placeholder="createPdfFromLatex" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-8">
                 <label for="url" class="block {% if 'url' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-md font-bold mb-2">URL</label>
                 <div class="flex items-center mb-2">
-                    <select id="method" name="method" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <select id="path{{path_index}}_method" name="path{{path_index}}_method" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                         <option value="GET">GET</option>
                         <option value="POST" selected>POST</option>
                         <option value="PUT">PUT</option>
@@ -99,25 +100,25 @@ document.addEventListener('DOMContentLoaded', function () {
                         <option value="TRACE">TRACE</option>
                     </select>
                     <div class="flex-grow">
-                      <input type="text" id="url" name="url" placeholder="https://..." value="{{path['url']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                      <input type="text" id="path{{path_index}}_url" name="path{{path_index}}_url" placeholder="https://..." value="{{path['url']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     </div>
                 </div>
             </div>
             <div id='paramsContainer' class="mb-8">
-                <label for="params" class="block text-gray-700 text-lg font-semibold mb-2">
+                <label for="path{{path_index}}_params" class="block text-gray-700 text-lg font-semibold mb-2">
                     Parameters<!--<a href="#" class="text-blue-600 text-sm ml-1">(?)</a>-->
                 </label>
                 {% for param in path['params'] %}
                 <div class="flex items-center mb-2 border-t pt-4 param-row">
                     <i class="fas fa-trash text-red-500 hover:text-red-700 mr-4 ml-4 cursor-pointer"></i>
-                    <select id="param{{ loop.index0 }}-type" name="param{{ loop.index0 }}-type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4" onchange="javascript:warnOnParameterChange()">
+                    <select id="path{{path_index}}_param{{ loop.index0 }}-type" name="path{{path_index}}_param{{ loop.index0 }}-type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4" onchange="javascript:warnOnParameterChange()">
                         <option value="integer" {% if param[0] == "integer" %}selected{% endif %}>Integer</option>
                         <option value="float" {% if param[0] == "float" %}selected{% endif %}>Float</option>
                         <option value="string" {% if param[0] == "string" %}selected{% endif %}>String</option>
                         <option value="credential" {% if param[0] == "credential" %}selected{% endif %}>Credential</option>
                     </select>
                     <div class="flex-grow">
-                        <input oninput="warnOnParameterChange()" type="text" id="param{{ loop.index0 }}-input" name="param{{ loop.index0 }}-input" placeholder="{{ param[1] }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ param[1] }}">
+                        <input oninput="warnOnParameterChange()" type="text" id="path{{path_index}}_param{{ loop.index0 }}-input" name="path{{path_index}}_param{{ loop.index0 }}-input" placeholder="{{ param[1] }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ param[1] }}">
                     </div>
                 </div>
                 {% endfor %}

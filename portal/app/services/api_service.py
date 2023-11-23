@@ -5,12 +5,12 @@ def parse_api_object(request):
 
     # Extract the fixed attributes
     title = request.form.get("title", "")
-    operation_id = request.form.get("operation_id", "")
-    method = request.form.get("method", "")
-    url = request.form.get("url", "")
+    operation_id = request.form.get("path0_operation_id", "")
+    method = request.form.get("path0_method", "")
+    url = request.form.get("path0_url", "")
     description = request.form.get("description", "")
     privacy_policy = request.form.get("privacy_policy", "")
-    path_id = request.form.get("path_id")
+    path_id = request.form.get("path0_path_id")
 
     # Validation checks
     if not title:
@@ -31,8 +31,8 @@ def parse_api_object(request):
     # Iteratively process each pair of 'type' and 'input'
     i = 0
     while True:
-        param_type_key = f'param{i}-type'
-        param_input_key = f'param{i}-input'
+        param_type_key = f'path0_param{i}-type'
+        param_input_key = f'path0_param{i}-input'
 
         # Check if both keys exist in the form data
         if param_type_key in request.form and param_input_key in request.form:
