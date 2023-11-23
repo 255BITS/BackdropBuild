@@ -1,3 +1,4 @@
+import uuid
 from flask import Flask, render_template, redirect, request, jsonify, url_for, flash, g
 from shared.couch import db
 from app.services.api_service import parse_api_object
@@ -21,7 +22,7 @@ def apis_my():
 def apis_new():
     assert_logged_in()
     default_api={"paths":[{"params":[["credential", "API_KEY"],["string", "query"]]}]}
-    return render_template('api_new.html', errors={}, api=default_api)
+    return render_template('api_new.html', errors={}, api=default_api, uuid=uuid)
 
 @api_bp.route('/apis/create', methods=["POST"])
 def apis_create():

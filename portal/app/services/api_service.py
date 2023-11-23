@@ -10,6 +10,7 @@ def parse_api_object(request):
     url = request.form.get("url", "")
     description = request.form.get("description", "")
     privacy_policy = request.form.get("privacy_policy", "")
+    path_id = request.form.get("path_id")
 
     # Validation checks
     if not title:
@@ -46,6 +47,7 @@ def parse_api_object(request):
         "title": title,
         "paths": [
             {
+                "path_id": path_id,
                 "operation_id": operation_id,
                 "method": method,
                 "url": url,

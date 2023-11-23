@@ -76,6 +76,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 <input type="text" id="description" name="description" value="{{api['description']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Convert latex to pdf documents">
             </div>
             {% for path in api["paths"] %}
+            {% if "path_id" in path %}
+                <input type="hidden" id='path_id' name='path_id' value="{{path["path_id"]}}"/>
+            {% else %}
+                <input type="hidden" id='path_id' name='path_id' value="{{uuid.uuid4()}}"/>
+            {% endif %}
             <div class="mb-4">
                 <label for="operation_id" class="block {% if 'operation_id' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-md font-bold mb-2">Operation ID</label>
                 <input type="text" id="operation_id" name="operation_id" value="{{path['operation_id']}}" placeholder="createPdfFromLatex" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
