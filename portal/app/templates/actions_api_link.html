@@ -3,14 +3,7 @@
 {% block head %}
 {{super()}}
 <script>
-{% if selected_api_link %}
-  var selectedApiId = {{ selected_api_link.api_id | tojson | safe }};
-{% else %}
-  var selectedApiId = null;
-{% endif %}
-
   function selectAPI(row) {
-    // Find the radio button inside this row
     const radio = row.querySelector('input[type=radio]');
     if (radio) {
       radio.checked = true;
@@ -18,14 +11,6 @@
       radio.dispatchEvent(new Event('change'));
     }
   }
-  document.addEventListener('DOMContentLoaded', function () {
-    if (selectedApiId !== null) {
-      const rowToSelect = document.querySelector(`tr[data-api-id="${selectedApiId}"]`);
-      if (rowToSelect) {
-        selectAPI(rowToSelect);
-      }
-    }
-  });
 </script>
 {% endblock %}
 
@@ -45,64 +30,67 @@
         </button>
       </div>
     </div>-->
-    <div class="bg-white shadow rounded-lg p-4">
-      <table class="min-w-full leading-normal">
-        <thead>
-          <tr>
-            <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-            </th>
-            <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-              Title
-            </th>
-            <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-              Description
-            </th>
-            <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-              Method
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {%for api in apis%}
-            <tr onclick="selectAPI(this)" class="cursor-pointer" data-api-id="{{api._id}}">
-              <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                <div class="flex items-center">
-                  <div class="ml-3">
-                    <input type="radio" name="api" value="{{api.value}}" hx-get="/actions/{{actions._id}}/api_link/{{api._id}}/new" hx-trigger="change, click" hx-target="#configuration">
-                  </div>
-                </div>
-              <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                <div class="flex items-center">
-                  <div class="ml-3">
-                    <p class="text-gray-900 whitespace-no-wrap">
-                      {{api.title}}
-                    </p>
-                  </div>
-                </div>
-              </td>
-              <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                <div class="flex items-center">
-                  <div class="ml-3">
-                    <p class="text-gray-900 whitespace-no-wrap">
-                      {{api.description}}
-                    </p>
-                  </div>
-                </div>
-              </td>
-              <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-                <div class="flex items-center">
-                  <div class="ml-3">
-                    <p class="text-gray-900 whitespace-no-wrap">
-                      {{api.method}}
-                    </p>
-                  </div>
-                </div>
-              </td>
+    <form method="POST">
+      <div class="bg-white shadow rounded-lg p-4">
+        <table class="min-w-full leading-normal">
+          <thead>
+            <tr>
+              <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+              </th>
+              <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Title
+              </th>
+              <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Description
+              </th>
+              <th class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                Method
+              </th>
             </tr>
-          {%endfor%}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {%for api in apis%}
+              <tr onclick="selectAPI(this)" class="cursor-pointer" data-api-id="{{api._id}}">
+                <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                  <div class="flex items-center">
+                    <div class="ml-3">
+                      <input type="radio" name="api" value="{{api.value}}">
+                    </div>
+                  </div>
+                <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                  <div class="flex items-center">
+                    <div class="ml-3">
+                      <p class="text-gray-900 whitespace-no-wrap">
+                        {{api.title}}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                  <div class="flex items-center">
+                    <div class="ml-3">
+                      <p class="text-gray-900 whitespace-no-wrap">
+                        {{api.description}}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+                  <div class="flex items-center">
+                    <div class="ml-3">
+                      <p class="text-gray-900 whitespace-no-wrap">
+                        {{api.method}}
+                      </p>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        {%endfor%}
+      </div>
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Add API</button>
+    </form>
     <div id="configuration"></div>
   </div>
 </div>

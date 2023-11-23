@@ -98,15 +98,3 @@ def api_link_add(id, api_id):
 
     actions_service().add_api_link(id, api_id, action_name, params)
     return redirect(url_for("actions.show", id=id))
-
-@actions_bp.route('/actions/<id>/api_link/<api_id>/new')
-def api_link_new(id, api_id):
-    api = db.get(api_id)
-    actions = db.get(id)
-    return render_template('actions_api_link_new.html', api=api, actions=actions)
-
-@actions_bp.route('/api/options')
-def api_link_options():
-    i = request.args.get("index")
-    type = request.args.get(f'params[{i}][type]')
-    return render_template('actions_api_link_options.html', type=type, i=i)
