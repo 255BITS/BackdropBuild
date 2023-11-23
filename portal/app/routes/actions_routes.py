@@ -56,6 +56,13 @@ def api_link(id):
     actions = db.get(id)
     return render_template('actions_api_link.html', apis=apis, actions=actions)
 
+@actions_bp.post('/actions/<id>/api_link')
+def post_api_link(id):
+    apis = actions_service().get_apis()
+    actions = db.get(id)
+    #TODO save
+    return redirect(url_for("actions.show", id=id))
+
 @actions_bp.get('/actions/<id>/api_link/<api_link_id>')
 def api_link_edit(id, api_link_id):
     apis = actions_service().get_apis()
