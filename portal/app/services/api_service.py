@@ -19,11 +19,11 @@ def parse_api_object(request):
     if not description:
         errors['description'] = 'Short description cannot be empty.'
     if not operation_id:
-        errors['operation_id'] = 'Operation ID cannot be empty.'
+        errors['path0_operation_id'] = 'Operation ID cannot be empty.'
     if not url:
-        errors['url'] = 'URL cannot be empty.'
+        errors['path0_url'] = 'URL cannot be empty.'
     elif not re.match(r'^https://', url):
-        errors['url'] = 'URL must start with https://'
+        errors['path0_url'] = 'URL must start with https://'
 
     # Initialize an empty list to store the parameters
     params = []

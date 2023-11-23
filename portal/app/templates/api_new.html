@@ -28,14 +28,14 @@ document.addEventListener('DOMContentLoaded', function () {
         newRow.classList.add('flex', 'items-center', 'mb-2', 'border-t', 'pt-4', 'param-row');
         newRow.innerHTML = `
           <i class="fas fa-trash text-red-500 hover:text-red-700 mr-4 ml-4 cursor-pointer"></i>
-          <select id="param${newIndex}_type" name="param${newIndex}_type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
+          <select id="path0_param${newIndex}_type" name="path0_param${newIndex}_type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
               <option value="integer">Integer</option>
               <option value="float">Float</option>
               <option value="string" selected>String</option>
               <option value="credential">Credential</option>
           </select>
           <div class="flex-grow">
-              <input type="text" id="param${newIndex}_input" name="param${newIndex}_input" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="parameter">
+              <input type="text" id="path0_param${newIndex}_input" name="path0_param${newIndex}_input" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="parameter">
           </div>
        `;
         const addParamButton = document.getElementById('addParamButton'); // Or use a different selector if your button is identified differently
@@ -69,11 +69,11 @@ document.addEventListener('DOMContentLoaded', function () {
         <form {% if "_id" in api %} action="/apis/{{api["_id"]}}/update" {% else %} action="/apis/create" {% endif %} method="POST">
             <div class="mb-4">
                 <label for="title" class="block {% if 'title' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-md font-bold mb-2">Title</label>
-                <input type="text" id="path{{path_index}}_title" name="title" placeholder="latex2pdf" value="{{api['title']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                <input type="text" id="title" name="title" placeholder="latex2pdf" value="{{api['title']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-4">
                 <label for="description" class="block {% if 'description' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-gray-700 text-md font-bold mb-2">Short Description</label>
-                <input type="text" id="path{{path_index}}_description" name="description" value="{{api['description']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Convert latex to pdf documents">
+                <input type="text" id="description" name="description" value="{{api['description']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="Convert latex to pdf documents">
             </div>
             {% for path in api["paths"] %}
             {% set path_index = loop.index0 %}
@@ -83,11 +83,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 <input type="hidden" id='path{{path_index}}_path_id' name='path{{path_index}}_path_id' value="{{uuid.uuid4()}}"/>
             {% endif %}
             <div class="mb-4">
-                <label for="path{{path_index}}_operation_id" class="block {% if 'operation_id' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-md font-bold mb-2">Operation ID</label>
+                <label for="path{{path_index}}_operation_id" class="block {% if 'path0_operation_id' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-md font-bold mb-2">Operation ID</label>
                 <input type="text" id="path{{path_index}}_operation_id" name="path{{path_index}}_operation_id" value="{{path['operation_id']}}" placeholder="createPdfFromLatex" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div class="mb-8">
-                <label for="url" class="block {% if 'url' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-md font-bold mb-2">URL</label>
+                <label for="url" class="block {% if 'path0_url' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-md font-bold mb-2">URL</label>
                 <div class="flex items-center mb-2">
                     <select id="path{{path_index}}_method" name="path{{path_index}}_method" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                         <option value="GET">GET</option>
