@@ -13,10 +13,10 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateIndexes() {
         const allRows = paramsContainer.querySelectorAll('.param-row');
         allRows.forEach((row, index) => {
-            row.querySelector('select').id = `param${index}_type`;
-            row.querySelector('select').name = `param${index}_type`;
-            row.querySelector('input').id = `param${index}_input`;
-            row.querySelector('input').name = `param${index}_input`;
+            row.querySelector('select').id = `path0_param${index}_type`;
+            row.querySelector('select').name = `path0_param${index}_type`;
+            row.querySelector('input').id = `path0_param${index}_input`;
+            row.querySelector('input').name = `path0_param${index}_input`;
         });
         warnOnParameterChange();
     }
