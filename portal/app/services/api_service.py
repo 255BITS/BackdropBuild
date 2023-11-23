@@ -31,8 +31,8 @@ def parse_api_object(request):
     # Iteratively process each pair of 'type' and 'input'
     i = 0
     while True:
-        param_type_key = f'path0_param{i}-type'
-        param_input_key = f'path0_param{i}-input'
+        param_type_key = f'path0_param{i}_type'
+        param_input_key = f'path0_param{i}_input'
 
         # Check if both keys exist in the form data
         if param_type_key in request.form and param_input_key in request.form:

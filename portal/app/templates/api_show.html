@@ -33,13 +33,13 @@
                 {% for param in path['params'] %}
                 <div class="flex items-center mb-2 pt-4">
                     <select id="param{{ loop.index0 }}" disabled="" name="method" class="shadow-b border-b rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline disabled">
-                        <option value="Integer" {% if param[0] == "Integer" %}selected{% endif %}>Integer</option>
-                        <option value="Float" {% if param[0] == "Float" %}selected{% endif %}>Float</option>
-                        <option value="String" {% if param[0] == "String" %}selected{% endif %}>String</option>
-                        <option value="Credential" {% if param[0] == "Credential" %}selected{% endif %}>Credential</option>
+                        <option value="Integer" {% if param["type"] == "integer" %}selected{% endif %}>Integer</option>
+                        <option value="Float" {% if param["type"] == "float" %}selected{% endif %}>Float</option>
+                        <option value="String" {% if param["type"] == "string" %}selected{% endif %}>String</option>
+                        <option value="Credential" {% if param["type"] == "credential" %}selected{% endif %}>Credential</option>
                     </select>
                     <div class="flex-grow">
-                        <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ param[1] }}</p>
+                        <p class="shadow-b appearance-none border-b rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">{{ param["name"] }}</p>
                     </div>
                 </div>
                 {% endfor %}

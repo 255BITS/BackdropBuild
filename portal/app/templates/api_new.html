@@ -13,10 +13,10 @@ document.addEventListener('DOMContentLoaded', function () {
     function updateIndexes() {
         const allRows = paramsContainer.querySelectorAll('.param-row');
         allRows.forEach((row, index) => {
-            row.querySelector('select').id = `param${index}-type`;
-            row.querySelector('select').name = `param${index}-type`;
-            row.querySelector('input').id = `param${index}-input`;
-            row.querySelector('input').name = `param${index}-input`;
+            row.querySelector('select').id = `param${index}_type`;
+            row.querySelector('select').name = `param${index}_type`;
+            row.querySelector('input').id = `param${index}_input`;
+            row.querySelector('input').name = `param${index}_input`;
         });
         warnOnParameterChange();
     }
@@ -28,14 +28,14 @@ document.addEventListener('DOMContentLoaded', function () {
         newRow.classList.add('flex', 'items-center', 'mb-2', 'border-t', 'pt-4', 'param-row');
         newRow.innerHTML = `
           <i class="fas fa-trash text-red-500 hover:text-red-700 mr-4 ml-4 cursor-pointer"></i>
-          <select id="param${newIndex}-type" name="param${newIndex}-type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
+          <select id="param${newIndex}_type" name="param${newIndex}_type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4">
               <option value="integer">Integer</option>
               <option value="float">Float</option>
               <option value="string" selected>String</option>
               <option value="credential">Credential</option>
           </select>
           <div class="flex-grow">
-              <input type="text" id="param${newIndex}-input" name="param${newIndex}-input" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="parameter">
+              <input type="text" id="param${newIndex}_input" name="param${newIndex}_input" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" placeholder="parameter">
           </div>
        `;
         const addParamButton = document.getElementById('addParamButton'); // Or use a different selector if your button is identified differently
@@ -111,14 +111,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 {% for param in path['params'] %}
                 <div class="flex items-center mb-2 border-t pt-4 param-row">
                     <i class="fas fa-trash text-red-500 hover:text-red-700 mr-4 ml-4 cursor-pointer"></i>
-                    <select id="path{{path_index}}_param{{ loop.index0 }}-type" name="path{{path_index}}_param{{ loop.index0 }}-type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4" onchange="javascript:warnOnParameterChange()">
-                        <option value="integer" {% if param[0] == "integer" %}selected{% endif %}>Integer</option>
-                        <option value="float" {% if param[0] == "float" %}selected{% endif %}>Float</option>
-                        <option value="string" {% if param[0] == "string" %}selected{% endif %}>String</option>
-                        <option value="credential" {% if param[0] == "credential" %}selected{% endif %}>Credential</option>
+                    <select id="path{{path_index}}_param{{ loop.index0 }}_type" name="path{{path_index}}_param{{ loop.index0 }}_type" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mr-4" onchange="javascript:warnOnParameterChange()">
+                        <option value="integer" {% if param["type"] == "integer" %}selected{% endif %}>Integer</option>
+                        <option value="float" {% if param["type"] == "float" %}selected{% endif %}>Float</option>
+                        <option value="string" {% if param["type"] == "string" %}selected{% endif %}>String</option>
+                        <option value="credential" {% if param["type"] == "credential" %}selected{% endif %}>Credential</option>
                     </select>
                     <div class="flex-grow">
-                        <input oninput="warnOnParameterChange()" type="text" id="path{{path_index}}_param{{ loop.index0 }}-input" name="path{{path_index}}_param{{ loop.index0 }}-input" placeholder="{{ param[1] }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ param[1] }}">
+                        <input oninput="warnOnParameterChange()" type="text" id="path{{path_index}}_param{{ loop.index0 }}_input" name="path{{path_index}}_param{{ loop.index0 }}_input" placeholder="{{ param["name"] }}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" value="{{ param["name"] }}">
                     </div>
                 </div>
                 {% endfor %}
