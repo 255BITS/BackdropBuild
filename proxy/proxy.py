@@ -91,7 +91,7 @@ async def listen_to_changes(last_seq):
                             url_api_lookup_table[doc['_id']] = {'paths': doc['paths']}
                         elif doc.get('type') == 'actions':
                             print(f"Document {doc['_id']} of type {doc['type']} is relevant.")
-                            action_lookup_table[doc['_id']] = {'api_links': doc['api_links'], 'auths': {}} #TODO doc['auths']
+                            action_lookup_table[doc['_id']] = {'api_links': doc['api_links'], 'auths': [{}]} #TODO doc['auths']
             except httpx.ReadTimeout:
                 continue
             except httpx.HTTPStatusError as e:
@@ -140,7 +140,7 @@ async def passthrough(action_id, operation_id):
 
     if action_id not in action_lookup_table:
         return jsonify({"error": "Action not found"}, 404)
-    actions_api_links = action_lookup_table[action_id]
+    actions_api_links = action_lookup_table[action_id]["api_links"]
     api = None
     active_path_id = None
     print("Found actions_api_links", actions_api_links)
