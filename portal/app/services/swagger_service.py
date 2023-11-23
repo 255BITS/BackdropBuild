@@ -22,8 +22,6 @@ class Swagger:
     def add_api(self, api, api_link, actions):
         params = {}
         for api_path, api_link_path in zip(api["paths"], api_link["paths"]):
-            print("--", api_path, api_link_path)
-
             params[api_path["method"].lower()] = []
             for api_param, api_link_param in zip(api_path["params"], api_link_path["params"]):
                 #TODO match by path_id

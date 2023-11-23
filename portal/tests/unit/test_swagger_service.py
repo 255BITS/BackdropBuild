@@ -23,8 +23,8 @@ def test_generate_openapi_no_params():
     result = generate_openapi_spec_for_actions(actions, apis)
     assert len(result["servers"]) == 1
     assert len(result["paths"]) == 1
-    assert len(result["paths"][""]) == 1
-    assert len(result["paths"][""]["post"]) > 0
+    assert len(result["paths"]["/1/test"]) == 1
+    assert len(result["paths"]["/1/test"]["post"]) > 0
 
 def test_generate_openapi_one_params():
     actions = load_fixture("single_one_params_actions.json")
@@ -32,6 +32,7 @@ def test_generate_openapi_one_params():
     result = generate_openapi_spec_for_actions(actions, apis)
     assert len(result["servers"]) == 1
     assert len(result["paths"]) == 1
-    assert len(result["paths"][""]) == 1
-    assert len(result["paths"][""]["post"]["schema"]) > 0
-    assert len(result["paths"][""]["post"]["schema"]["properties"]) > 0
+    assert len(result["paths"]["/1/test"]) == 1
+    print("--",result["paths"]["/1/test"]["post"])
+    assert len(result["paths"]["/1/test"]["post"]["parameters"]) > 0
+    assert len(result["paths"]["/1/test"]["post"]["parameters"][0]["schema"]) > 0
