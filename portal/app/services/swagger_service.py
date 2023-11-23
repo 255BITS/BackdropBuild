@@ -40,10 +40,14 @@ class Swagger:
                         'type': param_type,
                     },
                     "name": param_name,
-                    "in": "query",
                     'description': 'TODO',
                     'required': True
                 })
+                if api_path["method"] == 'GET' or api_path["method"] == 'DELETE':
+                    params[api_path["method"].lower()][-1]["in"]="query"
+                else:
+                    params[api_path["method"].lower()][-1]["in"]="body"
+
             path = f"/{actions['_id']}/{api_link_path['operation_id']}"
 
             self.add_path(path, api_path["method"].lower(), {
