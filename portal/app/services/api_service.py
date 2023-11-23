@@ -35,7 +35,7 @@ def parse_api_object(request):
 
         # Check if both keys exist in the form data
         if param_type_key in request.form and param_input_key in request.form:
-            params.append([request.form[param_type_key], request.form[param_input_key]])
+            params.append({"type": request.form[param_type_key], "name":request.form[param_input_key]})
             if request.form[param_input_key] == '':
                 errors[param_input_key] = "Parameter "+str(i)+" must have a title"
             i += 1
