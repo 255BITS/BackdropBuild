@@ -57,6 +57,7 @@ def update(id):
     name = form_data.get('name')
 
     actions = db.get(id)
+    actions['name'] = name
     api_links = [dict(a) for a in actions["api_links"]]
 
     param_pattern = re.compile(r'api_links\[(\d+)\]\[paths\]\[(\d+)\]\[params\]\[(\d+)\]\[(\w+)\]')
