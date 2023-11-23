@@ -42,7 +42,14 @@ def show(id):
 
 @actions_bp.route('/actions/<id>/edit')
 def edit(id):
-    return redirect(url_for('actions.show', id=id))
+    actions, apis, auths = actions_service().get_details(id)
+    return render_template('actions_edit.html', actions=actions, apis=apis)
+
+@actions_bp.route('/actions/<id>/edit_redirect')
+def edit_redirect(id):
+    response = make_response("", 200)
+    response.headers['HX-Redirect'] = url_for("actions.edit", id=id)
+    return response
 
 @actions_bp.post('/actions/<id>/update')
 def update(id):
