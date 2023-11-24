@@ -19,6 +19,7 @@ class DB:
         self.create_api_views()
         self.create_auth_views()
         self.create_user_views()
+        self.create_log_views()
 
     def insert(self, data):
         try:
@@ -142,6 +143,15 @@ class DB:
                                 } 
                             }"""
         self.create_view_ddoc("users", "by_email", map_users_by_email)
+
+    def create_log_views(self):
+        by_api = """function(doc) {
+                                if (doc.type === 'log') {
+                                    emit(doc.api_id, doc);
+                                }
+                            }"""
+
+        self.create_view_ddoc("logs", "by_api", by_api)
 
     def query_view(self, design_doc, view_name, **kwargs) -> List:
         """

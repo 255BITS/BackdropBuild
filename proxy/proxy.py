@@ -9,6 +9,7 @@ import traceback
 import signal
 import os
 import json
+from datetime import datetime
 
 app = Quart(__name__)
 logging_tasks = set()
@@ -42,9 +43,33 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 write_lock = asyncio.Lock()
 
-async def async_log(request_data, response_data, response_time):
-    log_message = f"Request Data: {request_data}, Response Data: {response_data}, Response Time: {response_time} seconds"
-    await asyncio.to_thread(logger.info, log_message)
+async def async_log(request_data, response_data, response_time, method, action_id, api_id, operation_id, path_id, response_status_code):
+    # Prepare the document to be stored in CouchDB
+    log_document = {
+        "method": method,
+        "action_id": action_id,
+        "api_id": api_id,
+        "operation_id": operation_id,
+        "path_id": path_id,
+        "request": request_data,
+        "response": response_data,
+        "response_status_code": response_status_code,
+        "created_at": datetime.utcnow().isoformat() + "Z",  # UTC time in ISO 8601
+        "type": "log",
+        "response_time": response_time
+    }
+
+    # Log the data to CouchDB
+    async with httpx.AsyncClient() as client:
+        try:
+            # POST request to store the document in CouchDB
+            response = await client.post(COUCHDB_URL, json=log_document)
+            if response.status_code != 201:
+                # Handle the case where the document isn't created successfully
+                logger.error(f"Failed to log to CouchDB: {response.text}")
+        except Exception as e:
+            logger.error(f"Error logging to CouchDB: {e}")
+
 
 async def fetch_api_url_mapping():
     async with httpx.AsyncClient() as client:
@@ -129,7 +154,6 @@ async def debug_request_info():
    app.logger.info(f'URL: {request.url}')
    app.logger.info(f'Body: {await request.get_data()}')
 
-
 @app.route('/<action_id>/<operation_id>', methods=['GET', 'POST', 'PUT', 'DELETE', "PATCH"])
 async def passthrough(action_id, operation_id):
     start_time = time.time()
@@ -192,7 +216,17 @@ async def passthrough(action_id, operation_id):
 
     response_time = time.time() - start_time
 
-    log_task = asyncio.create_task(async_log(data, response_data, response_time))
+    record_request = {
+        "content": content,
+        "params": params,
+        "headers": headers
+    }
+    record_response = {
+        "content": response_data,
+        "headers": dict(response.headers)
+    }
+    do_log = async_log(record_request, record_response, response_time, method, action_id, api['api_id'], operation_id, active_path_id, response.status_code)
+    log_task = asyncio.create_task(do_log)
     logging_tasks.add(log_task)
     log_task.add_done_callback(logging_tasks.discard)
 
