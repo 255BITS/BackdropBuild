@@ -35,10 +35,22 @@ def create():
     actions = actions_service().create(name)
     return redirect(url_for("actions.show", id=actions['_id']))
 
-@actions_bp.route('/actions/<id>')
+@actions_bp.get('/actions/<id>')
 def show(id):
     actions, apis, auths = actions_service().get_details(id)
     return render_template('actions_show.html', actions=actions, apis=apis, auths=auths)
+
+@actions_bp.delete('/actions/<id>')
+def delete(id):
+    #TODO assert owner
+    #TODO assert valid uuid
+    if db.get(id) is not None:
+        db.delete(id)
+        response = make_response("", 200)
+        response.headers['HX-Redirect'] = url_for("actions.index")
+        return response
+    flash("You can't delete that.", "error")
+    return redirect(url_for("actions.show", id=id))
 
 @actions_bp.route('/actions/<id>/edit')
 def edit(id):

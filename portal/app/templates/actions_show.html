@@ -147,6 +147,10 @@
               </button>
             </div>
         </div>
+        <form hx-delete="{{url_for('actions.delete', id=actions._id)}}" hx-confirm="Are you sure? This cannot be undone.">
+          <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Delete</button>
+        </form>
     </div>
+
 </div>
 {% endblock %}
