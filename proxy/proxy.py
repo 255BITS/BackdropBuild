@@ -8,6 +8,7 @@ import logging
 import traceback
 import signal
 import os
+import json
 
 app = Quart(__name__)
 logging_tasks = set()
@@ -133,8 +134,12 @@ async def debug_request_info():
 async def passthrough(action_id, operation_id):
     start_time = time.time()
     method = request.method
-    params = request.args
+    params = dict(request.args)
     data = await request.get_data()
+    try:
+        data_dict = json.loads(data.decode('utf-8'))
+    except json.JSONDecodeError:
+        data_dict = {}
     headers = dict(request.headers)
     del headers["Host"]
 
@@ -149,6 +154,12 @@ async def passthrough(action_id, operation_id):
             if path['operation_id']==operation_id:
                 api = a
                 active_path_id = path["path_id"]
+                for param in path["params"]:
+                    if param["source"] == "constant":
+                        if path["method"].lower() in ["get", "delete"]:
+                            params[param["name"]] = param["value"]
+                        else:
+                            data_dict[param["name"]] = param["value"]
 
     if api is None:
         return jsonify({"error": "API not found"}, 404)
@@ -161,12 +172,12 @@ async def passthrough(action_id, operation_id):
         if path["path_id"] == active_path_id:
             target_path = path
 
-    print("TARGET", target)
+    content = json.dumps(data_dict)
     #TODO: openai token auth on action
 
     async with httpx.AsyncClient() as client:
         api_url = target_path['url']
-        api_call = client.request(method=method, url=api_url, content=data, headers=headers, params=params)
+        api_call = client.request(method=method, url=api_url, content=content, headers=headers, params=params)
         api_call_task = asyncio.create_task(api_call)
         api_call_tasks.add(api_call_task)
         api_call_task.add_done_callback(api_call_tasks.discard)
