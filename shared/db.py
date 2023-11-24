@@ -150,8 +150,13 @@ class DB:
                                     emit(doc.api_id, doc);
                                 }
                             }"""
-
+        by_actions = """function(doc) {
+                                if (doc.type === 'log') {
+                                    emit(doc.action_id, doc);
+                                }
+                            }"""
         self.create_view_ddoc("logs", "by_api", by_api)
+        self.create_view_ddoc("logs", "by_actions", by_actions)
 
     def query_view(self, design_doc, view_name, **kwargs) -> List:
         """
@@ -205,3 +210,6 @@ class DB:
 
     def get_apis(self, actions_id):
         return self.query_view('auths', 'by_actions', key=actions_id)
+
+    def get_logs(self, actions_id):
+        return self.query_view('logs', 'by_actions', key=actions_id)

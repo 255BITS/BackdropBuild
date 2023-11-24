@@ -70,7 +70,6 @@ async def async_log(request_data, response_data, response_time, method, action_i
         except Exception as e:
             logger.error(f"Error logging to CouchDB: {e}")
 
-
 async def fetch_api_url_mapping():
     async with httpx.AsyncClient() as client:
         try:

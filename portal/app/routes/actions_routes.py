@@ -152,3 +152,10 @@ def api_link_delete(id, api_link_id):
     del actions["api_links"][int(api_link_id)]
     db.save(actions)
     return ""
+
+@actions_bp.route('/actions/<id>/usage')
+def actions_usage(id):
+    actions = db.get(id)
+    logs = db.get_logs(id)
+    return render_template('actions_usage.html', id=id, actions=actions, logs=logs)
+

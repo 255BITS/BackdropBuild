@@ -3,13 +3,10 @@
 {% block maincontent %}
 <div class="container mx-auto px-6 py-8">
     <div class="bg-white shadow-lg rounded-lg p-6">
-        <h2 class="text-2xl font-semibold mb-4">Usage: Actions Name</h2>
+        <h2 class="text-2xl font-semibold mb-4">Usage: {{actions.name}}</h2>
 
         <!-- Tabs for Stats and Logs -->
         <ul class="flex border-b">
-            <li class="-mb-px mr-1">
-                <a class="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" href="#stats">Stats</a>
-            </li>
             <li class="mr-1">
                 <a class="bg-white inline-block py-2 px-4 text-blue-500 hover:text-blue-800 font-semibold" href="#logs">Logs</a>
             </li>
@@ -32,7 +29,7 @@
         </div>
 
         <!-- Logs Tab -->
-        <div id="logs" class="pt-4 hidden">
+        <div id="logs" class="pt-4">
             <div class="flex justify-end mb-2">
                 <input type="text" class="shadow appearance-none border rounded py-2 px-3 text-gray-700" placeholder="Filter logs">
             </div>
@@ -46,23 +43,15 @@
                         <th class="border px-4 py-2">Action</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Placeholder rows for logs -->
-                    <tr>
-                        <td class="border px-4 py-1"></td>
-                        <td class="border px-4 py-1">f0d...</td>
-                        <td class="border px-4 py-1">a18...</td>
-                        <td class="border px-4 py-1">723...</td>
-                        <td class="border px-4 py-2">Action 1</td>
-                    </tr>
-                    <tr>
-                        <td class="border px-4 py-1"></td>
-                        <td class="border px-4 py-1">837...</td>
-                        <td class="border px-4 py-1">0b2...</td>
-                        <td class="border px-4 py-1">c23...</td>
-                        <td class="border px-4 py-2">Action 2</td>
-                    </tr>
-                </tbody>
+                {% for log in logs %}
+                <tr>
+                  <td>{{log.created_at}}</td>
+                  <td>{{log.request.headers.get("Openai-Gpt-Id")}}</td>
+                  <td>{{log.request.headers.get("Openai-Ephemeral-User-Id")}}</td>
+                  <td>{{log.request.headers.get("Openai-Conversation-Id")}}</td>
+                  <td>{{log.method}} {{log.operation_id}}</td>
+                </tr>
+                {% endfor %}
             </table>
         </div>
     </div>
