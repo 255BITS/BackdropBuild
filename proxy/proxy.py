@@ -43,11 +43,11 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 write_lock = asyncio.Lock()
 
-async def async_log(request_data, response_data, response_time, method, action_id, api_id, operation_id, path_id, response_status_code):
+async def async_log(request_data, response_data, response_time, method, actions_id, api_id, operation_id, path_id, response_status_code):
     # Prepare the document to be stored in CouchDB
     log_document = {
         "method": method,
-        "action_id": action_id,
+        "actions_id": actions_id,
         "api_id": api_id,
         "operation_id": operation_id,
         "path_id": path_id,
@@ -153,8 +153,8 @@ async def debug_request_info():
    app.logger.info(f'URL: {request.url}')
    app.logger.info(f'Body: {await request.get_data()}')
 
-@app.route('/<action_id>/<operation_id>', methods=['GET', 'POST', 'PUT', 'DELETE', "PATCH"])
-async def passthrough(action_id, operation_id):
+@app.route('/<actions_id>/<operation_id>', methods=['GET', 'POST', 'PUT', 'DELETE', "PATCH"])
+async def passthrough(actions_id, operation_id):
     start_time = time.time()
     method = request.method
     params = dict(request.args)
@@ -166,9 +166,9 @@ async def passthrough(action_id, operation_id):
     headers = dict(request.headers)
     del headers["Host"]
 
-    if action_id not in action_lookup_table:
+    if actions_id not in action_lookup_table:
         return jsonify({"error": "Action not found"}, 404)
-    actions_api_links = action_lookup_table[action_id]["api_links"]
+    actions_api_links = action_lookup_table[actions_id]["api_links"]
     api = None
     active_path_id = None
     print("Found actions_api_links", actions_api_links)
@@ -224,7 +224,7 @@ async def passthrough(action_id, operation_id):
         "content": response_data,
         "headers": dict(response.headers)
     }
-    do_log = async_log(record_request, record_response, response_time, method, action_id, api['api_id'], operation_id, active_path_id, response.status_code)
+    do_log = async_log(record_request, record_response, response_time, method, actions_id, api['api_id'], operation_id, active_path_id, response.status_code)
     log_task = asyncio.create_task(do_log)
     logging_tasks.add(log_task)
     log_task.add_done_callback(logging_tasks.discard)

@@ -152,7 +152,7 @@ class DB:
                             }"""
         by_actions = """function(doc) {
                                 if (doc.type === 'log') {
-                                    emit(doc.action_id, doc);
+                                    emit(doc.actions_id, doc);
                                 }
                             }"""
         self.create_view_ddoc("logs", "by_api", by_api)

@@ -46,9 +46,9 @@
                 {% for log in logs %}
                 <tr>
                   <td>{{log.created_at}}</td>
-                  <td>{{log.request.headers.get("Openai-Gpt-Id")}}</td>
-                  <td>{{log.request.headers.get("Openai-Ephemeral-User-Id")}}</td>
-                  <td>{{log.request.headers.get("Openai-Conversation-Id")}}</td>
+                  <td>{{log.request.headers.get("Openai-Gpt-Id", "")}}</td>
+                  <td>{{log.request.headers.get("Openai-Ephemeral-User-Id", "")}}</td>
+                  <td>{{log.request.headers.get("Openai-Conversation-Id", "")}}</td>
                   <td>{{log.method}} {{log.operation_id}}</td>
                 </tr>
                 {% endfor %}
