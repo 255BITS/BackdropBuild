@@ -155,6 +155,12 @@ class DB:
                                     emit(doc.actions_id, doc);
                                 }
                             }"""
+        map_count_by_actions = """function(doc) { 
+                                if (doc.type === 'log') { 
+                                    emit(doc.actions_id, 1); 
+                                } 
+                            }"""
+        self.create_view_ddoc("logs", "count_by_actions", map_count_by_actions, reduce_func="_sum")
         self.create_view_ddoc("logs", "by_api", by_api)
         self.create_view_ddoc("logs", "by_actions", by_actions)
 
@@ -213,3 +219,15 @@ class DB:
 
     def get_logs(self, actions_id):
         return self.query_view('logs', 'by_actions', key=actions_id)
+
+    def count_logs_by_actions(self, keys=None):
+        view_path = 'logs/count_by_actions'
+        query_params = {'reduce': True}
+        if keys is not None:
+            query_params['keys'] = keys
+        query_params['group'] = True
+
+        result = self.db.view(view_path, **query_params)
+        counts = {row.key: row.value for row in result.rows} if result.rows else {}
+        return counts
+

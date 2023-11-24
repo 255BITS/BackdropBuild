@@ -34,7 +34,7 @@
                             <div class="flex mt-4">
                                 <div class="flex items-center">
                                     <i class="fas fa-project-diagram"></i>
-                                    <span class="ml-2 text-gray-700 w-4">{{ action.apis }}</span>
+                                    <span class="ml-2 text-gray-700 w-4">{{ action.apis_links | length }}</span>
                                 </div>
                                 <div class="flex items-center ml-4">
                                     <i class="fas fa-robot"></i>
@@ -42,7 +42,7 @@
                                 </div>
                                 <div class="flex items-center ml-4">
                                     <i class="fas fa-play"></i>
-                                    <span class="ml-2 text-gray-700 w-4">{{ action.uses }}</span>
+                                    <span class="ml-2 text-gray-700 w-4">{{ usage_count[action._id] or 0 }}</span>
                                 </div>
                                 <span class="text-xs text-gray-500 ml-4 align-bottom items-end text-xs pt-1">Updated: {{ action.last_updated }}</span>
                             </div>
