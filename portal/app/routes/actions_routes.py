@@ -124,7 +124,6 @@ def post_api_link(id):
     form_data = request.form
     api_id = form_data["api"]
     api = db.get(api_id)
-    print("FOUND api", api)
     #TODO 404
     for api_link in actions["api_links"]:
         if api_id == api_link["api_id"]:
@@ -132,9 +131,7 @@ def post_api_link(id):
             return redirect(url_for("actions.show", id=id))
     api_links = { "api_id": api_id, "paths": [] }
     for path in api["paths"]:
-        api_link_path = dict(path)
-        api_link_path["params"] = []
-        print("--params", path)
+        api_link_path = { "path_id": path["path_id"], "operation_id": path["operation_id"], "params": [] }
         for param in path["params"]:
             default_source = "gpt"
             if param["type"] == "credential":
