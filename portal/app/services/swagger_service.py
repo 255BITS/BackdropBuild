@@ -30,9 +30,9 @@ class Swagger:
                 param_type = api_param["type"]
 
                 if api_param['type'] == "credential":
-                    pass
+                    continue
                 if "source" in api_link_param and api_link_param["source"] == "constant":
-                    pass
+                    continue
                 params[api_path["method"].lower()].append({
                     'schema': {
                         'type': param_type,
