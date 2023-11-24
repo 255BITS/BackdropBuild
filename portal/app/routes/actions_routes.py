@@ -33,7 +33,7 @@ def new():
 def create():
     name = request.form.get('name')
     actions = actions_service().create(name)
-    return redirect(url_for("actions.edit", id=actions['_id']))
+    return redirect(url_for("actions.show", id=actions['_id']))
 
 @actions_bp.route('/actions/<id>')
 def show(id):
