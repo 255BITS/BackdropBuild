@@ -19,7 +19,8 @@ def index():
     ids = [a['_id'] for a in actions_list]
     usage_count = db.count_logs_by_actions(ids)
     gpts_count = db.count_gpt_ids_by_actions(ids)
-    return render_template('actions_index.html', actions_list=actions_list, usage_count=usage_count, gpts_count=gpts_count)
+    sparklines = actions_service().get_sparklines(ids)
+    return render_template('actions_index.html', actions_list=actions_list, usage_count=usage_count, gpts_count=gpts_count, sparklines=sparklines)
 
 @actions_bp.route('/actions/new')
 def new():

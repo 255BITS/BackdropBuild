@@ -1,4 +1,5 @@
 from passlib.hash import bcrypt
+import datetime
 from shared import utils
 from shared.couch import db
 import secrets
@@ -63,3 +64,48 @@ class ActionsService:
         apis = db.query_view('apis', 'public')
         apis += db.query_view('apis', 'by_user', key=self.user['_id'])
         return apis
+
+    def get_sparklines(self, ids):
+        """
+        Get sparkline data for the given action IDs.
+
+        Args:
+        - ids (list): List of action IDs.
+
+        Returns:
+        - dict: A dictionary with action IDs as keys and sparkline data points as values.
+        """
+
+        # Calculate the date range
+        end_date = datetime.datetime.now()
+        start_date = end_date - datetime.timedelta(weeks=2)
+
+        # SVG dimensions
+        svg_width = 300
+        svg_height = 50
+
+        # Total number of days for x-axis distribution
+        total_days = (end_date - start_date).days + 1
+
+        # Initialize sparkline data dictionary
+        sparkline_data = {}
+
+        for action_id in ids:
+            # Fetch log counts for this action_id
+            log_counts = db.count_logs_by_actions_day(action_id, start_date, end_date)
+
+            # Extract and normalize counts
+            counts = [log_counts.get((action_id, start_date.year, start_date.month, start_date.day + i), 0) for i in range(total_days)]
+            max_count = max(counts + [1]) if counts else 1
+            normalized_counts = [count / max_count for count in counts]
+
+            # Create points for polyline
+            points = []
+            for i, count in enumerate(normalized_counts):
+                x = (i / total_days) * svg_width
+                y = svg_height - (count * svg_height)
+                points.append(f"{x},{y}")
+
+            sparkline_data[action_id] = " ".join(points)
+
+        return sparkline_data

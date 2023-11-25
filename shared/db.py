@@ -194,12 +194,23 @@ class DB:
                 }
             }
         """
+        map_by_actions_day = """
+            function(doc) {
+                if (doc.type === "log") {
+                    var date = new Date(doc.created_at);
+                    var key = [doc.action_id, date.getFullYear(), date.getMonth() + 1, date.getDate()];
+                    emit(key, 1);
+                }
+            }
+        """
+
         self.create_view_ddoc("logs", "count_gpt_ids_by_action", map_count_gpt_ids_by_action)
         self.create_view_ddoc("logs", "count_by_actions", map_count_by_actions, reduce_func="_sum")
         self.create_view_ddoc("logs", "count_by_api", map_count_by_api, reduce_func="_sum")
         self.create_view_ddoc("logs", "by_api", by_api)
         self.create_view_ddoc("logs", "by_actions", by_actions)
         self.create_view_ddoc("logs", "apis_last_used", map_last_used, reduce_last_used)
+        self.create_view_ddoc("logs", "count_by_actions_day", map_by_actions_day, reduce_func="_sum")
 
     def query_view(self, design_doc, view_name, **kwargs) -> List:
         """
@@ -305,3 +316,24 @@ class DB:
 
         # Return the dictionary containing action_id: latest_timestamp pairs
         return last_used_timestamps
+
+    def count_logs_by_actions_day(self, actions_id, start_date, end_date):
+        # Format start and end keys for the view query
+        start_key = [actions_id, start_date.year, start_date.month, start_date.day]
+        end_key = [actions_id, end_date.year, end_date.month, end_date.day]
+
+        result = self.db.view(
+            'logs/count_by_actions_day',
+            reduce=True,
+            startkey=start_key,
+            endkey=end_key,
+            group=True
+        )
+
+        counts = {}
+        for row in result.rows:
+            key = (row.key[0], row.key[1], row.key[2], row.key[3])
+            counts[key] = row.value
+
+        return counts
+
