@@ -44,7 +44,7 @@
                                     <i class="fas fa-play"></i>
                                     <span class="ml-2 text-gray-700 w-4">{{ usage_count[action._id] or 0 }}</span>
                                 </div>
-                                <span class="text-xs text-gray-500 ml-4 align-bottom items-end text-xs pt-1">Updated: {{ action.last_updated }}</span>
+                                <span class="text-xs text-gray-500 ml-4 align-bottom items-end text-xs pt-1">Updated: {{ action.updated_at | humanize }}</span>
                             </div>
                         </div>
                         <div class="flex justify-end">

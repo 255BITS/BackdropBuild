@@ -172,6 +172,20 @@ class DB:
                                     emit(doc.api_id, 1); 
                                 } 
                             }"""
+        map_last_used = """function(doc) {
+                               if (doc.type === 'log' && doc.actions_id && doc.created_at) {
+                                   emit(doc.api_id, doc.created_at);
+                               }
+                           }
+                           """
+
+        reduce_last_used = """
+                            function(keys, values, rereduce) {
+                                return values.reduce(function(a, b) {
+                                    return a > b ? a : b;
+                                }, 0);
+                            }
+                            """
 
         map_count_gpt_ids_by_action = """
             function(doc) {
@@ -185,6 +199,7 @@ class DB:
         self.create_view_ddoc("logs", "count_by_api", map_count_by_api, reduce_func="_sum")
         self.create_view_ddoc("logs", "by_api", by_api)
         self.create_view_ddoc("logs", "by_actions", by_actions)
+        self.create_view_ddoc("logs", "apis_last_used", map_last_used, reduce_last_used)
 
     def query_view(self, design_doc, view_name, **kwargs) -> List:
         """
@@ -272,3 +287,21 @@ class DB:
     def count_gpt_ids_by_actions(self, keys=None):
         result = self.db.view('logs/count_gpt_ids_by_action', keys=keys)
         return {row.key: row.value for row in result.rows}
+
+    def get_apis_last_used(self, keys):
+        # Define the view path
+        view_path = 'logs/apis_last_used'
+
+        # Query the view with the specified keys
+        result = self.db.view(view_path, keys=keys, reduce=True, group=True)
+
+        # Initialize an empty dictionary to store the results
+        last_used_timestamps = {}
+
+        # Iterate over the returned rows
+        for row in result.rows:
+            # Map each action_id to its latest timestamp
+            last_used_timestamps[row.key] = row.value
+
+        # Return the dictionary containing action_id: latest_timestamp pairs
+        return last_used_timestamps

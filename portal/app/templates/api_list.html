@@ -44,7 +44,7 @@
                            <span class="ml-2 text-gray-700">{{usage_count[api._id] or 0}}</span>
                        </div>
                     </div>
-                    <span class="text-xs text-gray-500 ml-4 align-bottom items-end text-xs pt-1">Last Used: {{ api.last_used }}</span>
+                    <span class="text-xs text-gray-500 ml-4 align-bottom items-end text-xs pt-1">Last Used: {{ (apis_last_used[api._id] or 'never') | humanize }}</span>
                 </div>
             </div>
             <div class="flex justify-end">
