@@ -16,7 +16,10 @@ def apis_discover():
 def apis_my():
     assert_logged_in()
     apis = db.query_view('apis', 'by_user', key=g.current_user.id)
-    return render_template('api_list.html', apis=apis)
+    ids = [a['_id'] for a in apis]
+    api_links_count = db.count_api_links(ids)
+    usage_count = db.count_logs_by_api(ids)
+    return render_template('api_list.html', apis=apis, usage_count=usage_count, api_links_count=api_links_count)
 
 @api_bp.route('/apis/new')
 def apis_new():

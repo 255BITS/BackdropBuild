@@ -90,9 +90,16 @@ class DB:
                                 }
                             }"""
 
+        count_api_links = """function(doc) {
+                                if (doc.type === 'actions') {
+                                    doc.api_links.forEach(api_link => emit(api_link.api_id, 1))
+                                }
+                            }"""
+
 
         self.create_view_ddoc("actions", "by_user", by_user)
         self.create_view_ddoc("actions", "api_links", api_links)
+        self.create_view_ddoc("actions", "count_api_links", count_api_links, reduce_func="_sum")
 
     def create_auth_views(self):
         """
@@ -160,6 +167,11 @@ class DB:
                                     emit(doc.actions_id, 1); 
                                 } 
                             }"""
+        map_count_by_api = """function(doc) { 
+                                if (doc.type === 'log') { 
+                                    emit(doc.api_id, 1); 
+                                } 
+                            }"""
 
         map_count_gpt_ids_by_action = """
             function(doc) {
@@ -170,6 +182,7 @@ class DB:
         """
         self.create_view_ddoc("logs", "count_gpt_ids_by_action", map_count_gpt_ids_by_action)
         self.create_view_ddoc("logs", "count_by_actions", map_count_by_actions, reduce_func="_sum")
+        self.create_view_ddoc("logs", "count_by_api", map_count_by_api, reduce_func="_sum")
         self.create_view_ddoc("logs", "by_api", by_api)
         self.create_view_ddoc("logs", "by_actions", by_actions)
 
@@ -239,7 +252,23 @@ class DB:
         result = self.db.view(view_path, **query_params)
         counts = {row.key: row.value for row in result.rows} if result.rows else {}
         return counts
+
+    def count_logs_by_api(self, keys=None):
+        view_path = 'logs/count_by_api'
+        query_params = {'reduce': True}
+        if keys is not None:
+            query_params['keys'] = keys
+        query_params['group'] = True
+
+        result = self.db.view(view_path, **query_params)
+        counts = {row.key: row.value for row in result.rows} if result.rows else {}
+        return counts
+
+    def count_api_links(self, keys):
+        result = self.db.view('actions/count_api_links', reduce=True, keys=keys, group=True)
+        counts = {row.key: row.value for row in result.rows} if result.rows else {}
+        return counts
+
     def count_gpt_ids_by_actions(self, keys=None):
         result = self.db.view('logs/count_gpt_ids_by_action', keys=keys)
         return {row.key: row.value for row in result.rows}
-
