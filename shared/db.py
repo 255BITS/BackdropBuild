@@ -160,6 +160,15 @@ class DB:
                                     emit(doc.actions_id, 1); 
                                 } 
                             }"""
+
+        map_count_gpt_ids_by_action = """
+            function(doc) {
+                if (doc.type === 'log_gpt') {
+                    emit(doc.actions_id, doc.gpt_ids.length);
+                }
+            }
+        """
+        self.create_view_ddoc("logs", "count_gpt_ids_by_action", map_count_gpt_ids_by_action)
         self.create_view_ddoc("logs", "count_by_actions", map_count_by_actions, reduce_func="_sum")
         self.create_view_ddoc("logs", "by_api", by_api)
         self.create_view_ddoc("logs", "by_actions", by_actions)
@@ -230,4 +239,7 @@ class DB:
         result = self.db.view(view_path, **query_params)
         counts = {row.key: row.value for row in result.rows} if result.rows else {}
         return counts
+    def count_gpt_ids_by_actions(self, keys=None):
+        result = self.db.view('logs/count_gpt_ids_by_action', keys=keys)
+        return {row.key: row.value for row in result.rows}
 

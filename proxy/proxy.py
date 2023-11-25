@@ -43,6 +43,28 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 write_lock = asyncio.Lock()
 
+async def update_log_gpt_document(actions_id, gpt_id):
+    async with httpx.AsyncClient() as client:
+        try:
+            # Fetch or create the log_gpt document for the given actions_id
+            response = await client.get(f"{COUCHDB_URL}/log_gpt_{actions_id}")
+            if response.status_code == 200:
+                doc = response.json()
+            elif response.status_code == 404:
+                doc = {'type': 'log_gpt', 'gpt_ids': [], 'actions_id': actions_id}
+            else:
+                logger.error(f"Failed to fetch log_gpt document: {response.text}")
+                return
+
+            # Add the new GPT ID to the set if it's not already present
+            if gpt_id not in doc.get('gpt_ids', []):
+                doc['gpt_ids'].append(gpt_id)
+                update_response = await client.put(f"{COUCHDB_URL}/log_gpt_{actions_id}", json=doc)
+                if update_response.status_code not in [201, 202]:
+                    logger.error(f"Failed to update log_gpt document: {update_response.text}")
+        except Exception as e:
+            logger.error(f"Error in updating log_gpt document for actions_id {actions_id} with GPT ID {gpt_id}: {e}")
+
 async def async_log(request_data, response_data, response_time, method, actions_id, api_id, operation_id, path_id, response_status_code):
     # Prepare the document to be stored in CouchDB
     log_document = {
@@ -69,6 +91,7 @@ async def async_log(request_data, response_data, response_time, method, actions_
                 logger.error(f"Failed to log to CouchDB: {response.text}")
         except Exception as e:
             logger.error(f"Error logging to CouchDB: {e}")
+    await update_log_gpt_document(actions_id, request_data["headers"].get("Openai-Gpt-Id"))
 
 async def fetch_api_url_mapping():
     async with httpx.AsyncClient() as client:

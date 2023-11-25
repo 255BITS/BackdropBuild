@@ -16,8 +16,10 @@ def before_request():
 @actions_bp.route('/actions')
 def index():
     actions_list = actions_service().list() #TODO pagination, order
-    usage_count = db.count_logs_by_actions([a['_id'] for a in actions_list])
-    return render_template('actions_index.html', actions_list=actions_list, usage_count=usage_count)
+    ids = [a['_id'] for a in actions_list]
+    usage_count = db.count_logs_by_actions(ids)
+    gpts_count = db.count_gpt_ids_by_actions(ids)
+    return render_template('actions_index.html', actions_list=actions_list, usage_count=usage_count, gpts_count=gpts_count)
 
 @actions_bp.route('/actions/new')
 def new():
