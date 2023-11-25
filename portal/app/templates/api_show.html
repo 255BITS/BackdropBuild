@@ -61,6 +61,9 @@
                 </div>
             </div>
         </form>
+        <form hx-delete="{{url_for('apis.delete', id=api._id)}}" hx-confirm="Are you sure? This cannot be undone.">
+          <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Delete</button>
+        </form>
         {% else %}
         <form action="/apis/{{api["_id"]}}/unpublish" method="post">
             <!-- Button to Add New Action -->

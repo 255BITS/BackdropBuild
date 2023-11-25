@@ -1,5 +1,5 @@
 import uuid
-from flask import Flask, render_template, redirect, request, jsonify, url_for, flash, g
+from flask import Flask, render_template, redirect, request, jsonify, url_for, flash, g, make_response
 from shared.couch import db
 from app.services.api_service import parse_api_object
 from app.services.auth_service import assert_owner, assert_logged_in
@@ -100,3 +100,17 @@ def apis_show_usage(id):
     api = db.get(id)
     assert_owner(api)
     return render_template('api_usage.html', api=api)
+
+@api_bp.delete('/apis/<id>')
+def delete(id):
+    #TODO assert owner
+    #TODO assert valid uuid
+    if db.get(id) is not None:
+        db.delete(id)
+        response = make_response("", 200)
+        response.headers['HX-Redirect'] = url_for("apis.apis_my")
+        return response
+    flash("You can't delete that.", "error")
+    return redirect(url_for("apis.apis_show", id=id))
+
+
