@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, redirect, url_for, request, g, make_response, flash
 from app.services.actions_service import ActionsService
-from app.services.auth_service import assert_logged_in
+from app.services.auth_service import assert_logged_in, assert_owner
 from shared.couch import db
 import re
 
@@ -46,9 +46,9 @@ def show(id):
 
 @actions_bp.delete('/actions/<id>')
 def delete(id):
-    #TODO assert owner
-    #TODO assert valid uuid
-    if db.get(id) is not None:
+    doc = db.get(id)
+    if doc is not None:
+        assert_owner(doc)
         db.delete(id)
         response = make_response("", 200)
         response.headers['HX-Redirect'] = url_for("actions.index")
@@ -73,6 +73,7 @@ def update(id):
     name = form_data.get('name')
 
     actions = db.get(id)
+    assert_owner(actions)
     actions['name'] = name
     api_links = [dict(a) for a in actions["api_links"]]
 
@@ -153,6 +154,7 @@ def post_api_link(id):
 @actions_bp.delete('/actions/<id>/api_link/<api_link_id>')
 def api_link_delete(id, api_link_id):
     actions = db.get(id)
+    assert_owner(actions)
     del actions["api_links"][int(api_link_id)]
     db.save(actions)
     return ""

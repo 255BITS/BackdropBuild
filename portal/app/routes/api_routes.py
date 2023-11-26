@@ -103,9 +103,9 @@ def apis_show_usage(id):
 
 @api_bp.delete('/apis/<id>')
 def delete(id):
-    #TODO assert owner
-    #TODO assert valid uuid
-    if db.get(id) is not None:
+    doc = db.get(id)
+    if doc is not None:
+        assert_owner(doc)
         db.delete(id)
         response = make_response("", 200)
         response.headers['HX-Redirect'] = url_for("apis.apis_my")
