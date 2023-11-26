@@ -163,7 +163,6 @@ async def update_action_lookup_table():
     async with write_lock:
         for a in action_info:
             action_lookup_table[a['id']]=a['value']
-        pprint(action_lookup_table)
 
 @app.route('/', methods=['GET'])
 def ready():
@@ -194,19 +193,15 @@ async def passthrough(actions_id, operation_id):
     actions_api_links = action_lookup_table[actions_id]["api_links"]
     api = None
     active_path_id = None
+    active_action_path = None
     print("Found actions_api_links", actions_api_links)
     for a in actions_api_links:
         for path in a["paths"]:
             if path['operation_id']==operation_id:
                 api = a
                 active_path_id = path["path_id"]
-                for param in path["params"]:
-                    if param["source"] == "constant":
-                        if path["method"].lower() in ["get", "delete"]:
-                            params[param["name"]] = param["value"]
-                        else:
-                            data_dict[param["name"]] = param["value"]
-
+                active_action_path = path
+                break
     if api is None:
         return jsonify({"error": "API not found"}, 404)
     if api['api_id'] not in url_api_lookup_table:
@@ -217,8 +212,21 @@ async def passthrough(actions_id, operation_id):
     for path in target["paths"]:
         if path["path_id"] == active_path_id:
             target_path = path
+            break
+    api_url = target_path['url']
+    for param in active_action_path["params"]:
+        api_url = api_url.replace(f"<{param['name']}>", param["value"])
+        if param["source"] == "constant":
+            if target_path["method"].lower() in ["get", "delete"]:
+                params[param["name"]] = param["value"]
+            else:
+                data_dict[param["name"]] = param["value"]
+
+
 
     content = json.dumps(data_dict)
+    content_length = str(len(content.encode('utf-8')))
+    headers['Content-Length'] = content_length
     #TODO: openai token auth on action
 
     async with httpx.AsyncClient() as client:
@@ -282,3 +290,48 @@ async def before_serving():
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=10004)
+
+# TODO turn to test:
+# curl -X POST "http://localhost:10004/6f78723e47c6be817762c0eaa20274c4/pressRedButtonPOST" \
+#      -H "Remote-Addr: 127.0.0.1" \
+#      -H "Host: 4d35-136-29-80-78.ngrok.io" \
+#      -H "User-Agent: Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; ChatGPT-User/1.0; +https://openai.com/bot" \
+#      -H "Content-Length: 2" \
+#      -H "Accept: */*" \
+#      -H "Accept-Encoding: gzip, deflate" \
+#      -H "Content-Type: application/json" \
+#      -H "Openai-Conversation-Id: 4da183d3-b142-53a9-a9bf-30f163904ee6" \
+#      -H "Openai-Ephemeral-User-Id: 7aaf0d0b-6b82-5a01-afec-3bcc4a3b9dfd" \
+#      -H "Openai-Gpt-Id: g-Bk4k5UzvL" 
+
+# Example document:
+#{
+#  "_id": "7a7760bae2aa09ef39bfc5740600430a",
+#  "_rev": "2-9b70c0c3014b07d30ef3c42539430665",
+#  "created_at": "2023-11-24T05:15:27.199556Z",
+#  "updated_at": "2023-11-24T05:15:38.879305Z",
+#  "api_links": [
+#    {
+#      "api_id": "6f78723e47c6be817762c0eaa201a12e",
+#      "paths": [
+#        {
+#          "path_id": "d7eb4035-3ab6-4e88-b52b-f45a86548ded",
+#          "operation_id": "pressRedButtonPOST",
+#          "method": "POST",
+#          "url": "http://localhost:10005/",
+#          "params": [
+#            {
+#              "name": "pressure",
+#              "source": "gpt",
+#              "value": ""
+#            }
+#          ]
+#        }
+#      ]
+#    }
+#  ],
+#  "name": "POST 2",
+#  "type": "actions",
+#  "user_id": "6f78723e47c6be817762c0eaa2007330"
+#}
+# running minimal-proxy
