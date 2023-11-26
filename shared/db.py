@@ -155,7 +155,7 @@ class DB:
 
         self.create_view_ddoc("apis", "count", map_count, reduce_func="_count")
         self.create_view_ddoc("apis", "public", public)
-        self.create_view_ddoc("apis", "public_or_by_user", public_or_by_user)
+        self.create_view_ddoc("apis", "public_or_by_user", public_or_by_user, reduce_func="_count")
         self.create_view_ddoc("apis", "by_user", by_user)
         self.create_view_ddoc("apis", "urls", urls)
 

@@ -120,9 +120,11 @@ def update(id):
 
 @actions_bp.get('/actions/<id>/api_link')
 def api_link(id):
-    apis = actions_service().get_apis()
+    page = int(request.args.get("page", 1))
+    limit = 10
+    apis, total_count = actions_service().get_apis(limit, (page-1)*limit)
     actions = db.get(id)
-    return render_template('actions_api_link.html', apis=apis, actions=actions)
+    return render_template('actions_api_link.html', apis=apis, actions=actions, page=page, limit=limit, total_count=total_count)
 
 @actions_bp.post('/actions/<id>/api_link')
 def post_api_link(id):

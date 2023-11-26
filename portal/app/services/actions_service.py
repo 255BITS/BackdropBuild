@@ -61,9 +61,10 @@ class ActionsService:
         actions = db.get(id)
         db.save(actions | update_dict)
 
-    def get_apis(self):
-        apis = db.query_view('apis', 'public_or_by_user', keys=[["public", 0],[self.user["_id"], 1]] )
-        return apis
+    def get_apis(self, limit, skip):
+        apis = db.query_view('apis', 'public_or_by_user', keys=[["public", 0],[self.user["_id"], 1]], limit=limit, skip=skip, reduce=False)
+        total_count = sum(db.query_view('apis', 'public_or_by_user', key=["public", 0], reduce=True)+db.query_view('apis', 'public_or_by_user', key=[self.user["_id"], 1], reduce=True)+[0])
+        return apis, total_count
 
     def get_sparklines(self, ids):
         """
