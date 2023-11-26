@@ -215,6 +215,17 @@ async def passthrough(actions_id, operation_id):
             break
     api_url = target_path['url']
     for param in active_action_path["params"]:
+        target_param = None
+        for tp in target_path["params"]:
+            if tp["name"] == param["name"]:
+                target_param = tp
+        if target_param is not None and target_param["type"] == "credential":
+            if target_param['proxy_target'] == 'bearer':
+                headers['Authorization'] = 'Bearer ' + param['value']
+            else:
+                headers['Authorization'] = 'Basic ' + param['value']
+            continue
+
         api_url = api_url.replace(f"<{param['name']}>", param["value"])
         if param["source"] == "constant":
             if target_path["method"].lower() in ["get", "delete"]:
@@ -230,7 +241,6 @@ async def passthrough(actions_id, operation_id):
     #TODO: openai token auth on action
 
     async with httpx.AsyncClient() as client:
-        api_url = target_path['url']
         api_call = client.request(method=method, url=api_url, content=content, headers=headers, params=params)
         api_call_task = asyncio.create_task(api_call)
         api_call_tasks.add(api_call_task)
