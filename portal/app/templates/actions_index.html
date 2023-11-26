@@ -61,6 +61,7 @@
                         </div>
                     </div>
                 {% endfor %}
+                {{ macros.paginate(page, limit, total_count) }}
             </div>
         </div>
     </main>

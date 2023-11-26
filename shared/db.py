@@ -84,6 +84,7 @@ class DB:
                                     emit(doc.user_id, doc);
                                 }
                             }"""
+
         api_links = """function(doc) {
                                 if (doc.type === 'actions') {
                                     emit(doc._id, {"api_links": doc.api_links, "auth": [{}]});
@@ -97,7 +98,7 @@ class DB:
                             }"""
 
 
-        self.create_view_ddoc("actions", "by_user", by_user)
+        self.create_view_ddoc("actions", "by_user", by_user, reduce_func="_count")
         self.create_view_ddoc("actions", "api_links", api_links)
         self.create_view_ddoc("actions", "count_api_links", count_api_links, reduce_func="_sum")
 
@@ -145,6 +146,7 @@ class DB:
                                     emit(doc.user_id, doc); 
                                 } 
                             }"""
+
         urls = """function(doc) { 
                                 if (doc.type === 'API') { 
                                     emit(null, {params: doc.params, paths: doc.paths}); 

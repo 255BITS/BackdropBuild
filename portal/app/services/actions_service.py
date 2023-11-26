@@ -21,9 +21,10 @@ class ActionsService:
     def __init__(self, user):
         self.user = user
 
-    def list(self):
-        actions_list = db.get_actions_for_user(self.user["_id"])
-        return actions_list
+    def list(self, limit, skip):
+        actions_list = db.query_view('actions', 'by_user', key=self.user["_id"], limit=limit, skip=skip, reduce=False)
+        total_count = db.query_view('actions', 'by_user', key=self.user["_id"], reduce=True)[0]
+        return actions_list, total_count
 
     def create(self, name):
         #TODO validate name
