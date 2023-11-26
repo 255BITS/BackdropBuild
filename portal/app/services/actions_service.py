@@ -61,8 +61,7 @@ class ActionsService:
         db.save(actions | update_dict)
 
     def get_apis(self):
-        apis = db.query_view('apis', 'public')
-        apis += db.query_view('apis', 'by_user', key=self.user['_id'])
+        apis = db.query_view('apis', 'public_or_by_user', keys=[["public", 0],[self.user["_id"], 1]] )
         return apis
 
     def get_sparklines(self, ids):

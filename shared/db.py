@@ -127,6 +127,19 @@ class DB:
                                     emit(null, doc); 
                                 } 
                             }"""
+        public_or_by_user = """
+            function (doc) {
+              if(doc.type === "API") {
+                if (doc.user_id) {
+                  // Emit for user-specific documents
+                  emit([doc.user_id, 1], doc);
+                } else if (doc.visibility === 'public') {
+                  emit(['public', 0], doc);
+                }
+              }
+            }
+        """
+
         by_user = """function(doc) { 
                                 if (doc.type === 'API') { 
                                     emit(doc.user_id, doc); 
@@ -140,6 +153,7 @@ class DB:
 
         self.create_view_ddoc("apis", "count", map_count, reduce_func="_count")
         self.create_view_ddoc("apis", "public", public)
+        self.create_view_ddoc("apis", "public_or_by_user", public_or_by_user)
         self.create_view_ddoc("apis", "by_user", by_user)
         self.create_view_ddoc("apis", "urls", urls)
 
