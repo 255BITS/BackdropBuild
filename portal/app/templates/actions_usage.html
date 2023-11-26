@@ -30,9 +30,6 @@
 
         <!-- Logs Tab -->
         <div id="logs" class="pt-4">
-            <div class="flex justify-end mb-2">
-                <input type="text" class="shadow appearance-none border rounded py-2 px-3 text-gray-700" placeholder="Filter logs">
-            </div>
             <table class="min-w-full">
                 <thead>
                     <tr>
@@ -54,61 +51,8 @@
                 {% endfor %}
             </table>
         </div>
+        {{ macros.paginate(page, limit, total_count) }}
     </div>
 </div>
-
-<script>
-    // Function to initialize charts
-    function initCharts() {
-        var usersCtx = document.getElementById('usersGraph').getContext('2d');
-        var conversationsCtx = document.getElementById('conversationsGraph').getContext('2d');
-
-        new Chart(usersCtx, {
-            type: 'line',
-            data: {
-                labels: ['Placeholder Data'],
-                datasets: [{ label: 'Number of Users', data: [0] }]
-            }
-        });
-
-        new Chart(conversationsCtx, {
-            type: 'line',
-            data: {
-                labels: ['Placeholder Data'],
-                datasets: [{ label: 'Number of Conversations', data: [0] }]
-            }
-        });
-    }
-
-    // Flag to track if charts have been initialized
-    let chartsInitialized = false;
-
-    document.addEventListener('DOMContentLoaded', (event) => {
-        const tabs = document.querySelectorAll('ul li a');
-        const tabContents = document.querySelectorAll('#stats, #logs');
-
-        tabs.forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                e.preventDefault();
-
-                tabContents.forEach(content => {
-                    content.classList.add('hidden');
-                });
-                tabs.forEach(tab => {
-                    tab.classList.remove('text-blue-800');
-                });
-
-                tab.classList.add('text-blue-800');
-                const activeTabContent = document.querySelector(tab.getAttribute('href'));
-                activeTabContent.classList.remove('hidden');
-            });
-           // Check if we're opening the Stats tab and if the charts need initializing
-            if (tab.getAttribute('href') === '#stats' && !chartsInitialized) {
-                initCharts();
-                chartsInitialized = true;
-            }
-        });
-    });
-</script>
 {% endblock %}
 

@@ -165,7 +165,9 @@ def api_link_delete(id, api_link_id):
 
 @actions_bp.route('/actions/<id>/usage')
 def actions_usage(id):
+    page = int(request.args.get("page", 1))
     actions = db.get(id)
-    logs = db.get_logs(id)
-    return render_template('actions_usage.html', id=id, actions=actions, logs=logs)
+    limit = 10
+    logs, total_count = actions_service().get_logs(actions, limit, limit*(page-1))
+    return render_template('actions_usage.html', id=id, actions=actions, logs=logs, page=page, limit=limit, total_count=total_count)
 

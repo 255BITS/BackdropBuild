@@ -54,7 +54,11 @@
           Showing
           <span class="font-medium">{{ (page - 1) * limit + 1 }}</span>
           to
-          <span class="font-medium">{{ page * limit }}</span>
+          {% if total_count < page * limit %}
+              <span class="font-medium">{{ total_count - ((page-1) * limit) }}</span>
+          {% else %}
+            <span class="font-medium">{{ page * limit }}</span>
+          {% endif %}
           of
           <span class="font-medium">{{ total_count }}</span>
           results

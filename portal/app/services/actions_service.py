@@ -66,6 +66,12 @@ class ActionsService:
         total_count = sum(db.query_view('apis', 'public_or_by_user', key=["public", 0], reduce=True)+db.query_view('apis', 'public_or_by_user', key=[self.user["_id"], 1], reduce=True)+[0])
         return apis, total_count
 
+    def get_logs(self, actions, limit, skip):
+        actions_id = actions["_id"]
+        logs = db.query_view('logs', 'by_actions', limit=limit, skip=skip, key=actions_id, reduce=False)
+        total_count = sum(db.query_view('logs', 'by_actions', key=actions_id, limit=limit, skip=skip, reduce=True)+[0])
+        return logs, total_count
+
     def get_sparklines(self, ids):
         """
         Get sparkline data for the given action IDs.
