@@ -42,7 +42,7 @@ def get_id_from_headers(datatype):
     if datatype == 'conversation':
         second_key = request.headers.get('Openai-Conversation-Id')
     elif datatype == 'user':
-        second_key = request.headers.get('Openai-Ephemeral-User-Id')
+        second_key = f"{request.headers.get('Openai-Gpt-Id')}-{request.headers.get('Openai-Ephemeral-User-Id')}"
     else:  # For gpts or other types
         second_key = request.headers.get('Openai-Gpt-Id')
 
