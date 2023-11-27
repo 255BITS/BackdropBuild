@@ -26,7 +26,7 @@ def write_data(datatype):
 
 def read_data(datatype):
     id = get_id_from_headers(datatype)
-    data = memorydb.get(id)
+    data = memorydb.read(id)
     if data:
         return data
     return jsonify({"message": "No data found"}), 404
