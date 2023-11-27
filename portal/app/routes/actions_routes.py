@@ -128,7 +128,6 @@ def api_link(id):
 
 @actions_bp.post('/actions/<id>/api_link')
 def post_api_link(id):
-    apis = actions_service().get_apis()
     actions = db.get(id)
     form_data = request.form
     api_id = form_data["api"]
