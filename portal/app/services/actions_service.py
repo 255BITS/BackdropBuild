@@ -5,6 +5,11 @@ from shared.couch import db
 import secrets
 import string
 from app.services.credentials_service import CredentialsService
+import re
+import uuid
+
+class ConflictError(ValueError):
+    pass
 
 def decode_auth(auth):
     creds = CredentialsService()
@@ -50,6 +55,46 @@ class ActionsService:
             "password_hash": password_hash,
         })
         return actions
+
+    def create_api_link(self, api_links, api, api_id):
+        api_link = { "api_id": api_id, "paths": [], "id": uuid.uuid4().hex }
+        for path in api["paths"]:
+            operation_id = self.find_unique_operation_id(api_links, path["operation_id"])
+            api_link_path = { "path_id": path["path_id"], "operation_id": operation_id, "params": [] }
+            for param in path["params"]:
+                default_source = "gpt"
+                if param["type"] == "credential":
+                    default_source = "credential"
+                default_value = ""
+                api_link_param = { "name": param["name"], "source": default_source, "value": default_value }
+                api_link_path["params"].append(api_link_param)
+
+            api_link["paths"].append(api_link_path)
+
+        return api_link
+
+    def find_unique_operation_id(self, api_links, operation_id):
+        def increment_suffix(name):
+            match = re.search(r'(\d+)$', name)
+            if match:
+                # Increment the number at the end of the string
+                num = int(match.group(1)) + 1
+                return re.sub(r'\d+$', str(num), name)
+            else:
+                # If no number, add '1' as a suffix
+                return name + '2'
+
+        operation_ids = set()
+        for api_link in api_links:
+            for path in api_link["paths"]:
+                operation_ids.add(path["operation_id"])
+
+        new_operation_id = operation_id
+        print("check ", new_operation_id, operation_ids)
+        while new_operation_id in operation_ids:
+            new_operation_id = increment_suffix(new_operation_id)
+
+        return new_operation_id
 
     def get_details(self, id):
         #TODO 404
@@ -119,3 +164,15 @@ class ActionsService:
             sparkline_data[action_id] = " ".join(points)
 
         return sparkline_data
+
+    def update(self, actions):
+        self.validate(actions)
+        db.save(actions)
+
+    def validate(self, actions):
+        operation_id_set = set()
+        for api_link in actions['api_links']:
+            for path in api_link['paths']:
+                if path['operation_id'] in operation_id_set:
+                    raise ConflictError("operation_id must be unique")
+                operation_id_set.add(path['operation_id'])

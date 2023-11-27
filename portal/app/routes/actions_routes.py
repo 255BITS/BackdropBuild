@@ -114,7 +114,11 @@ def update(id):
             api_links[api_index]["paths"][path_index][field] = value
 
     actions["api_links"] = api_links
-    db.save(actions)
+    try:
+        actions_service().update(actions)
+    except ValueError as e:
+        flash(str(e), 'error')
+        return redirect(url_for('actions.edit', id=id))
 
     return redirect(url_for('actions.show', id=id))
 
@@ -133,24 +137,8 @@ def post_api_link(id):
     api_id = form_data["api"]
     api = db.get(api_id)
     #TODO 404
-    for api_link in actions["api_links"]:
-        if api_id == api_link["api_id"]:
-            flash("That API has already been added.", "info")
-            return redirect(url_for("actions.show", id=id))
-    api_links = { "api_id": api_id, "paths": [] }
-    for path in api["paths"]:
-        api_link_path = { "path_id": path["path_id"], "operation_id": path["operation_id"], "params": [] }
-        for param in path["params"]:
-            default_source = "gpt"
-            if param["type"] == "credential":
-                default_source = "credential"
-            default_value = ""
-            api_link_param = { "name": param["name"], "source": default_source, "value": default_value }
-            api_link_path["params"].append(api_link_param)
-
-        api_links["paths"].append(api_link_path)
-
-    actions["api_links"].append(api_links) 
+    api_link = actions_service().create_api_link(actions["api_links"], api, api_id)
+    actions["api_links"].append(api_link) 
     db.save(actions)
     return redirect(url_for("actions.show", id=id))
 
@@ -158,9 +146,19 @@ def post_api_link(id):
 def api_link_delete(id, api_link_id):
     actions = db.get(id)
     assert_owner(actions)
-    del actions["api_links"][int(api_link_id)]
-    db.save(actions)
-    return ""
+    api_link_index = None
+    for i, api_link in enumerate(actions["api_links"]):
+        if "id" not in api_link and api_link_id == "0" or api_link["id"] == api_link_id:
+            api_link_index = i
+
+    if api_link_index is None:
+        flash("API link not found.", "warning")
+    else:
+        del actions["api_links"][int(api_link_index)]
+        db.save(actions)
+    response = make_response("", 200)
+    response.headers['HX-Redirect'] = url_for("actions.edit", id=id)
+    return response
 
 @actions_bp.route('/actions/<id>/usage')
 def actions_usage(id):
