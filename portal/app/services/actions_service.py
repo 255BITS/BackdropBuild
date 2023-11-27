@@ -41,7 +41,7 @@ class ActionsService:
         password = generate_random_string()
         password_hash = bcrypt.hash(password)
         auth = db.save({
-            "actions_id": actions["_id"],
+            "action_id": actions["_id"],
             "auth_type": "api_key_basic",
             "type": "auth",
             "user_id": self.user["_id"],
@@ -70,9 +70,9 @@ class ActionsService:
         return apis, total_count
 
     def get_logs(self, actions, limit, skip):
-        actions_id = actions["_id"]
-        logs = db.query_view('logs', 'by_actions', limit=limit, skip=skip, key=actions_id, reduce=False)
-        total_count = sum(db.query_view('logs', 'by_actions', key=actions_id, limit=limit, skip=skip, reduce=True)+[0])
+        action_id = actions["_id"]
+        logs = db.query_view('logs', 'by_actions', limit=limit, skip=skip, key=action_id, reduce=False)
+        total_count = sum(db.query_view('logs', 'by_actions', key=action_id, limit=limit, skip=skip, reduce=True)+[0])
         return logs, total_count
 
     def get_sparklines(self, ids):

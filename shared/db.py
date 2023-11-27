@@ -108,7 +108,7 @@ class DB:
         """
         by_actions = """function(doc) {
                                 if (doc.type === 'auth') {
-                                    emit(doc.actions_id, doc);
+                                    emit(doc.action_id, doc);
                                 }
                             }"""
 
@@ -175,12 +175,12 @@ class DB:
                             }"""
         by_actions = """function(doc) {
                                 if (doc.type === 'log') {
-                                    emit(doc.actions_id, doc);
+                                    emit(doc.action_id, doc);
                                 }
                             }"""
         map_count_by_actions = """function(doc) { 
                                 if (doc.type === 'log') { 
-                                    emit(doc.actions_id, 1); 
+                                    emit(doc.action_id, 1); 
                                 } 
                             }"""
         map_count_by_api = """function(doc) { 
@@ -189,7 +189,7 @@ class DB:
                                 } 
                             }"""
         map_last_used = """function(doc) {
-                               if (doc.type === 'log' && doc.actions_id && doc.created_at) {
+                               if (doc.type === 'log' && doc.action_id && doc.created_at) {
                                    emit(doc.api_id, doc.created_at);
                                }
                            }
@@ -206,7 +206,7 @@ class DB:
         map_count_gpt_ids_by_action = """
             function(doc) {
                 if (doc.type === 'log_gpt') {
-                    emit(doc.actions_id, doc.gpt_ids.length);
+                    emit(doc.action_id, doc.gpt_ids.length);
                 }
             }
         """
@@ -275,11 +275,11 @@ class DB:
     def get_actions_for_user(self, user_id):
         return self.query_view('actions', 'by_user', key=user_id)
 
-    def get_auths_for_actions(self, actions_id):
-        return self.query_view('auths', 'by_actions', key=actions_id)
+    def get_auths_for_actions(self, action_id):
+        return self.query_view('auths', 'by_actions', key=action_id)
 
-    def get_apis(self, actions_id):
-        return self.query_view('auths', 'by_actions', key=actions_id)
+    def get_apis(self, action_id):
+        return self.query_view('auths', 'by_actions', key=action_id)
 
     def count_logs_by_actions(self, keys=None):
         view_path = 'logs/count_by_actions'
@@ -330,10 +330,10 @@ class DB:
         # Return the dictionary containing action_id: latest_timestamp pairs
         return last_used_timestamps
 
-    def count_logs_by_actions_day(self, actions_id, start_date, end_date):
+    def count_logs_by_actions_day(self, action_id, start_date, end_date):
         # Format start and end keys for the view query
-        start_key = [actions_id, start_date.year, start_date.month, start_date.day]
-        end_key = [actions_id, end_date.year, end_date.month, end_date.day]
+        start_key = [action_id, start_date.year, start_date.month, start_date.day]
+        end_key = [action_id, end_date.year, end_date.month, end_date.day]
 
         result = self.db.view(
             'logs/count_by_actions_day',

@@ -10,15 +10,15 @@ public_bp = Blueprint('public', __name__)
 def home():
     return render_template('landing.html', count_apis=db.count_apis())
 
-@public_bp.get('/openapi/<actions_id>.json')
-def get_openapi_spec(actions_id):
-    actions, apis, _ = ActionsService(None).get_details(actions_id)
+@public_bp.get('/openapi/<action_id>.json')
+def get_openapi_spec(action_id):
+    actions, apis, _ = ActionsService(None).get_details(action_id)
     #TODO 404?
     return generate_openapi_spec_for_actions(actions, apis)
 
-@public_bp.get('/privacy_policy/<actions_id>')
-def get_privacy_policy(actions_id):
-    actions, apis, _ = ActionsService(None).get_details(actions_id)
+@public_bp.get('/privacy_policy/<action_id>')
+def get_privacy_policy(action_id):
+    actions, apis, _ = ActionsService(None).get_details(action_id)
     privacy_policy = "In addition to the following GPTActionHub.com may monitor request input/output, collect analytics, and share them with the Actions authors.\n"
     privacy_policy += "------\n"
     for api in apis:
