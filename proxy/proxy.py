@@ -187,6 +187,7 @@ async def passthrough(actions_id, operation_id):
         data_dict = {}
     headers = dict(request.headers)
     del headers["Host"]
+    headers['ActionHub-Id'] = action_id
 
     if actions_id not in action_lookup_table:
         return jsonify({"error": "Action not found"}, 404)
