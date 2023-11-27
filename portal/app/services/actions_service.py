@@ -4,10 +4,13 @@ from shared import utils
 from shared.couch import db
 import secrets
 import string
+from app.services.credentials_service import CredentialsService
 
 def decode_auth(auth):
+    creds = CredentialsService()
     if auth["auth_type"] == "api_key_basic":
-        value = f"{auth['username']}:{auth['password']}"
+        password = creds.try_decrypt(auth['password'])
+        value = f"{auth['username']}:{password}"
         return auth | {
             "value_encoded": ''.join(['*' for _ in value]),
             "value": value
@@ -43,7 +46,7 @@ class ActionsService:
             "type": "auth",
             "user_id": self.user["_id"],
             "username": username,
-            "password": password, #TODO encrypt
+            "password": CredentialsService().encrypt(password), #TODO encrypt
             "password_hash": password_hash,
         })
         return actions

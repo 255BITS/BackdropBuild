@@ -1,3 +1,4 @@
+import base64
 import os
 from cryptography.fernet import Fernet
 
@@ -13,6 +14,12 @@ class CredentialsService:
 
     def decrypt(self, token: str) -> str:
         return self.fernet.decrypt(token.encode()).decode()
+
+    def try_decrypt(self, value: str) -> bool:
+        try:
+            return self.decrypt(value)
+        except InvalidToken:
+            return value
 # Example Usage
 if __name__ == "__main__":
     # Make sure to set the ENCRYPTION_KEY in your environment variables
