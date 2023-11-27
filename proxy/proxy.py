@@ -221,10 +221,12 @@ async def passthrough(action_id, operation_id):
             if tp["name"] == param["name"]:
                 target_param = tp
         if target_param is not None and target_param["type"] == "credential":
-            if target_param['proxy_target'] == 'bearer':
+            if target_param['name'] == 'bearer':
                 headers['Authorization'] = 'Bearer ' + param['value']
-            else:
+            elif target_param['name'] == 'basic':
                 headers['Authorization'] = 'Basic ' + param['value']
+            else:
+                headers[target_param['name']] = param['value']
             continue
 
         api_url = api_url.replace(f"<{param['name']}>", param["value"])
