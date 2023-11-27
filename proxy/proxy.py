@@ -187,28 +187,29 @@ async def passthrough(action_id, operation_id):
         data_dict = {}
     headers = dict(request.headers)
     del headers["Host"]
-    headers['ActionHub-Id'] = action_id
 
     if action_id not in action_lookup_table:
         return jsonify({"error": "Action not found"}, 404)
     actions_api_links = action_lookup_table[action_id]["api_links"]
-    api = None
+    api_link = None
     active_path_id = None
     active_action_path = None
     print("Found actions_api_links", actions_api_links)
     for a in actions_api_links:
         for path in a["paths"]:
             if path['operation_id']==operation_id:
-                api = a
+                api_link = a
                 active_path_id = path["path_id"]
                 active_action_path = path
                 break
-    if api is None:
+    if api_link is None:
         return jsonify({"error": "API not found"}, 404)
-    if api['api_id'] not in url_api_lookup_table:
+    headers['ActionHub-Id'] = api_link['id']
+
+    if api_link['api_id'] not in url_api_lookup_table:
         return jsonify({"error": "API link found in action but not in API"}, 404)
 
-    target = url_api_lookup_table[api['api_id']]
+    target = url_api_lookup_table[api_link['api_id']]
     target_path = None
     for path in target["paths"]:
         if path["path_id"] == active_path_id:
@@ -235,8 +236,6 @@ async def passthrough(action_id, operation_id):
                 params[param["name"]] = param["value"]
             else:
                 data_dict[param["name"]] = param["value"]
-
-
 
     content = json.dumps(data_dict)
     content_length = str(len(content.encode('utf-8')))
@@ -268,7 +267,7 @@ async def passthrough(action_id, operation_id):
         "content": response_data,
         "headers": dict(response.headers)
     }
-    do_log = async_log(record_request, record_response, response_time, method, action_id, api['api_id'], operation_id, active_path_id, response.status_code)
+    do_log = async_log(record_request, record_response, response_time, method, action_id, api_link['api_id'], operation_id, active_path_id, response.status_code)
     log_task = asyncio.create_task(do_log)
     logging_tasks.add(log_task)
     log_task.add_done_callback(logging_tasks.discard)
