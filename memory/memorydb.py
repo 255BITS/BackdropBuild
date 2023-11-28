@@ -21,23 +21,30 @@ class MemoryDB(db.DB):
 
 COUCHDB_USER = os.getenv("COUCHDB_USER", "gptactionhub-memory")
 COUCHDB_PASSWORD = os.getenv("COUCHDB_PASSWORD", "gptactionhub-memory")
-COUCHDB_URL = os.getenv("COUCHDB_URL", "localhost:5984")
+COUCHDB_HOST = os.getenv("COUCHDB_HOST", "localhost:5984")
 COUCHDB_DATABASE = os.getenv("COUCHDB_DATABASE", "gptactionhub-memory")
 couch_credentials = {
-    'url': f"http://{COUCHDB_USER}:{COUCHDB_PASSWORD}@{COUCHDB_URL}",
+    'url': f"http://{COUCHDB_USER}:{COUCHDB_PASSWORD}@{COUCHDB_HOST}",
     'db_name': COUCHDB_DATABASE
 }
-db = MemoryDB(couch_credentials)
+db = None
+
+def get_db():
+    global db
+    if db is None:
+        db = MemoryDB(couch_credentials)
+    return db
 
 def read(id):
-    results = db.query_view('memory', 'store', startkey=[id, {}], endkey=[id], descending=True, limit=1)
+    results = get_db().query_view('memory', 'store', startkey=[id, {}], endkey=[id], descending=True, limit=1)
     return results[0]['value'] if len(results)>0 else None
 
 def write(id, value):
     doc = {'id': id, 'value': value, 'timestamp': time.time()}
-    db.save(doc)
+    get_db().save(doc)
     return doc
 
 def list(id, limit=10, skip=0):
-    results = db.query_view('memory', 'store', startkey=[id, {}], endkey=[id], descending=True, limit=limit, skip=skip)
+    results = get_db().query_view('memory', 'store', startkey=[id, {}], endkey=[id], descending=True, limit=limit, skip=skip)
     return [row["value"] for row in results]
+
