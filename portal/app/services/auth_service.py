@@ -91,6 +91,9 @@ def login_github_user(token):
         })
         log_signup(email)
 
+    if "profile_image" not in user and "avatar_url" in user_info:
+        user["profile_image"] = user_info["avatar_url"]
+        db.save(user)
     session['user_id'] = user["_id"]
 
 def login_user(user):

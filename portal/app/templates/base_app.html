@@ -15,7 +15,11 @@
             <div class="relative">
                 <div class="flex justify-between items-center cursor-pointer">
                     <span class='text-gray-300 mr-4'>{{current_user.email}}</span>
-                    <img src="/static/profile.webp" alt="Profile" class="profile-image hover-trigger">
+                    {% if current_user.profile_image %}
+                      <img src="{{current_user.profile_image}}" alt="Profile" class="profile-image hover-trigger">
+                    {% else %}
+                      <img src="/static/profile.webp" alt="Profile" class="profile-image hover-trigger">
+                    {% endif %}
                 </div>
                 <div class="dropdown-menu hidden absolute right-0 py-2 w-48 bg-white rounded-lg shadow-xl">
                     <div>
