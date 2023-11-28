@@ -186,6 +186,8 @@ async def passthrough(action_id, operation_id):
     except json.JSONDecodeError:
         data_dict = {}
     headers = dict(request.headers)
+    if "ActionHub-Id" in headers:
+        return jsonify({"error": "Proxy cannot call itself."}, 508)
     del headers["Host"]
 
     if action_id not in action_lookup_table:
