@@ -2,7 +2,7 @@
 
 API hosts and GPT creators meet to create capable GPTs.
 
-Live nonfunctional prototype at [gptactionhub.com](https://gptactionhub.com)
+Live at [gptactionhub.com](https://gptactionhub.com)
 
 ## For API Hosts
 
