@@ -193,6 +193,9 @@ async def update_action_lookup_table():
         for a in action_info:
             action_lookup_table[a['id']]={'api_links': a['value'], 'auths': a['auths']}
 
+def validate_auth(header_token, auth):
+    return True #todo
+
 @app.route('/', methods=['GET'])
 def ready():
     return "ready"
@@ -249,6 +252,26 @@ async def passthrough(action_id, operation_id):
         if path["path_id"] == active_path_id:
             target_path = path
             break
+
+    auth_header = None
+    if "Authorization" in headers:
+        auth_header = headers["Authorization"]
+    # Basic auth
+    if auth_header and auth_header.startswith('Basic '):
+        token = auth_header[6:]  # Strip off 'Basic ' prefix
+        try:
+            valid = False
+            for auth in action_lookup_table[action_id]['auths']:
+                if(validate_auth(token, auth)):
+                    valid = True
+                    break
+            if(not valid):
+                return jsonify({"error": 'Missing or invalid Authorization header (i)'}, 401)
+        except (TypeError, ValueError):
+            return jsonify({"error": 'Missing or invalid Authorization header (e)'}, 401)
+    else:
+        return jsonify({"error": 'Missing or invalid Authorization header'}, 401)
+
     api_url = target_path['url']
     for param in active_action_path["params"]:
         target_param = None
