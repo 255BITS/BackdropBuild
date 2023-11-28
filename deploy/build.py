@@ -35,11 +35,12 @@ def main():
 
     print("build push and tag docker image")
 
-    services = ['gptactionhub', 'gptactionhubproxy']
+    services = ['gptactionhub', 'gptactionhubproxy', 'gptactionhubmemory']
     version = '1.0'
     service_paths = {
         'gptactionhub': 'portal',
         'gptactionhubproxy': 'proxy',
+        'gptactionhubmemory': 'memory',
     }
 
     for service in services:

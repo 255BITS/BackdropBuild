@@ -3,6 +3,10 @@ import memorydb
 
 app = Flask(__name__)
 
+@app.route('/', methods=['GET'])
+def index():
+    return "Memory online"
+
 @app.route('/<datatype>/write', methods=['POST'])
 @app.route('/<datatype>/read', methods=['GET'])
 @app.route('/<datatype>/history', methods=['GET'])
@@ -48,4 +52,5 @@ def get_id_from_headers(datatype):
 
     return f"{action_hub_id}_{second_key}"
 
-app.run(debug=True, host='0.0.0.0', port=10005)
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port=10005)
