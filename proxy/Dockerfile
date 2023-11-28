@@ -14,9 +14,10 @@ RUN mkdir -p /root/.aws
 COPY proxy/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+RUN pip install gunicorn
 # Copy app files into container
 COPY proxy/ .
 COPY shared ./shared
 
 # Command to run the application using Uvicorn
-CMD ["python", "proxy.py"]
+CMD ["gunicorn", "-w 4", "app:app", "-b", "0.0.0.0:10005"]
