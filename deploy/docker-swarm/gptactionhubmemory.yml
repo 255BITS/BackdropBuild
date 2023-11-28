@@ -17,3 +17,9 @@ services:
        constraints: 
          - node.role == worker
          - node.labels.couchdb!=true
+   networks:
+     - gptactionhubmemory_network
+
+networks:
+  gptactionhubmemory_network:
+    driver: overlay
