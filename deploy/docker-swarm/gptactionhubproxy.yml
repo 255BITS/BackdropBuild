@@ -11,6 +11,7 @@ services:
     - COUCHDB_PASSWORD=$COUCHDB_PASSWORD
     - COUCHDB_HOST=$COUCHDB_HOST
     - COUCHDB_DATABASE=$COUCHDB_DATABASE
+    - ENCRYPTION_KEY=$ENCRYPTION_KEY
    deploy:
      replicas: 1
      placement:
