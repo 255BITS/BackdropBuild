@@ -126,7 +126,7 @@ async def fetch_action_mapping():
         if response.status_code != 200:
             terminate_and_send_slack_notification(f"Error fetching proxy actions on startup: {response.status_code}")
         actionrows = response.json()["rows"]
-        authrows = await fetch_auths(actionrows)
+        authrows = await fetch_auths([row["id"] for row in actionrows])
         for actionrow in actionrows:
             actionrow['auths']=[]
             for authrow in authrows:
@@ -135,10 +135,10 @@ async def fetch_action_mapping():
                     actionrow['auths'].append(authrow)
         return actionrows
 
-async def fetch_auths(actions):
+async def fetch_auths(action_ids):
     async with httpx.AsyncClient(timeout=couch_timeout) as client:
         try:
-            auths = await client.get(AUTH_MAPPING_URL+json.dumps([row["id"] for row in actions]))
+            auths = await client.get(AUTH_MAPPING_URL+json.dumps([a_id for a_id in action_ids]))
             if auths.status_code != 200:
                 terminate_and_send_slack_notification(f"Error fetching proxy auths on startup: {auth.status_code}")
             return [auth['value'] for auth in auths.json()['rows']]
@@ -161,13 +161,23 @@ async def listen_to_changes(last_seq):
 
                 async with write_lock:
                     for change in changes['results']:
+                        if "deleted" in change and change["deleted"]:
+                            if change["id"] in url_api_lookup_table:
+                                del url_api_lookup_table[change["id"]]
+                                print("Deleted api")
+                                continue
+                            if change["id"] in action_lookup_table:
+                                del action_lookup_table[change["id"]]
+                                print("Deleted action")
+                                continue
+                            print("Ignore deleted doc", change["id"])
+
                         doc = change.get('doc', {})
                         if doc.get('type') == 'API':
                             url_api_lookup_table[doc['_id']] = {'paths': doc['paths']}
                             print("Created api", url_api_lookup_table[doc["_id"]])
                         elif doc.get('type') == 'actions':
-                            print(f"Document {doc['_id']} of type {doc['type']} is relevant.")
-                            action_lookup_table[doc['_id']] = {'api_links': doc['api_links'], 'auths': (await fetch_auths([doc]))} #TODO doc['auths']
+                            action_lookup_table[doc['_id']] = {'api_links': doc['api_links'], 'auths': (await fetch_auths([doc["_id"]]))}
                             print("Created action", action_lookup_table[doc["_id"]])
             except httpx.ReadTimeout:
                 continue
