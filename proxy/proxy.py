@@ -10,6 +10,8 @@ import signal
 import os
 import json
 from datetime import datetime
+import requests
+import sys
 
 app = Quart(__name__)
 logging_tasks = set()
@@ -33,6 +35,8 @@ COUCHDB_PROTOCOL = os.getenv("COUCHDB_PROTOCOL", DEFAULT_PROTOCOL)
 COUCHDB_URL = COUCHDB_PROTOCOL+COUCHDB_USER+":"+COUCHDB_PASSWORD+"@"+COUCHDB_HOST+"/"+COUCHDB_DATABASE
 MAPPING_API_URL = COUCHDB_URL+"/_design/apis/_view/urls"
 MAPPING_ACTION_URL = COUCHDB_URL+"/_design/actions/_view/api_links"
+AUTH_MAPPING_URL = COUCHDB_URL+"/_design/auths/_view/by_actions?keys="
+SLACK_WEBHOOK_URL = os.getenv('SLACK_WEBHOOK_URL', None)
 
 # Setup asynchronous logging
 logger = logging.getLogger("quart.app")
@@ -43,8 +47,18 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 write_lock = asyncio.Lock()
 
+couch_timeout = Timeout(120.0)
+
+def terminate_and_send_slack_notification(message):
+    payload = {"text": message}
+    if SLACK_WEBHOOK_URL is not None:
+        response = requests.post(SLACK_WEBHOOK_URL, json=payload)
+    print(f"Failed to send Slack notification: {message}")
+    sys.exit("Terminating program due to error.")
+
+
 async def update_log_gpt_document(action_id, gpt_id):
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=couch_timeout) as client:
         try:
             # Fetch or create the log_gpt document for the given action_id
             response = await client.get(f"{COUCHDB_URL}/log_gpt_{action_id}")
@@ -82,7 +96,7 @@ async def async_log(request_data, response_data, response_time, method, action_i
     }
 
     # Log the data to CouchDB
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=couch_timeout) as client:
         try:
             # POST request to store the document in CouchDB
             response = await client.post(COUCHDB_URL, json=log_document)
@@ -94,28 +108,41 @@ async def async_log(request_data, response_data, response_time, method, action_i
     await update_log_gpt_document(action_id, request_data["headers"].get("Openai-Gpt-Id"))
 
 async def fetch_api_url_mapping():
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=couch_timeout) as client:
         try:
             response = await client.get(MAPPING_API_URL)
-            if response.status_code == 200:
-                return response.json()['rows']
-            else:
-                return url_api_lookup_table  # Return current mapping on failure
-        except httpx.RequestError:
-            return url_api_lookup_table  # Return current mapping on failure
+            if response.status_code != 200:
+                terminate_and_send_slack_notification(f"Error fetching proxy apis on startup: {response.status_code}")
+            return response.json()['rows']
+        except httpx.RequestError as e:
+            terminate_and_send_slack_notification(f"HTTP request error while fetching apis: {e}")
 
 async def fetch_action_mapping():
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=couch_timeout) as client:
         try:
-            print("Updating action lookup table")
-            print(MAPPING_ACTION_URL)
             response = await client.get(MAPPING_ACTION_URL)
-            if response.status_code == 200:
-                return response.json()['rows']
-            else:
-                return action_lookup_table  # Return current mapping on failure
-        except httpx.RequestError:
-            return action_lookup_table  # Return current mapping on failure
+        except httpx.RequestError as e:
+            terminate_and_send_slack_notification(f"HTTP request error while fetching actions: {e}")
+        if response.status_code != 200:
+            terminate_and_send_slack_notification(f"Error fetching proxy actions on startup: {response.status_code}")
+        actionrows = response.json()["rows"]
+        auth = await fetch_auths(actionrows)
+        if auth.status_code != 200:
+            terminate_and_send_slack_notification(f"Error fetching proxy auths on startup: {auth.status_code}")
+        authrows = auth.json()["rows"]
+        for actionrow in actionrows:
+            actionrow['auths']=[]
+            for authrow in authrows:
+                if authrow['value']['action_id'] == actionrow['id']:
+                    actionrow['auths'].append(authrow)
+        return actionrows
+
+async def fetch_auths(actions):
+    async with httpx.AsyncClient(timeout=couch_timeout) as client:
+        try:
+            return await client.get(AUTH_MAPPING_URL+json.dumps([row["id"] for row in actions]))
+        except httpx.RequestError as e:
+            terminate_and_send_slack_notification(f"HTTP request error while fetching auths: {e}")
 
 async def listen_to_changes(last_seq):
     """ Asynchronous version to listen for changes in the database """
@@ -135,11 +162,12 @@ async def listen_to_changes(last_seq):
                     for change in changes['results']:
                         doc = change.get('doc', {})
                         if doc.get('type') == 'API':
-                            print(f"Document {doc['_id']} of type {doc['type']} is relevant.")
                             url_api_lookup_table[doc['_id']] = {'paths': doc['paths']}
+                            print("Created api", url_api_lookup_table[doc["_id"]])
                         elif doc.get('type') == 'actions':
                             print(f"Document {doc['_id']} of type {doc['type']} is relevant.")
-                            action_lookup_table[doc['_id']] = {'api_links': doc['api_links'], 'auths': [{}]} #TODO doc['auths']
+                            action_lookup_table[doc['_id']] = {'api_links': doc['api_links'], 'auths': (await fetch_auths([doc]))} #TODO doc['auths']
+                            print("Created action", action_lookup_table[doc["_id"]])
             except httpx.ReadTimeout:
                 continue
             except httpx.HTTPStatusError as e:
@@ -286,7 +314,7 @@ async def shutdown():
 async def get_current_last_seq():
     """ Get the current last sequence number from the database """
     url = f"{COUCHDB_URL}/_changes?limit=1&descending=true"
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=couch_timeout) as client:
         response = await client.get(url)
         data = response.json()
         return data['last_seq']
