@@ -39,29 +39,6 @@ def read_env_file(filename):
     """
     Reads a file and creates a hashmap (dictionary) from its content.
     The file is expected to have lines in the format 'KEY=VALUE'.
-
-    Parameters:
-    filename (str): The name of the file to be read.
-
-    Returns:
-    dict: A dictionary containing the key-value pairs from the file.
-    """
-    env_variables = {}
-
-    with open(filename, 'r') as file:
-        for line in file:
-            # Stripping any leading/trailing whitespace and skipping empty lines
-            line = line.strip()
-            if line:
-                key, value = line.split('=')
-                env_variables[key] = value
-
-    return env_variables
-
-def read_env_file(filename):
-    """
-    Reads a file and creates a hashmap (dictionary) from its content.
-    The file is expected to have lines in the format 'KEY=VALUE'.
     Parameters:
     filename (str): The name of the file to be read.
 
