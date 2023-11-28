@@ -87,7 +87,7 @@ class DB:
 
         api_links = """function(doc) {
                                 if (doc.type === 'actions') {
-                                    emit(doc._id, {"api_links": doc.api_links, "auth": [{}]});
+                                    emit(doc._id, doc.api_links);
                                 }
                             }"""
 

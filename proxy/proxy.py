@@ -126,21 +126,22 @@ async def fetch_action_mapping():
         if response.status_code != 200:
             terminate_and_send_slack_notification(f"Error fetching proxy actions on startup: {response.status_code}")
         actionrows = response.json()["rows"]
-        auth = await fetch_auths(actionrows)
-        if auth.status_code != 200:
-            terminate_and_send_slack_notification(f"Error fetching proxy auths on startup: {auth.status_code}")
-        authrows = auth.json()["rows"]
+        authrows = await fetch_auths(actionrows)
         for actionrow in actionrows:
             actionrow['auths']=[]
             for authrow in authrows:
-                if authrow['value']['action_id'] == actionrow['id']:
+                if 'action_id' in authrow and authrow['action_id'] == actionrow['id']:
+                    del authrow['action_id']
                     actionrow['auths'].append(authrow)
         return actionrows
 
 async def fetch_auths(actions):
     async with httpx.AsyncClient(timeout=couch_timeout) as client:
         try:
-            return await client.get(AUTH_MAPPING_URL+json.dumps([row["id"] for row in actions]))
+            auths = await client.get(AUTH_MAPPING_URL+json.dumps([row["id"] for row in actions]))
+            if auths.status_code != 200:
+                terminate_and_send_slack_notification(f"Error fetching proxy auths on startup: {auth.status_code}")
+            return [auth['value'] for auth in auths.json()['rows']]
         except httpx.RequestError as e:
             terminate_and_send_slack_notification(f"HTTP request error while fetching auths: {e}")
 
@@ -190,7 +191,7 @@ async def update_action_lookup_table():
     print("Actions found", len(action_info))
     async with write_lock:
         for a in action_info:
-            action_lookup_table[a['id']]=a['value']
+            action_lookup_table[a['id']]={'api_links': a['value'], 'auths': a['auths']}
 
 @app.route('/', methods=['GET'])
 def ready():
