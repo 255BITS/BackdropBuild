@@ -235,7 +235,10 @@ async def passthrough(action_id, operation_id):
                 break
     if api_link is None:
         return jsonify({"error": "API not found"}, 404)
-    headers['ActionHub-Id'] = api_link['id']
+    if 'ActionHub-Id' in headers:
+        return jsonify({"error": "proxy loop detected, aborting"}, 508)
+
+    headers['ActionHub-Id'] = action_id
 
     if api_link['api_id'] not in url_api_lookup_table:
         return jsonify({"error": "API link found in action but not in API"}, 404)
