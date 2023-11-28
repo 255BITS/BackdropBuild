@@ -75,7 +75,7 @@ def read_env_file(filename):
             # Stripping any leading/trailing whitespace and skipping empty lines
             line = line.strip()
             if line:
-                key, value = line.split('=')
+                key, value = line.split('=', 1)
                 env_variables[key] = value
 
     return env_variables
