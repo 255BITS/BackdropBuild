@@ -223,7 +223,7 @@ class DB:
         self.create_view_ddoc("logs", "count_gpt_ids_by_action", map_count_gpt_ids_by_action)
         self.create_view_ddoc("logs", "count_by_actions", map_count_by_actions, reduce_func="_sum")
         self.create_view_ddoc("logs", "count_by_api", map_count_by_api, reduce_func="_sum")
-        self.create_view_ddoc("logs", "by_api", by_api)
+        self.create_view_ddoc("logs", "by_api", by_api, reduce_func="_count")
         self.create_view_ddoc("logs", "by_actions", by_actions, reduce_func="_count")
         self.create_view_ddoc("logs", "apis_last_used", map_last_used, reduce_last_used)
         self.create_view_ddoc("logs", "count_by_actions_day", map_by_actions_day, reduce_func="_sum")

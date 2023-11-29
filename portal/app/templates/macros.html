@@ -97,3 +97,31 @@
   </div>
 {% endmacro %}
 
+
+{% macro list_logs(logs) %}
+  <div id="logs" class="pt-4">
+      <table class="min-w-full">
+          <thead>
+              <tr>
+                  <th class="border px-4 py-1">Timestamp</th>
+                  <th class="border px-4 py-1">GPT ID</th>
+                  <th class="border px-4 py-1">User ID</th>
+                  <th class="border px-4 py-1">Conversation ID</th>
+                  <th class="border px-4 py-1">Response status</th>
+                  <th class="border px-4 py-2">Action</th>
+              </tr>
+          </thead>
+          {% for log in logs %}
+          <tr>
+            <td>{{log.created_at}}</td>
+            <td>{{log.request.headers.get("Openai-Gpt-Id", "")}}</td>
+            <td>{{log.request.headers.get("Openai-Ephemeral-User-Id", "")}}</td>
+            <td>{{log.request.headers.get("Openai-Conversation-Id", "")}}</td>
+            <td>{{log.get("response_status_code", "")}}</td>
+            <td>{{log.method}} {{log.operation_id}}</td>
+          </tr>
+          {% endfor %}
+      </table>
+  </div>
+{% endmacro %}
+

@@ -3,7 +3,7 @@
 {% block maincontent %}
 <div class="container mx-auto px-6 py-8">
     <div class="bg-white shadow-lg rounded-lg p-6">
-        <h2 class="text-2xl font-semibold mb-4">Usage: {{actions.name}}</h2>
+        <h2 class="text-2xl font-semibold mb-4">Action Usage: {{actions.name}}</h2>
 
         <!-- Tabs for Stats and Logs -->
         <ul class="flex border-b">
@@ -12,45 +12,7 @@
             </li>
         </ul>
 
-        <!-- Stats Tab -->
-        <div id="stats" class="pt-4 hidden">
-            <div class="mb-4">
-                <h3 class="font-semibold text-lg">Number of Times Used</h3>
-                <p>Placeholder: 123</p>
-            </div>
-            <div class="mb-4">
-                <h3 class="font-semibold text-lg">Graph of Number of Users</h3>
-                <canvas id="usersGraph"></canvas>
-            </div>
-            <div>
-                <h3 class="font-semibold text-lg">Graph of Number of Conversations</h3>
-                <canvas id="conversationsGraph"></canvas>
-            </div>
-        </div>
-
-        <!-- Logs Tab -->
-        <div id="logs" class="pt-4">
-            <table class="min-w-full">
-                <thead>
-                    <tr>
-                        <th class="border px-4 py-1">Timestamp</th>
-                        <th class="border px-4 py-1">GPT ID</th>
-                        <th class="border px-4 py-1">User ID</th>
-                        <th class="border px-4 py-1">Conversation ID</th>
-                        <th class="border px-4 py-2">Action</th>
-                    </tr>
-                </thead>
-                {% for log in logs %}
-                <tr>
-                  <td>{{log.created_at}}</td>
-                  <td>{{log.request.headers.get("Openai-Gpt-Id", "")}}</td>
-                  <td>{{log.request.headers.get("Openai-Ephemeral-User-Id", "")}}</td>
-                  <td>{{log.request.headers.get("Openai-Conversation-Id", "")}}</td>
-                  <td>{{log.method}} {{log.operation_id}}</td>
-                </tr>
-                {% endfor %}
-            </table>
-        </div>
+        {{ macros.list_logs(logs) }}
         {{ macros.paginate(page, limit, total_count) }}
     </div>
 </div>

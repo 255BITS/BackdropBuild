@@ -1,11 +1,14 @@
 import uuid
 from flask import Flask, render_template, redirect, request, jsonify, url_for, flash, g, make_response
 from shared.couch import db
-from app.services.api_service import parse_api_object
+from app.services.api_service import parse_api_object, ApiService
 from app.services.auth_service import assert_owner, assert_logged_in
 
 from flask import Blueprint
 api_bp = Blueprint('apis', __name__)
+
+def api_service(api):
+    return ApiService(api)
 
 @api_bp.route('/discover-apis')
 def apis_discover():
@@ -97,9 +100,12 @@ def apis_unpublish(id):
 
 @api_bp.route('/apis/<id>/usage')
 def apis_show_usage(id):
+    page = int(request.args.get("page", 1))
+    limit = 10
     api = db.get(id)
     assert_owner(api)
-    return render_template('api_usage.html', api=api)
+    logs, total_count = api_service(api).get_logs(limit, limit*(page-1))
+    return render_template('api_usage.html', api=api, logs=logs, page=page, limit=limit, total_count=total_count)
 
 @api_bp.delete('/apis/<id>')
 def delete(id):

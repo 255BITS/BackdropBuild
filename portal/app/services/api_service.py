@@ -1,4 +1,5 @@
 import re
+from shared.couch import db
 
 def parse_api_object(request):
     errors = {}
@@ -60,3 +61,13 @@ def parse_api_object(request):
     }
 
     return errors, api_object
+
+class ApiService:
+    def __init__(self, api):
+        self.api = api
+
+    def get_logs(self, limit, skip):
+        api_id = self.api["_id"]
+        logs = db.query_view('logs', 'by_api', limit=limit, skip=skip, key=api_id, reduce=False)
+        total_count = sum(db.query_view('logs', 'by_api', key=api_id, limit=limit, skip=skip, reduce=True)+[0])
+        return logs, total_count
