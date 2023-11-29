@@ -296,7 +296,7 @@ async def passthrough(action_id, operation_id):
                 headers[target_param['name']] = param['value']
             continue
 
-        api_url = api_url.replace(f"<{param['name']}>", param["value"])
+        api_url = api_url.replace(f"<{param['name']}>", str(param["value"]))
         if param["source"] == "constant":
             if target_path["method"].lower() in ["get", "delete"]:
                 params[param["name"]] = param["value"]
