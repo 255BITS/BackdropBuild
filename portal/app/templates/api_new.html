@@ -90,11 +90,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 <label for="url" class="block {% if 'path0_url' in errors %} text-red-700 {% else %} text-gray-700 {% endif %} text-md font-bold mb-2">URL</label>
                 <div class="flex items-center mb-2">
                     <select id="path{{path_index}}_method" name="path{{path_index}}_method" class="shadow border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                        <option value="GET">GET</option>
-                        <option value="POST" selected>POST</option>
-                        <option value="PUT">PUT</option>
-                        <option value="PATCH">PATCH</option>
-                        <option value="DELETE">DELETE</option>
+                        <option value="GET" {% if path["method"] == "GET" %}selected{% endif %}>GET</option>
+                        <option value="POST" {% if path["method"] == "POST" %}selected{% endif %}>POST</option>
+                        <option value="PUT" {% if path["method"] == "PUT" %}selected{% endif %}>PUT</option>
+                        <option value="PATCH" {% if path["method"] == "PATCH" %}selected{% endif %}>PATCH</option>
+                        <option value="DELETE" {% if path["method"] == "DELETE" %}selected{% endif %}>DELETE</option>
                     </select>
                     <div class="flex-grow">
                       <input type="text" id="path{{path_index}}_url" name="path{{path_index}}_url" placeholder="https://..." value="{{path['url']}}" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
