@@ -117,7 +117,7 @@
             <td>{{log.request.headers.get("Openai-Gpt-Id", "")}}</td>
             <td>{{log.request.headers.get("Openai-Ephemeral-User-Id", "")}}</td>
             <td>{{log.request.headers.get("Openai-Conversation-Id", "")}}</td>
-            <td>{{log.get("response_status_code", "")}}</td>
+            <td>{{log.get("response_status_code", "")}}(<button class="text-blue-500" onclick="toggleModal('{{url_for("logs.show", id=log._id)}}')">{{url_for("logs.show", id=log._id)}}</button>)</td>
             <td>{{log.method}} {{log.operation_id}}</td>
           </tr>
           {% endfor %}

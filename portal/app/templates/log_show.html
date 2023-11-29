@@ -1,0 +1,30 @@
+<html lang="en">
+<head>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-10 font-mono">
+  <div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded shadow p-4 mb-6">
+      <h2 class="text-xl font-semibold mb-2">Request Details</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+        <div><strong>Created At:</strong> {{ log.created_at }}</div>
+        <div><strong>Method:</strong> {{ log.method }}</div>
+        <div><strong>Params:</strong> <pre class="whitespace-pre-wrap">{{ log.request.params | tojson }}</pre></div>
+        <div><strong>Response Status:</strong> {{ log.response_status_code }}</div>
+        <div><strong>Time Taken:</strong> {{ log.response_time }}s</div>
+        <!-- Add more fields as necessary -->
+      </div>
+    </div>
+    
+    <div class="bg-white rounded shadow p-4 mb-6 overflow-x-auto">
+      <h2 class="text-xl font-semibold mb-2">Response Details</h2>
+      <div class="text-sm">
+        <div><strong>Status Code:</strong> {{ log.response_status_code }}</div>
+        <div><strong>Headers:</strong> <pre class="whitespace-pre-wrap">{{ log.response.headers | tojson }}</pre></div>
+        <div><strong>Body:</strong> <pre class="whitespace-pre-wrap">{{ log.response.content }}</pre></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
