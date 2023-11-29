@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, Response
 from shared.couch import db
 from app.services.actions_service import ActionsService
 from app.services.swagger_service import generate_openapi_spec_for_actions
+import json
 import datetime
 
 public_bp = Blueprint('public', __name__)
@@ -14,7 +15,12 @@ def home():
 def get_openapi_spec(action_id):
     actions, apis, _ = ActionsService(None).get_details(action_id)
     #TODO 404?
-    return generate_openapi_spec_for_actions(actions, apis)
+    openapi_spec = generate_openapi_spec_for_actions(actions, apis)
+    pretty_openapi_spec = json.dumps(openapi_spec, indent=4)
+    
+    # Return the pretty-printed JSON
+    return pretty_openapi_spec, 200, {'Content-Type': 'application/json'}
+
 
 @public_bp.get('/privacy_policy/<action_id>')
 def get_privacy_policy(action_id):
