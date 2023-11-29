@@ -40,6 +40,19 @@ def get_privacy_policy(action_id):
 def setup_instructions():
     return render_template("setup_instructions.html")
 
+@public_bp.get('/sitemap.xml')
+def sitemap():
+    static_content_at = datetime.datetime.fromisoformat('2023-11-29T15:00:45.886476')
+    paths = {
+        "/": {
+            "last_updated": static_content_at
+        },
+        "/setup-instructions": {
+            "last_updated": static_content_at
+        }
+    }
+    return render_template('sitemap.xml', paths=paths), 200, {'Content-Type': 'application/xml'}
+
 @public_bp.get('/fixie_ai/<action_id>.js')
 def get_fixie_tool(action_id):
     actions, apis, _ = ActionsService(None).get_details(action_id)
