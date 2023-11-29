@@ -48,6 +48,7 @@ logger.addHandler(handler)
 write_lock = asyncio.Lock()
 
 couch_timeout = Timeout(120.0)
+proxy_service_timeout = Timeout(180.0)
 
 def terminate_and_send_slack_notification(message):
     payload = {"text": message}
@@ -302,12 +303,13 @@ async def passthrough(action_id, operation_id):
             else:
                 data_dict[param["name"]] = param["value"]
 
+    method = request.method
     content = json.dumps(data_dict)
     content_length = str(len(content.encode('utf-8')))
     headers['Content-Length'] = content_length
     #TODO: openai token auth on action
 
-    async with httpx.AsyncClient() as client:
+    async with httpx.AsyncClient(timeout=proxy_service_timeout) as client:
         api_call = client.request(method=method, url=api_url, content=content, headers=headers, params=params)
         api_call_task = asyncio.create_task(api_call)
         api_call_tasks.add(api_call_task)
