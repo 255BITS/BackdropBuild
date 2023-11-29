@@ -152,7 +152,19 @@
               </button>
             </div>
         </div>
-        <form hx-delete="{{url_for('actions.delete', id=actions._id)}}" hx-confirm="Are you sure? This cannot be undone.">
+    </div>
+    <div class="mb-6 relative border-t">
+      <h3 class="text-lg font-semibold mt-4 mb-4">Fixie.ai Tools <a target="_blank" href='https://docs.ai-jsx.com/tutorials/sidekickTutorial/part4-tools'>?</a></h3>
+        <div class="relative w-full">
+            <a target="_blank" href="https://gptactionhub.com/fixie_ai/{{actions._id}}.js" class='w-full p-4 border rounded-lg font-mono'> https://gptactionhub.com/fixie_ai/{{actions._id}}.js</a>
+            <button class="absolute top-4 right-2 text-gray-500 hover:text-gray-700">
+                <i class="far fa-copy" onclick="copyToClipboard(event, 'https://gptactionhub.com/fixie_ai/{{actions._id}}.js')"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="mb-6 relative">
+        <form hx-delete="{{url_for('actions.delete', id=actions._id)}}" hx-confirm="Are you sure? This cannot be undone." class="mt-4">
           <button class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Delete</button>
         </form>
     </div>

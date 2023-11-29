@@ -265,9 +265,9 @@ async def passthrough(action_id, operation_id):
 
     auth_header = None
     if "Authorization" in headers:
-        auth_header = headers["Authorization"]
+        auth_header = headers["Authorization"].lower()
     # Basic auth
-    if auth_header and auth_header.startswith('Basic '):
+    if auth_header and auth_header.startswith('basic '):
         token = auth_header[6:]  # Strip off 'Basic ' prefix
         try:
             valid = False
