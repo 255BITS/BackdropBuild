@@ -71,12 +71,12 @@ def apis_update(id):
     if errors:
         for k, v in errors.items():
             flash(v, 'error')
-        return render_template('api_new.html', errors=errors, api=api_object)
+        return render_template('api_new.html', errors=errors, api=api)
     for k, v in api_object.items():
         api[k]=v
 
     saved = db.save(api)
-    return render_template('api_show.html', errors={}, api=api_object)
+    return redirect('/apis/'+api["_id"])
 
 @api_bp.route('/apis/<id>/publish', methods=["POST"])
 def apis_publish(id):
