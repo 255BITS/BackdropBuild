@@ -35,13 +35,14 @@ def main():
 
     print("build push and tag docker image")
 
-    services = ['gptactionhub', 'gptactionhubproxy', 'gptactionhubmemory']
     version = '1.0'
     service_paths = {
         'gptactionhub': 'portal',
         'gptactionhubproxy': 'proxy',
         'gptactionhubmemory': 'memory',
+        'gptactionhubstability': 'stability',
     }
+    services = service_paths.keys()
 
     for service in services:
         if args.pattern is None or args.pattern in service:
