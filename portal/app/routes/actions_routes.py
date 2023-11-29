@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, url_for, request, g, make_response, flash
 from app.services.actions_service import ActionsService
 from app.services.auth_service import assert_logged_in, assert_owner
-from shared.couch import db
+from shared.couch import db, logs_db
 import re
 
 actions_bp = Blueprint('actions', __name__)
@@ -20,7 +20,7 @@ def index():
     actions_list, total_count = actions_service().list(limit, (page-1)*limit) #TODO order
     ids = [a['_id'] for a in actions_list]
     usage_count = logs_db.count_logs_by_actions(ids)
-    gpts_count = db.count_gpt_ids_by_actions(ids)
+    gpts_count = logs_db.count_gpt_ids_by_actions(ids)
     sparklines = actions_service().get_sparklines(ids)
     return render_template('actions_index.html', actions_list=actions_list, usage_count=usage_count, gpts_count=gpts_count, sparklines=sparklines, page=page, total_count=total_count, limit=limit)
 
