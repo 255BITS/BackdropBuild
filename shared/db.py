@@ -138,11 +138,11 @@ class DB:
         public_or_by_user = """
             function (doc) {
               if(doc.type === "API") {
-                if (doc.user_id) {
+                 if (doc.visibility === 'public') {
+                  emit(['public', 0], doc);
+                } else if (doc.user_id) {
                   // Emit for user-specific documents
                   emit([doc.user_id, 1], doc);
-                } else if (doc.visibility === 'public') {
-                  emit(['public', 0], doc);
                 }
               }
             }
