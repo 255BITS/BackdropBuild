@@ -6,6 +6,10 @@
   background-image: url('/static/bg1.png');
   background-repeat: repeat; /* This will tile your image */
 }
+.custom-bg2 {
+  background-image: url('/static/bg2.png');
+  background-repeat: repeat; /* This will tile your image */
+}
   </style>
 {% endblock %}
 {% block content %}
@@ -28,14 +32,14 @@
             <p class="text-gray-700 mb-4">Gain insight on how your GPTs are being used</p>
         </div>
         <div class="w-full md:w-2/3 p-6">
-            <img src="https://placehold.co/800x250/EEE/31343C"/>
+            <img src="/static/valueprop1.png"/>
         </div>
     </div>
 </div>
 <div class="container mx-auto px-6 border-b">
     <div class="flex flex-wrap my-12">
         <div class="w-full md:w-2/3 p-6">
-            <img src="https://placehold.co/800x250/EEE/31343C"/>
+            <img src="/static/valueprop2.png"/>
         </div>
         <div class="w-full md:w-1/3 p-6">
             <h2 class="text-2xl font-bold mb-2">API Builders</h2>
@@ -47,25 +51,64 @@
 </div>
 <div class="container mx-auto px-6 border-b">
     <div class="flex flex-wrap my-12">
-        <div class="w-full md:w-1/2 p-6 text-center">
-            <img src="https://placehold.co/600x250/EEE/31343C"/>
+        <div class="w-full p-6 text-center">
             <h2 class="text-2xl font-bold mb-2">GPTs Showcase</h2>
-            <p class="text-gray-700 mb-4">Resume Builder: Built a resume in PDF form</p>
-            <p class="text-gray-700 mb-4">Menu Crafter: Craft a printable menu for a restaurant</p>
-            <p class="text-gray-700 mb-4">...</p>
-        </div>
-        <div class="w-full md:w-1/2 p-6 text-center">
-            <img src="https://placehold.co/600x250/EEE/31343C"/>
-            <h2 class="text-2xl font-bold mb-2">Available Actions</h2>
-            <p class="text-gray-700 mb-4">Generate PDFs from latex</p>
-            <p class="text-gray-700 mb-4">Create audio files with Stablility</p>
-            <p class="text-gray-700 mb-4">Print an image to a gift</p>
-            <p class="text-gray-700 mb-4">...</p>
+                <div class="container mx-auto px-6 py-8 bg-gray-500">
+                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- First Example (Original) -->
+                    <div class="bg-white shadow-lg rounded-lg p-6">
+                      <div class="mb-2">
+                        <p class="text-lg font-semibold">
+                          <img src="/static/gpt1.png" class="float-left"/>
+                          <p class="text-gray-700 mb-4 text-lg">
+                            <a class='text-blue-600 hover:text-blue-800 underline' target='_blank' href='https://chat.openai.com/g/g-AlNwd9j61-gptactionhub-s-support'>GPTActionHub's Support</a>
+                          </p>
+                        </p>
+                        <p class="text-sm text-gray-600 align-bottom items-end">
+                          A fixie ai corpus scrapes our site and lets you talk with gptactionhub.com!
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- Second Example (Converted) -->
+                    <div class="bg-white shadow-lg rounded-lg p-6">
+                      <div class="mb-2">
+                        <p class="text-lg font-semibold">
+                          <!-- Placeholder for an image, if any -->
+                          <img src="/static/gpt2.png" class="float-left"/>
+                          <p class="text-gray-700 mb-4 text-lg">
+                            <a class='text-blue-600 hover:text-blue-800 underline' target='_blank' href='https://chat.openai.com/g/g-d16txttjs-memory-mate'>Memory Mate</a>
+                          </p>
+                        </p>
+                        <p class="text-sm text-gray-600 align-bottom items-end">
+                          A chatbot that has memory of the user across chat sessions.
+                        </p>
+                      </div>
+                    </div>
+
+                    <!-- Third Example (Converted) -->
+                    <div class="bg-white shadow-lg rounded-lg p-6">
+                      <div class="mb-2">
+                        <p class="text-lg font-semibold">
+                          <!-- Placeholder for an image, if any -->
+                          <img src="/static/gpt3.png" class="float-left rounded-lg"/>
+                          <p class="text-gray-700 mb-4 text-lg">
+                            <a class='text-blue-600 hover:text-blue-800 underline' target='_blank' href='https://chat.openai.com/g/g-LYHf8mLAy-stable-diffusion-v1-6-text-to-image-stability-ai'>Stable Diffusion v1.6 text to image</a>
+                          </p>
+                        </p>
+                        <p class="text-sm text-gray-600 align-bottom items-end">
+                          Generate cutting edge AI imagery with Stability.ai's newest image generator.
+                        </p>
+                      </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 
 </div>
-<div class="container mx-auto px-6">
+<div class="text-center px-6 py-12 bg-gray-100 border-b border-t custom-bg2">
     <div class="text-center py-12">
         <h2 class="text-3xl font-bold mb-2">Ready to Dive In?</h2>
         <p class="text-gray-700 mb-6">Join us today and start exploring the endless possibilities.</p>
@@ -74,5 +117,25 @@
         </a>
     </div>
 </div>
+<footer class="bg-gray-800 text-white">
+    <div class="container mx-auto px-6 py-10">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+            <div>
+                <h3 class="text-xl font-semibold">Open Source</h3>
+                <p class="mt-2">
+                    <a href="https://github.com/255BITS/GPTActionHub" class="text-blue-400 hover:text-blue-300">https://github.com/255BITS/GPTActionHub</a>
+                </p>
+            </div>
+            <div class="mt-6 md:mt-0">
+                <h3 class="text-xl font-semibold">Built 🛠️ for
+                </h3>
+                <p class="mt-2">
+                    <a href="https://backdropbuild.com/v2" class="text-blue-400 hover:text-blue-300">BackdropBuild v2</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+
 {% endblock %}
 
