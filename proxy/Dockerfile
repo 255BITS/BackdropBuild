@@ -20,4 +20,4 @@ COPY proxy/ .
 COPY shared ./shared
 
 # Command to run the application using Uvicorn
-CMD ["uvicorn", "--workers 4", "app:app", "--host", "0.0.0.0", "--port", "10005"]
+CMD ["uvicorn", "--workers", "4", "app:app", "--host", "0.0.0.0", "--port", "10004"]
