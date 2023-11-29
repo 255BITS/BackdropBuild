@@ -26,7 +26,7 @@ def apis_my():
     ids = [a['_id'] for a in apis]
     api_links_count = db.count_api_links(ids)
     usage_count = logs_db.count_logs_by_api(ids)
-    apis_last_used = db.get_apis_last_used(ids)
+    apis_last_used = logs_db.get_apis_last_used(ids)
     return render_template('api_list.html', apis=apis, usage_count=usage_count, api_links_count=api_links_count, apis_last_used=apis_last_used)
 
 @api_bp.route('/apis/new')
