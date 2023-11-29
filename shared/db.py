@@ -73,7 +73,11 @@ class DB:
 
         # Update the design document in the database if needed
         if update_needed:
-            self.db[design_doc_id] = current_design_doc
+            try:
+                self.db[design_doc_id] = current_design_doc
+            except couchdb.http.ResourceConflict:
+                # Another worker is updating the view
+                pass
 
     def create_actions_views(self):
         """

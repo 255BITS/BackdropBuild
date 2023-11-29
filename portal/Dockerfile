@@ -22,4 +22,4 @@ COPY portal/ .
 COPY shared ./shared
 
 # Command to run the application using Uvicorn
-CMD ["gunicorn", "-w 1", "main:app", "-b", "0.0.0.0:8999"]
+CMD ["gunicorn", "-w 4", "main:app", "-b", "0.0.0.0:8999"]
