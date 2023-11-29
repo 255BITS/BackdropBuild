@@ -3,6 +3,21 @@
 {% block head %}
 <link rel="stylesheet" href="/static/styles.css">
 <script src="https://unpkg.com/htmx.org@1.9.8"></script>
+<script>
+	function toggleModal(url) {
+		fetch(url)
+			.then(response => response.text())
+			.then(html => {
+				document.getElementById('modal-content').innerHTML = html;
+				document.getElementById('modal').classList.remove('hidden');
+			});
+	}
+	window.onclick = function(event) {
+		if (event.target == document.getElementById('modal')) {
+			document.getElementById('modal').classList.add('hidden');
+		}
+	}
+</script>
 {% endblock %}
 
 {% block body %}
@@ -34,6 +49,21 @@
                 </div>
             </div>
         </header>
+
+				<div id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-10">
+						<!-- Modal content -->
+						<div class="relative top-20 mx-auto p-5 border w-2/5 shadow-lg rounded-md bg-white">
+								<div id="modal-content">
+										<!-- Dynamic content will be loaded here -->
+								</div>
+								<button onclick="document.getElementById('modal').classList.add('hidden')" class="absolute top-0 right-0 mt-2 mr-2 text-gray-600 hover:text-gray-900">
+										<svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+												<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+										</svg>
+								</button>
+						</div>
+				</div>
+
         <div class="flex h-full flex-1">
             <!-- Left Sidebar -->
             <div class="bg-card-background-color w-64 p-6 hidden sm:block">

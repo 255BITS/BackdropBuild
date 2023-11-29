@@ -33,3 +33,7 @@ def get_privacy_policy(action_id):
         privacy_policy += "\n------\n"
     privacy_policy += f"This privacy policy is valid {datetime.datetime.now().isoformat()}. GPTActionHub.com and API authors reserve the right to modify any part of the policy in the future.\n"
     return Response(privacy_policy, mimetype="text/plain")
+
+@public_bp.get('/setup-instructions')
+def setup_instructions():
+    return render_template("setup_instructions.html")

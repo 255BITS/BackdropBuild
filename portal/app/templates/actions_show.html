@@ -131,7 +131,12 @@
             </div>
 
     <div class="mb-6 relative">
-        <h3 class="text-lg font-semibold mb-2">OpenAPI Specification URL</h3>
+        <h3 class="text-lg font-semibold mb-2">OpenAPI Specification URL
+          <button onclick="toggleModal('{{ url_for('public.setup_instructions')}}')" class="text-blue-500 font-bold py-2 rounded text-s">
+            ?
+          </button>
+        </h3>
+
         <div class="relative w-full">
             <input type="text" readonly value="https://gptactionhub.com/openapi/{{actions._id}}.json" class='w-full p-4 border rounded-lg font-mono'/>
             <button class="absolute top-4 right-2 text-gray-500 hover:text-gray-700">
