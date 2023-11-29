@@ -107,10 +107,6 @@ class ActionsService:
         auths = [decode_auth(auth) for auth in auths]
         return actions, apis, auths
 
-    def update(self, id, update_dict):
-        actions = db.get(id)
-        db.save(actions | update_dict)
-
     def get_apis(self, limit, skip):
         apis = db.query_view('apis', 'public_or_by_user', keys=[["public", 0],[self.user["_id"], 1]], limit=limit, skip=skip, reduce=False)
         total_count = sum(db.query_view('apis', 'public_or_by_user', key=["public", 0], reduce=True)+db.query_view('apis', 'public_or_by_user', key=[self.user["_id"], 1], reduce=True)+[0])
@@ -169,6 +165,17 @@ class ActionsService:
 
     def update(self, actions):
         self.validate(actions)
+        apis = db.get([link['api_id'] for link in actions["api_links"]])
+
+        for api_link, api in zip(actions["api_links"], apis):
+            for path, api_path in zip(api_link["paths"], api["paths"]):
+                for param, api_param in zip(path["params"], api_path["params"]):
+                    if param["source"] == "constant":
+                        if api_param["type"]=="integer":
+                            param["value"] = int(param["value"])
+                        elif api_param["type"]=="float":
+                            param["value"] = float(param["value"])
+
         db.save(actions)
 
     def validate(self, actions):
