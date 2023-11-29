@@ -1,7 +1,7 @@
 from passlib.hash import bcrypt
 import datetime
 from shared import utils
-from shared.couch import db
+from shared.couch import db, logs_db
 import secrets
 import string
 from app.services.credentials_service import CredentialsService
@@ -114,8 +114,8 @@ class ActionsService:
 
     def get_logs(self, actions, limit, skip):
         action_id = actions["_id"]
-        logs = db.query_view('logs', 'by_actions', limit=limit, skip=skip, key=action_id, reduce=False)
-        total_count = sum(db.query_view('logs', 'by_actions', key=action_id, limit=limit, skip=skip, reduce=True)+[0])
+        logs = logs_db.query_view('logs', 'by_actions', limit=limit, skip=skip, key=action_id, reduce=False)
+        total_count = sum(logs_db.query_view('logs', 'by_actions', key=action_id, limit=limit, skip=skip, reduce=True)+[0])
         return logs, total_count
 
     def get_sparklines(self, ids):
@@ -145,7 +145,7 @@ class ActionsService:
 
         for action_id in ids:
             # Fetch log counts for this action_id
-            log_counts = db.count_logs_by_actions_day(action_id, start_date, end_date)
+            log_counts = logs_db.count_logs_by_actions_day(action_id, start_date, end_date)
 
             # Extract and normalize counts
             counts = [log_counts.get((action_id, start_date.year, start_date.month, start_date.day + i), 0) for i in range(total_days)]

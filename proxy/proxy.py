@@ -33,6 +33,7 @@ COUCHDB_HOST = os.getenv("COUCHDB_HOST", DEFAULT_HOST)
 COUCHDB_USER = os.getenv("COUCHDB_USER", DEFAULT_USER)
 COUCHDB_PROTOCOL = os.getenv("COUCHDB_PROTOCOL", DEFAULT_PROTOCOL)
 COUCHDB_URL = COUCHDB_PROTOCOL+COUCHDB_USER+":"+COUCHDB_PASSWORD+"@"+COUCHDB_HOST+"/"+COUCHDB_DATABASE
+COUCHDB_LOGS_URL = COUCHDB_URL+"-logs"
 MAPPING_API_URL = COUCHDB_URL+"/_design/apis/_view/urls"
 MAPPING_ACTION_URL = COUCHDB_URL+"/_design/actions/_view/api_links"
 AUTH_MAPPING_URL = COUCHDB_URL+"/_design/auths/_view/by_actions?keys="
@@ -62,7 +63,7 @@ async def update_log_gpt_document(action_id, gpt_id):
     async with httpx.AsyncClient(timeout=couch_timeout) as client:
         try:
             # Fetch or create the log_gpt document for the given action_id
-            response = await client.get(f"{COUCHDB_URL}/log_gpt_{action_id}")
+            response = await client.get(f"{COUCHDB_LOGS_URL}/log_gpt_{action_id}")
             if response.status_code == 200:
                 doc = response.json()
             elif response.status_code == 404:
@@ -74,7 +75,7 @@ async def update_log_gpt_document(action_id, gpt_id):
             # Add the new GPT ID to the set if it's not already present
             if gpt_id not in doc.get('gpt_ids', []):
                 doc['gpt_ids'].append(gpt_id)
-                update_response = await client.put(f"{COUCHDB_URL}/log_gpt_{action_id}", json=doc)
+                update_response = await client.put(f"{COUCHDB_LOGS_URL}/log_gpt_{action_id}", json=doc)
                 if update_response.status_code not in [201, 202]:
                     logger.error(f"Failed to update log_gpt document: {update_response.text}")
         except Exception as e:
@@ -100,7 +101,7 @@ async def async_log(request_data, response_data, response_time, method, action_i
     async with httpx.AsyncClient(timeout=couch_timeout) as client:
         try:
             # POST request to store the document in CouchDB
-            response = await client.post(COUCHDB_URL, json=log_document)
+            response = await client.post(COUCHDB_LOGS_URL, json=log_document)
             if response.status_code != 201:
                 # Handle the case where the document isn't created successfully
                 logger.error(f"Failed to log to CouchDB: {response.text}")

@@ -1,6 +1,6 @@
 import uuid
 from flask import Flask, render_template, redirect, request, jsonify, url_for, flash, g, make_response
-from shared.couch import db
+from shared.couch import db, logs_db
 from app.services.api_service import parse_api_object, ApiService
 from app.services.auth_service import assert_owner, assert_logged_in
 
@@ -16,7 +16,7 @@ def apis_discover():
     ids = [a['_id'] for a in apis]
 
     api_links_count = db.count_api_links(ids)
-    usage_count = db.count_logs_by_api(ids)
+    usage_count = logs_db.count_logs_by_api(ids)
     return render_template('api_discover.html', apis=apis, api_links_count=api_links_count, usage_count=usage_count)
 
 @api_bp.route('/apis')
@@ -25,7 +25,7 @@ def apis_my():
     apis = db.query_view('apis', 'by_user', key=g.current_user.id)
     ids = [a['_id'] for a in apis]
     api_links_count = db.count_api_links(ids)
-    usage_count = db.count_logs_by_api(ids)
+    usage_count = logs_db.count_logs_by_api(ids)
     apis_last_used = db.get_apis_last_used(ids)
     return render_template('api_list.html', apis=apis, usage_count=usage_count, api_links_count=api_links_count, apis_last_used=apis_last_used)
 

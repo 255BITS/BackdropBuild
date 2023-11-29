@@ -18,10 +18,15 @@ couch_credentials = {
     'url': f"http://{COUCHDB_USER}:{COUCHDB_PASSWORD}@{COUCHDB_HOST}",
     'db_name': COUCHDB_DATABASE
 }
+couch_credentials_logs = couch_credentials | {
+    'db_name': COUCHDB_DATABASE+"-logs"
+}
 db = None
+logs_db = None
 
 def initialize_couch(couch_credentials):
-    global db
-    db = DB(couch_credentials)
+    global db, logs_db
+    db = DB(couch_credentials, partition="app")
+    logs_db = DB(couch_credentials_logs, partition="logs")
 
 initialize_couch(couch_credentials)

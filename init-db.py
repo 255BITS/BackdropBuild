@@ -24,22 +24,23 @@ users_url = couchdb_url + '_users/org.couchdb.user:' + username
 user_creation_response = requests.put(users_url, json=user_doc, auth=HTTPBasicAuth(admin_user, admin_pass))
 
 # Step 2: Create a new database
-db_url = couchdb_url + username
-db_creation_response = requests.put(db_url, auth=HTTPBasicAuth(admin_user, admin_pass))
+for db_postfix in ["", "-logs"]:
+    db_url = couchdb_url + username + db_postfix
+    db_creation_response = requests.put(db_url, auth=HTTPBasicAuth(admin_user, admin_pass))
 
-# Step 3: Set permissions for the user on the new database
-permissions = {
-    'admins': {
-        'names': [username],
-        'roles': []
-    },
-    'members': {
-        'names': [username],
-        'roles': []
+    # Step 3: Set permissions for the user on the new database
+    permissions = {
+        'admins': {
+            'names': [username],
+            'roles': []
+        },
+        'members': {
+            'names': [username],
+            'roles': []
+        }
     }
-}
-security_url = db_url + '/_security'
-permission_response = requests.put(security_url, json=permissions, auth=HTTPBasicAuth(admin_user, admin_pass))
+    security_url = db_url + '/_security'
+    permission_response = requests.put(security_url, json=permissions, auth=HTTPBasicAuth(admin_user, admin_pass))
 
-# Output the responses
-print(user_creation_response.json(), db_creation_response.json(), permission_response.json())
+    # Output the responses
+    print(user_creation_response.json(), db_creation_response.json(), permission_response.json())

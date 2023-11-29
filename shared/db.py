@@ -4,9 +4,10 @@ from typing import List, Union
 from shared import utils
 
 class DB:
-    def __init__(self, couch_credentials):
+    def __init__(self, couch_credentials, partition=None):
         self.server = couchdb.Server(url=couch_credentials['url'])
         self.db_name = couch_credentials['db_name']
+        self.partition = partition
 
         # Create the database if it doesn't exist
         if self.db_name not in self.server:
@@ -15,11 +16,13 @@ class DB:
         self.create_views()
 
     def create_views(self):
-        self.create_actions_views()
-        self.create_api_views()
-        self.create_auth_views()
-        self.create_user_views()
-        self.create_log_views()
+        if self.partition == "app":
+            self.create_actions_views()
+            self.create_api_views()
+            self.create_auth_views()
+            self.create_user_views()
+        else:
+            self.create_log_views()
 
     def insert(self, data):
         try:

@@ -1,5 +1,5 @@
 import re
-from shared.couch import db
+from shared.couch import db, logs_db
 
 def parse_api_object(request):
     errors = {}
@@ -68,6 +68,6 @@ class ApiService:
 
     def get_logs(self, limit, skip):
         api_id = self.api["_id"]
-        logs = db.query_view('logs', 'by_api', limit=limit, skip=skip, key=api_id, reduce=False)
-        total_count = sum(db.query_view('logs', 'by_api', key=api_id, limit=limit, skip=skip, reduce=True)+[0])
+        logs = logs_db.query_view('logs', 'by_api', limit=limit, skip=skip, key=api_id, reduce=False)
+        total_count = sum(logs_db.query_view('logs', 'by_api', key=api_id, limit=limit, skip=skip, reduce=True)+[0])
         return logs, total_count
