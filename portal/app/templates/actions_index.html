@@ -4,6 +4,29 @@
 <!-- List of objects -->
     <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200">
         <div class="container mx-auto px-6 py-8">
+            {% if action | length == 0 %}
+                <div class="bg-white shadow-xl rounded-lg p-8 max-w-3xl w-full">
+                  <!-- Welcoming Message -->
+                  <div class="mt-4 text-center">
+                      <p class="text-xl text-gray-600">Ready to make magic? Start by creating your first Action!</p>
+                      <!-- Primary Action Button -->
+                      <form action="{{url_for("actions.new")}}" method="GET">
+                          <button type="submit" class="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">
+                              <i class="fas fa-bolt"></i>
+                              Create New Action
+                          </button>
+                      </form>
+                      <!-- Secondary Exploration Prompt -->
+                      <p class="mt-4">
+                          or
+                          <a href="{{url_for("apis.apis_discover")}}" class="text-blue-600 hover:text-blue-800 inline-block align-baseline font-bold text-sm">
+                              Explore APIs
+                          </a>
+                      </p>
+                  </div>
+                </div>
+
+            {% else %}
             <div class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-1 shadow-lg rounded-lg max-w-3xl">
                 <div class="flex justify-between items-center bg-white px-5 py-3 shadow rounded-t-lg">
                     <div>
@@ -50,6 +73,7 @@
                 {% endfor %}
                 {{ macros.paginate(page, limit, total_count) }}
             </div>
+            {% endif %}
         </div>
     </main>
 {%endblock%}
