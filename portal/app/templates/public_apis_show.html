@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="px-6 py-4 mb-6 bg-gray-100 border-b custom-bg">
+	{{macros.breadcrumbs([{"APIS": "/public_apis"}, api.title])}}
+	<ul class="py-4">
+    {% for path in api.paths %}
+      <li>
+      Description:{{api.description}}
+      </li>
+      <li>
+      Method: {{path["method"]}}
+      </li>
+      <li>
+      OperationId: {{path["operation_id"]}}
+      </li>
+      {% for param in path.params %}
+        <li>
+          Parameter: {{param["name"]}}
+          {% if param.description %}
+            - {{param.description}}
+          {% endif %}
+        </li>
+      {% endfor %}
+    {% endfor %}
+  </li>
+</div>
+{% endblock %}

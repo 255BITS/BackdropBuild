@@ -13,6 +13,18 @@ public_bp = Blueprint('public', __name__)
 def home():
     return render_template('landing.html', count_apis=db.count_apis())
 
+@public_bp.get("/public_apis")
+def list_public_apis():
+    apis = db.query_view('apis', 'public')
+    return render_template("public_apis_index.html", apis=apis)
+
+@public_bp.get("/public_apis/<api_id>")
+def get_public_api(api_id):
+    api = db.get(api_id)
+    if api["type"] != "API" or api["visibility"] != "public":
+        return redirect_to("/")
+    return render_template("public_apis_show.html", api=api)
+
 @public_bp.get('/openapi/<action_id>.json')
 def get_openapi_spec(action_id):
     actions, apis, _ = ActionsService(None).get_details(action_id)
@@ -43,14 +55,27 @@ def setup_instructions():
 @public_bp.get('/sitemap.xml')
 def sitemap():
     static_content_at = datetime.datetime.fromisoformat('2023-11-29T15:00:45.886476')
+    apis = db.query_view('apis', 'public')
+    last_public_update = None
+    for api in apis:
+        updated_at = datetime.datetime.fromisoformat(api["updated_at"])
+        if last_public_update is None or updated_at > last_public_update:
+            last_public_update = updated_at
     paths = {
         "/": {
             "last_updated": static_content_at
         },
         "/setup-instructions": {
             "last_updated": static_content_at
+        },
+        "/public_apis": {
+            "last_updated": last_public_update,
         }
     }
+    for api in apis:
+        paths[f"/public_apis/{api['_id']}"] = {
+            "last_updated": datetime.datetime.fromisoformat(api["updated_at"])
+        }
     return render_template('sitemap.xml', paths=paths), 200, {'Content-Type': 'application/xml'}
 
 @public_bp.get('/fixie_ai/<action_id>.js')
