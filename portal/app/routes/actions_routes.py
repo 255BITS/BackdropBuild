@@ -140,7 +140,7 @@ def post_api_link(id):
     api_link = actions_service().create_api_link(actions["api_links"], api, api_id)
     actions["api_links"].append(api_link) 
     db.save(actions)
-    return redirect(url_for("actions.show", id=id))
+    return redirect(url_for("actions.edit", id=id))
 
 @actions_bp.delete('/actions/<id>/api_link/<api_link_id>')
 def api_link_delete(id, api_link_id):
