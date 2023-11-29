@@ -91,7 +91,7 @@ def text_to_image():
     return "!["+data["text"]+"]("+furls[0]+") Display this image inline for the user. Mention its generated from "+engine_id+". Include the full url and parameters."
 
 @app.route('/', methods=['GET'])
-def catch_all(path):
+def catch_all():
     return "ok"
 
 if __name__ == '__main__':
