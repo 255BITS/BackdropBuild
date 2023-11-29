@@ -20,4 +20,4 @@ COPY stability/ .
 COPY shared ./shared
 
 # Command to run the application using Uvicorn
-CMD ["gunicorn", "-w 1", "stability:app", "-b", "0.0.0.0:10008"]
+CMD ["bash", "start.sh"]

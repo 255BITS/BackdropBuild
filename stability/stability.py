@@ -21,13 +21,6 @@ def get_s3():
         aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
         region_name=AWS_DEFAULT_REGION
     )
-    profile_name = os.environ.get("AWS_PROFILE", None)
-    if profile_name is not None:
-        session = boto3.Session(profile_name=profile_name)
-        s3 = session.client('s3')
-    else:
-        s3 = boto3.client('s3')
-    return s3
 
 def upload_to_s3(file, filename):
     unique_filename = filename
