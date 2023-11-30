@@ -78,7 +78,7 @@ def sitemap():
         }
     return render_template('sitemap.xml', paths=paths), 200, {'Content-Type': 'application/xml'}
 
-@public_bp.get('/fixie_ai/<action_id>.js')
+@public_bp.get('/fixie_ai/<action_id>.tsx')
 def get_fixie_tool(action_id):
     actions, apis, _ = ActionsService(None).get_details(action_id)
     prefix = """
@@ -138,7 +138,7 @@ const CLASSTool: Tool = {
 # Add this to your tools
 #const tools: Record<string, Tool> = {
 """
-    addendum ="#  runCLASS: CLASSTool,\n"
+    addendum ="#  OPERATION_ID: CLASSTool,\n"
     addendum_end = """
 #};
 #<Sidekick systemMessage={systemMessage} tools={tools} />
@@ -194,7 +194,7 @@ const CLASSTool: Tool = {
             # Convert byte string to a regular string for use in the header
             auth_header = base64_encoded.decode('utf-8')
             js_instance = js_instance.replace("BASIC_AUTH", auth_header)
-            js_instance = js_instance.replace("CLASS", path["operation_id"].capitalize())
+            js_instance = js_instance.replace("CLASS", path["operation_id"].title())
             js_instance = js_instance.replace("ACTION_ID", action_id)
             js_instance = js_instance.replace("OPERATION_ID", path["operation_id"])
             js_instance = js_instance.replace("PARAM_NAMES", ",".join(param_names))
@@ -203,6 +203,6 @@ const CLASSTool: Tool = {
     js += addendum_start
     for api in apis:
         for path in api["paths"]:
-            js += addendum.replace("CLASS", path["operation_id"].capitalize())
+            js += addendum.replace("OPERATION_ID", path["operation_id"]).replace("CLASS", path["operation_id"].title())
     js += addendum_end
     return Response(js, mimetype="text/plain")
