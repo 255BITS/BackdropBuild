@@ -219,6 +219,17 @@ async def debug_request_info():
    app.logger.info(f'URL: {request.url}')
    app.logger.info(f'Body: {await request.get_data()}')
 
+def get_value_from_source(param, headers):
+    source = param["source"]
+    if source == "constant":
+        return param["value"]
+    elif source == "header-gptid":
+        return headers.get("Openai-Gpt-Id")
+    elif source == "header-conversationid":
+        return headers.get("Openai-Conversation-Id")
+    elif source == "header-userid":
+        return headers.get("Openai-Ephemeral-User-Id")
+
 @app.route('/<action_id>/<operation_id>', methods=['GET', 'POST', 'PUT', 'DELETE', "PATCH"])
 async def passthrough(action_id, operation_id):
     start_time = time.time()
@@ -298,11 +309,13 @@ async def passthrough(action_id, operation_id):
             continue
 
         api_url = api_url.replace(f"<{param['name']}>", str(param["value"]))
-        if param["source"] == "constant":
+
+        value = get_value_from_source(param, headers)
+        if value is not None:
             if target_path["method"].lower() in ["get", "delete"]:
-                params[param["name"]] = param["value"]
+                params[param["name"]] = value
             else:
-                data_dict[param["name"]] = param["value"]
+                data_dict[param["name"]] = value
 
     method = request.method
     content = json.dumps(data_dict)
