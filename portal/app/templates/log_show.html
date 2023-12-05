@@ -10,6 +10,7 @@
         <div><strong>Created At:</strong> {{ log.created_at }}</div>
         <div><strong>Method:</strong> {{ log.method }}</div>
         <div><strong>Params:</strong> <pre class="whitespace-pre-wrap">{{ log.request.params | tojson }}</pre></div>
+        <div><strong>Body:</strong> <pre class="whitespace-pre-wrap">{{ log.request.get('content', {}) }}</pre></div>
         <div><strong>Response Status:</strong> {{ log.response_status_code }}</div>
         <div><strong>Time Taken:</strong> {{ log.response_time }}s</div>
         <!-- Add more fields as necessary -->
