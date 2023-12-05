@@ -40,6 +40,7 @@ def main():
         'gptactionhub': 'portal',
         'gptactionhubproxy': 'proxy',
         'gptactionhubmemory': 'memory',
+        'gptactionhubpersona': 'persona',
         'gptactionhubstability': 'stability',
     }
     services = service_paths.keys()
@@ -54,7 +55,7 @@ def main():
                 print("Skipping ", service)
 
     print("Project has been built but not redeployed.  To redeploy run:")
-    print("   ./deploy.sh")
+    print("   python deploy.py")
 
 if __name__ == '__main__':
     main()
