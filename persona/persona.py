@@ -16,12 +16,13 @@ async def get_persona_status(id):
         print(response.text)
         return response.json()
 
-@app.route('/profile', methods=['GET'])
+@app.route('/profile', methods=['POST'])
 async def profile():
-    z = request.args.get('z', "dev")
-    prompt = request.args.get('prompt', "headshot of an actress")
-    happy = float(request.args.get('happy', 0))
-    angry = float(request.args.get('angry', 0))
+    json_data = await request.get_json()
+    z = json_data.get('z', "dev")
+    prompt = json_data.get('prompt', "headshot of an actress")
+    happy = float(json_data.get('happy', 0))
+    angry = float(json_data.get('angry', 0))
 
     # First async call
     response = await post_persona(prompt, z, happy, angry)
