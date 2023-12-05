@@ -223,11 +223,9 @@ def get_value_from_source(param, headers):
     source = param["source"]
     if source == "constant":
         return param["value"]
-    elif source == "header-gptid":
-        return headers.get("Openai-Gpt-Id")
-    elif source == "header-conversationid":
+    elif source == "conversation":
         return headers.get("Openai-Conversation-Id")
-    elif source == "header-userid":
+    elif source == "user":
         return headers.get("Openai-Ephemeral-User-Id")
 
 @app.route('/<action_id>/<operation_id>', methods=['GET', 'POST', 'PUT', 'DELETE', "PATCH"])

@@ -59,9 +59,10 @@
                         <select class="form-select w-1/3 mr-2 border-gray-300 p-2 rounded-lg border toggle-constant-input" name="api_links[{{ api_index }}][paths][{{ path_index }}][params][{{ param_index }}][source]">
                             <option value="gpt" {{ "selected" if api_link_param.source == "gpt" else "" }}>Set by GPT</option>
                             <option value="constant" {{ "selected" if api_link_param.source == "constant" else "" }}>Constant</option>
-                            <option value="header-gptid" {{ "selected" if api_link_param.source == "header-gptid" else "" }}>Header: Openai-Gpt-Id</option>
-                            <option value="header-conversationid" {{ "selected" if api_link_param.source == "header-conversationid" else "" }}>Header: Openai-Conversation-Id</option>
-                            <option value="header-userid" {{ "selected" if api_link_param.source == "header-userid" else "" }}>Header: Openai-Ephemeral-User-Id</option>
+                            {% if api_param.type == "string" %}
+                              <option value="conversation" {{ "selected" if api_link_param.source == "conversation" else "" }}>Conversation ID</option>
+                              <option value="user" {{ "selected" if api_link_param.source == "user" else "" }}>User ID</option>
+                            {% endif %}
                           </select>
                           <input type="text" name="api_links[{{ api_index }}][paths][{{ path_index }}][params][{{ param_index }}][value]" value="{{api_link_param.value}}" class="form-input w-1/3 border p-2 rounded-lg border-gray-300 {{"" if api_link_param.source == "constant" else "hidden"}}">
                         {% endif %}
