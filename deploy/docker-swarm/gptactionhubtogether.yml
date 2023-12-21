@@ -1,0 +1,16 @@
+version: '3'
+services:
+  gptactionhubtogether:
+   image: '532091552808.dkr.ecr.us-west-2.amazonaws.com/gptactionhubtogether:1.0'
+   ports:
+     - 10010:10010
+   environment:
+    - ENV=production
+    - 'VIRTUAL_HOST=https://together.gptactionhub.com'
+    - TOGETHER_API_KEY=$TOGETHER_API_KEY
+   deploy:
+     replicas: 1
+     placement:
+       constraints:
+         - node.role == worker
+         - node.labels.couchdb!=true

@@ -42,6 +42,8 @@ def main():
         'gptactionhubmemory': 'memory',
         'gptactionhubpersona': 'persona',
         'gptactionhubstability': 'stability',
+        'gptactionhubzazzle': 'zazzle',
+        'gptactionhubtogether': 'together',
     }
     services = service_paths.keys()
 
