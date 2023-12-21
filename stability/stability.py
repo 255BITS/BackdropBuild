@@ -43,9 +43,9 @@ def text_to_image():
         api_key = request.headers["STABILITY_API_KEY"]
     data = request.json
     if "height" not in data or data["height"] == "":
-        data["height"]=400
+        data["height"]=384
     if "width" not in data or data["width"] == "":
-        data["width"]=600
+        data["width"]=640
 
     if api_key is None:
         raise Exception("Missing Stability API key.")
