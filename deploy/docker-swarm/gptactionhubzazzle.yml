@@ -12,4 +12,4 @@ services:
      placement:
        constraints:
          - node.role == worker
-         - node.labels.couchdb!=true
+         - node.labels.worker==true
